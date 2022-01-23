@@ -1,0 +1,1 @@
+from .XindmapApp import XindmapApp

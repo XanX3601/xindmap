@@ -1,0 +1,3 @@
+importlib
+kivy[base]
+click

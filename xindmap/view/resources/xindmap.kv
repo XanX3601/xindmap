@@ -1,0 +1,28 @@
+<XindmapController>:
+    command_label: command_label
+
+    AnchorLayout:
+        anchor_x: 'center'
+        anchor_y: 'center'
+
+        width: root.width
+        height: root.height
+
+    AnchorLayout:
+        anchor_x: 'center'
+        anchor_y: 'bottom'
+
+        width: root.width
+        height: 20
+
+        padding: 5, 1, 1, 5
+
+        Label:
+            size: root.size
+            text_size: self.size
+            halign: 'left'
+            valign: 'middle'
+
+            id: command_label
+            text: 'hello, world'
+
