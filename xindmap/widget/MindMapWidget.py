@@ -8,6 +8,8 @@ class MindMapWidget(kwidget.Widget):
     """widget used to display a mind map
 
     Attributes:
+        current_mind_node_widget: the mind node widget that display the current
+            node of the mind map
         mind_node_to_mind_node_widget: a dictionnary linking a mind node to the
             mind node widget that is used to display it
         scatter: the scatter widget in which are displayed the mind node widgets
@@ -22,6 +24,7 @@ class MindMapWidget(kwidget.Widget):
         """
         super().__init__(**kwargs)
 
+        self.current_mind_node_widget = None
         self.mind_node_to_mind_node_widget = {}
 
     def add_mind_node_widget(self, mind_node):
@@ -49,6 +52,20 @@ class MindMapWidget(kwidget.Widget):
 
         # display the new mind node widget
         self.scatter.add_widget(mind_node_widget)
+
+    def center_on_current_mind_node_widget(self):
+        """centers this widget on the current mind node widget
+        """
+        if self.current_mind_node_widget is not None:
+            futur_center_x, futur_center_y = self.scatter.to_parent(
+                *self.current_mind_node_widget.center
+            )
+
+            delta_x = self.center_x - futur_center_x
+            delta_y = self.center_y - futur_center_y
+
+            self.scatter.x += delta_x
+            self.scatter.y += delta_y
         
     def init(self, mind_map):
         """initializes this widget
@@ -68,5 +85,7 @@ class MindMapWidget(kwidget.Widget):
         """
         if current_node not in self.mind_node_to_mind_node_widget:
             self.add_mind_node_widget(current_node)
+
+        self.current_mind_node_widget = self.mind_node_to_mind_node_widget[current_node]
 
 

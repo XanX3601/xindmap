@@ -62,3 +62,7 @@ class CommandController:
         """
         kapp.App.get_running_app().stop()
 
+    def command_view_center(self):
+        """centers the view on the current mind node
+        """
+        self._mind_map_widget.center_on_current_mind_node_widget()
