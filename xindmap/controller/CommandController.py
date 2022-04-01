@@ -51,6 +51,12 @@ class CommandController:
 
                 self._command_tree.add_command(command_name, inputs)
 
+    def command_add_node(self):
+        """adds a node in the mind map
+        """
+        self._mind_map.add_node()
+        klogger.Logger.info('[command controller] command add_node done')
+
     def command_quit(self):
         """quits the application
         """
