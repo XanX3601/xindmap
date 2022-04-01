@@ -1,2 +1,0 @@
-class NodeParsingError(RuntimeError):
-    pass

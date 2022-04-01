@@ -1,37 +1,50 @@
 import click
-import os
 
 @click.command()
-@click.argument(
-    'filename',
-    required=False,
-    type=click.Path(exists=True),
-    default=None
-    )
 @click.option(
-    '--config-file',
-    type=click.Path(exists=True),
-    help='the config file to open',
-    default='{}/.config/xindmap/xindmap.config'.format(os.path.expanduser('~'))
+    '-log',
+    '--log-level',
+    default='debug',
+    type=click.Choice(
+        ['trace', 'debug', 'info', 'warning', 'error', 'critical'],
+        case_sensitive=False
     )
-def main(filename, config_file):
+)
+def xindmap(log_level):
+    import kivy.lang.builder as kbuilder
+    import kivy.logger as klogger
     import importlib.resources as pkg_resources
-    import kivy.lang.builder
-    import xindmap.view
-    import xindmap.view.config
-    import xindmap.view.resources
+    import xindmap.app as xapp
+    import xindmap.resources as xresources
 
-    os.environ['KIVY_NO_ARGS'] = '1'
+    logger = klogger.Logger
 
-    # load kv file
-    with pkg_resources.path(xindmap.view.resources, 'xindmap.kv') as kv_file:
-        kivy.lang.builder.Builder.load_file(str(kv_file))
+    # set log level beforehand
+    logger.setLevel(klogger.LOG_LEVELS[log_level])
 
-    # create app
-    app = xindmap.view.XindmapApp(config_file)
+    logger.info(
+        '************************************* XINDMAP START **************************************'
+    )
 
-    # init app
-    app.init()
+    with pkg_resources.path(xresources, 'xindmap.kv') as kv_file_path:
+        kv_file_path = str(kv_file_path.resolve())
 
-    # run app
-    app.run()
+        builder = kbuilder.Builder
+        builder.load_file(kv_file_path)
+
+    logger.info('xindmap.kv file loaded')
+
+    xindmap_app = xapp.XindmapApp()
+    logger.info('xindmap app instantiation success')
+
+    xindmap_app.init()
+    logger.info('xindmap app initialization success')
+
+    xindmap_app.run()
+
+    logger.info(
+        '************************************** XINDMAP END ***************************************'
+    )
+
+if __name__ == '__main__':
+    xindmap()

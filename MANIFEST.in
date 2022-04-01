@@ -1,1 +1,1 @@
-recursive-include xindmap/view/resources xindmap.kv
+include xindmap/resources xindmap.kv

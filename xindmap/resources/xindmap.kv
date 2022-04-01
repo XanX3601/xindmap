@@ -1,0 +1,61 @@
+<RootWidget>:
+    mind_map_widget: mind_map_widget
+    input_widget: input_widget
+
+    AnchorLayout:
+        anchor_x: 'center'
+        anchor_y: 'top'
+
+        size: root.size
+        size_hint: None, None
+
+        MindMapWidget:
+            id: mind_map_widget
+
+            size_hint: 1, 1
+
+    AnchorLayout:
+        anchor_x: 'center'
+        anchor_y: 'bottom'
+        padding: 5
+
+        size: root.width, 20
+        
+        InputWidget:
+            id: input_widget
+
+<InputWidget>:
+    input_label: input_label
+
+    Label:
+        id: input_label
+        
+        pos: root.pos
+        size: self.texture_size
+        texture_size: root.size
+
+<MindMapWidget>:
+    scatter: scatter
+
+    Scatter:
+        id: scatter
+
+        size: root.size
+        pos: root.pos
+
+        do_rotation: False
+
+<MindNodeWidget>:
+    label: label
+
+    Label:
+        id: label
+
+        size: self.texture_size
+        center_x: root.center_x
+        center_y: root.center_y - self.font_size / 2
+
+        text: root.mind_node.text if root.mind_node is not None else ''
+        halign: 'center'
+        valgin: 'middle'
+

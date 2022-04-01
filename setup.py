@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="xindmap",
-    version="1.0.0",
+    version="0.1.0",
     author="Thomas Petiteau",
     author_email="thomas.petiteau@outlook.com",
     description="Mind mapping app targeted at developpers.",
@@ -14,6 +14,9 @@ setuptools.setup(
     url="https://github.com/XanX3601/xindmap",
     include_package_data=True,
     packages=setuptools.find_packages(),
-    entry_points={"console_scripts": ["xindmap=xindmap.main:main"]},
-    install_requires=[],
+    entry_points={"console_scripts": ["xindmap=xindmap.main:xindmap"]},
+    install_requires=[
+        'click>=8.0.3',
+        'kivy>=2.0.0'
+    ],
 )
