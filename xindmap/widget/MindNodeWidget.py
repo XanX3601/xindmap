@@ -28,6 +28,7 @@ class MindNodeWidget(kwidget.Widget):
         super().__init__(**kwargs)
 
         self.mind_node = mind_node
+        self.mind_node.bind(text=self.on_mind_node_text)
 
     def on_mind_node_text(self, mind_node, text):
         """callback raised upon changing the text of the mind node

@@ -3,6 +3,7 @@ import kivy.event as kevent
 import kivy.logger as klogger
 import kivy.properties as kproperties
 import xindmap.input as xinput
+import xindmap.state as xstate
 
 class InputController(kevent.EventDispatcher):
     """input controller
@@ -22,20 +23,45 @@ class InputController(kevent.EventDispatcher):
         self.inputs = collections.deque()
         self.inputs_result = collections.deque()
 
-    def init(self, command_controller, command_tree, input_widget):
+    def init(
+        self,
+        editor_state,
+        command_controller,
+        command_tree,
+        input_widget,
+        insert_controller
+    ):
         """initializes this controller
         
         Args:
             command_controller: the command controller
             command_tree: the command tree
             input_widget: the input widget
+            insert_controller: the insert controller
         """
+        self._editor_state = editor_state
         self._command_controller = command_controller
         self._command_tree = command_tree
         self._input_widget = input_widget
+        self._insert_controller = insert_controller
 
     def input(self, input):
-        """inputs to this controller
+        """inputs to this controller dependending on the state of the editor
+
+        Args:
+            input: an input
+        """
+        klogger.Logger.debug(
+            '[input controller] input type {} value {}'.format(input.type.name, input.value)
+        )
+
+        if self._editor_state.state == xstate.State.command:
+            self.input_command(input)
+        elif self._editor_state.state == xstate.State.insert:
+            self.input_insert(input)
+
+    def input_command(self, input):
+        """inputs to this controller an input in command mode
 
         Args:
             input: an input
@@ -46,10 +72,6 @@ class InputController(kevent.EventDispatcher):
             self.inputs_result.clear()
 
             self._command_tree.root()
-
-        klogger.Logger.debug(
-            '[input controller] input type {} value {}'.format(input.type.name, input.value)
-        )
 
         if input.type == xinput.InputType.backspace:
             if self.inputs:
@@ -77,6 +99,18 @@ class InputController(kevent.EventDispatcher):
                 self._command_controller.execute(self._command_tree.command)
 
                 clear(self)
+
+    def input_insert(self, input):
+        """inputs to this controller an input in insert mode
+
+        Args:
+            input: an input
+        """
+        if input.type == xinput.InputType.default:
+            self._insert_controller.insert(input.value)
+
+        elif input.type == xinput.InputType.escape:
+            self._editor_state.state = xstate.State.command
 
     def on_inputs_text(self, _, text):
         """callback raised when the property inputs_text is changed

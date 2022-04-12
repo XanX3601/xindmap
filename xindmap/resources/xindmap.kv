@@ -1,38 +1,59 @@
 <RootWidget>:
-    mind_map_widget: mind_map_widget
     input_widget: input_widget
+    mind_map_widget: mind_map_widget
+    output_widget: output_widget
 
-    AnchorLayout:
-        anchor_x: 'center'
-        anchor_y: 'top'
-
+    FloatLayout:
         size: root.size
-        size_hint: None, None
+        pos: root.pos
 
         MindMapWidget:
             id: mind_map_widget
 
-            size_hint: 1, 1
+            size_hint: (None, None)
 
-    AnchorLayout:
-        anchor_x: 'center'
-        anchor_y: 'bottom'
-        padding: 5
+            size: root.size
+            pos: root.pos
 
-        size: root.width, 20
-        
         InputWidget:
             id: input_widget
+
+            size_hint: (None, None)
+
+            width: root.width - 10
+            height: 20
+
+            pos: 10, 5
+
+        OutputWidget:
+            id: output_widget
+
+            size_hint: (None, None)
+
+            width: root.width - 10
+            height: 20
+
+            pos: 10, 25
 
 <InputWidget>:
     input_label: input_label
 
     Label:
         id: input_label
-        
+
         pos: root.pos
         size: self.texture_size
-        texture_size: root.size
+
+<OutputWidget>:
+    output_label: output_label
+
+    Label:
+        id: output_label
+
+        pos: root.pos
+        size: self.texture_size
+
+        markup: True
 
 <MindMapWidget>:
     scatter: scatter

@@ -7,9 +7,11 @@ class RootWidget(kwidget.Widget):
     Attributes:
         input_widget: the input widget
         mindmap_canvas_widget: the mindmap canvas widget
+        output_widget: the output widget
     """
     input_widget = kproperties.ObjectProperty()
     mind_map_widget = kproperties.ObjectProperty()
+    output_widget = kproperties.ObjectProperty()
 
     def __init__(self, **kwargs):
         """instantiates this widget
