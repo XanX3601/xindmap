@@ -35,7 +35,7 @@ class MindMapWidget(kwidget.Widget):
         """
         # retrive the mind node widget that displays the mind node parent
         mind_node_widget_parent = self.mind_node_to_mind_node_widget.get(
-            mind_node, None
+            mind_node.parent, None
         )
 
         # create the new mind node widget
