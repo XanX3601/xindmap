@@ -30,6 +30,22 @@ class MindNodeWidget(kwidget.Widget):
         self.mind_node = mind_node
         self.mind_node.bind(text=self.on_mind_node_text)
 
+        self.label.bind(width=self.on_label_width)
+
+    def compute_width(self):
+        """computes the width of this widget
+        """
+        self.width = self.label.width
+    
+    def on_label_width(self, label, width):
+        """callback raised upon changing the width of the label
+
+        Args:
+            label: the label
+            width: the new width of the label
+        """
+        self.compute_width()
+
     def on_mind_node_text(self, mind_node, text):
         """callback raised upon changing the text of the mind node
 
