@@ -28,6 +28,14 @@ class EditorState(kevent.EventDispatcher):
 
         xlogging.info('{}: instantiated', self)
 
+    def __str__(self):
+        """computes a string representation of this state
+
+        Returns:
+            a string representation of this state
+        """
+        return 'editor state {}'.format(self.__id)
+
     # callback *****************************************************************
     def on_state(self, _, state):
         """callback raised upon changing the editor state

@@ -4,7 +4,7 @@ import click
 @click.option(
     '-log',
     '--log-level',
-    default='info',
+    default='debug',
     type=click.Choice(
         ['trace', 'debug', 'info', 'warning', 'error', 'critical'],
         case_sensitive=False
