@@ -1,5 +1,7 @@
+import itertools
 import kivy.properties as kproperties
 import kivy.uix.widget as kwidget
+import xindmap.logging as xlogging
 
 class MindNodeWidget(kwidget.Widget):
     """widget used to display a mind node
@@ -14,11 +16,16 @@ class MindNodeWidget(kwidget.Widget):
         mind_node_widget_parent: the mind node widget that display the parent of
             the mind node
     """
+    # static *******************************************************************
+    __id_counter = itertools.count()
+
+    # property *****************************************************************
     full_height = kproperties.NumericProperty()
     label = kproperties.ObjectProperty()
     mind_node_widget_children = kproperties.ListProperty()
     mind_node_widget_parent = kproperties.ObjectProperty()
 
+    # dunder *******************************************************************
     def __init__(self, mind_node, mind_node_widget_parent, **kwargs):
         """instantiates this widget
 
@@ -29,6 +36,8 @@ class MindNodeWidget(kwidget.Widget):
             kwargs: dictionnary of args
         """
         super().__init__(**kwargs)
+
+        self.__id = next(MindNodeWidget.__id_counter)
 
         self.label.bind(width=self.on_label_width)
 
@@ -47,12 +56,28 @@ class MindNodeWidget(kwidget.Widget):
         self.compute_x()
         self.compute_width()
 
+        xlogging.info('{}: instantiated', self)
+
+    def __str__(self):
+        """computes a string representation of this widget
+
+        Returns:
+            a string representation of this widget
+        """
+        if hasattr(self, '_MindNodeWidget__id'):
+            return 'mind node widget {}'.format(self.__id)
+
+        return super().__str__()
+
+    # compute ******************************************************************
     def compute_full_height(self):
         """computes the full height of this widget
         """
         self.full_height = sum(
             [child.full_height for child in self.mind_node_widget_children]
         ) + 40 * (len(self.mind_node_widget_children) - 1)
+
+        xlogging.debug('{}: compute full height {}', self, self.full_height)
 
     def compute_mind_node_widget_children_center_y(self):
         """computes the center y of all the children of this widget
@@ -64,10 +89,14 @@ class MindNodeWidget(kwidget.Widget):
             current_point += child.full_height / 2
             current_point += 40
 
+        xlogging.debug('{}: compute mind node widget children center y', self)
+
     def compute_width(self):
         """computes the width of this widget
         """
         self.width = self.label.width
+
+        xlogging.debug('{}: compute width {}', self, self.width)
     
     def compute_x(self):
         """computes the x of this widget
@@ -77,6 +106,9 @@ class MindNodeWidget(kwidget.Widget):
                     + self.mind_node_widget_parent.width\
                     + 20
 
+            xlogging.debug('{}: compute x {}', self, self.x)
+
+    # callback *****************************************************************
     def on_full_height(self, _, __):
         """callback raised upon changing the full height of this widget
 
@@ -86,6 +118,8 @@ class MindNodeWidget(kwidget.Widget):
             __: ignored
                 equal full_height
         """
+        xlogging.debug('{}: on full height', self)
+        
         self.compute_mind_node_widget_children_center_y()
 
     def on_label_width(self, label, width):
@@ -95,6 +129,8 @@ class MindNodeWidget(kwidget.Widget):
             label: the label
             width: the new width of the label
         """
+        xlogging.debug('{}: on label width', self)
+
         self.compute_width()
 
     def on_mind_node_text(self, mind_node, text):
@@ -104,6 +140,8 @@ class MindNodeWidget(kwidget.Widget):
             mind_node: the mind node
             text: the new text of the mind node
         """
+        xlogging.debug('{}: on mind node text', self)
+
         self.label.text = text
 
     def on_mind_node_widget_child_full_height(
@@ -118,6 +156,8 @@ class MindNodeWidget(kwidget.Widget):
             mind_node_widget_child: the child
             full_height: the new full height of the child
         """
+        xlogging.debug('{}: on mind node widget child full height', self)
+
         self.compute_full_height()
 
     def on_mind_node_widget_children(self, _, __):
@@ -129,6 +169,8 @@ class MindNodeWidget(kwidget.Widget):
             __: ignored
                 equal to mind_node_widget_children
         """
+        xlogging.debug('{}: on mind node widget children', self)
+
         self.compute_full_height()
 
         for child in self.mind_node_widget_children:
@@ -142,6 +184,8 @@ class MindNodeWidget(kwidget.Widget):
             mind_node_widget_parent: the mind node widget parent
             width: the new value of width
         """
+        xlogging.debug('{}: on mind node widget parent width', self)
+
         self.compute_x()
 
     def on_mind_node_widget_parent_x(self, mind_node_widget_parent, x):
@@ -151,5 +195,7 @@ class MindNodeWidget(kwidget.Widget):
             mind_node_widget_parent: the mind node widget parent
             x: the new value of x
         """
+        xlogging.debug('{}: on mind node widget parent x', self)
+
         self.compute_x()
 

@@ -1,5 +1,7 @@
+import itertools
 import kivy.uix.widget as kwidget
 import kivy.properties as kproperties
+import xindmap.logging as xlogging
 
 class InputWidget(kwidget.Widget):
     """the widget used to display the user's inputs
@@ -7,8 +9,13 @@ class InputWidget(kwidget.Widget):
     Attributes:
         input_label: input label
     """
+    # static *******************************************************************
+    __id_counter = itertools.count()
+
+    # property *****************************************************************
     input_label = kproperties.ObjectProperty()
 
+    # dunder *******************************************************************
     def __init__(self, **kwargs):
         """instantiates this widget
 
@@ -17,6 +24,19 @@ class InputWidget(kwidget.Widget):
         """
         super().__init__(**kwargs)
 
+        self.__id = next(InputWidget.__id_counter)
+
+        xlogging.info('{}: instantiated', self)
+
+    def __str__(self):
+        """computes a string representation of this widget
+
+        Returns:
+            a string representation of this widget
+        """
+        return 'input widget {}'.format(self.__id)
+
+    # text *********************************************************************
     @property
     def text(self):
         """gets the displayed text

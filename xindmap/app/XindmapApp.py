@@ -1,9 +1,8 @@
-from os import walk
+import itertools
 import kivy.app as kapp
-import kivy.logger as klogger
-import kivy.uix.widget as kwidget
 import xindmap.controller as xcontroller
 import xindmap.command as xcommand
+import xindmap.logging as xlogging
 import xindmap.mindmap as xmindmap
 import xindmap.state as xstate
 import xindmap.widget as xwidget
@@ -20,10 +19,16 @@ class XindmapApp(kapp.App):
         mind_map: the mind map
         root_widget: the root widget
     """
+    # id ***********************************************************************
+    __id_counter = itertools.count()
+
+    # dunder *******************************************************************
     def __init__(self):
         """instantiates this app
         """
         super().__init__()
+
+        self.__id = next(XindmapApp.__id_counter)
 
         self.editor_state = xstate.EditorState()
         self.command_tree = xcommand.CommandTree()
@@ -36,6 +41,17 @@ class XindmapApp(kapp.App):
 
         self.root_widget = xwidget.RootWidget()
 
+        xlogging.info('{}: instantiated', self)
+
+    def __str__(self):
+        """computes a string representation of this app
+
+        Returns:
+            a string representation of this app
+        """
+        return 'xindmap app {}'.format(1)
+
+    # init *********************************************************************
     def init(self):
         """initializes all the members of this application
         """
@@ -61,6 +77,9 @@ class XindmapApp(kapp.App):
             self.mind_map
         )
 
+        xlogging.info('{}: initialized', self)
+
+    # build ********************************************************************
     def build(self):
         """builds this application
         """

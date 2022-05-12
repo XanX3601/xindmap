@@ -1,3 +1,5 @@
+import xindmap.logging as xlogging
+
 from .InputType import InputType
 
 class Input:
@@ -7,6 +9,7 @@ class Input:
         type: type of the input
         value: value of the input
     """
+    # dunder *******************************************************************
     def __init__(self, type, value=None):
         """instantiates this input
 
@@ -16,6 +19,8 @@ class Input:
         """
         self.type = type
         self.value = value
+
+        xlogging.debug('input: instantiated type {} value {}', type, value)
 
     def __eq__(self, other_input):
         """tests wether this input equals another one

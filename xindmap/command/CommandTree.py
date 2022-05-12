@@ -1,3 +1,6 @@
+import itertools
+import xindmap.logging as xlogging
+
 from .CommandNode import CommandNode
 
 class CommandTree:
@@ -8,12 +11,29 @@ class CommandTree:
         current_node: the current node
             the root node by default
     """
+    # static *******************************************************************
+    __id_counter = itertools.count()
+
+    # dunder *******************************************************************
     def __init__(self):
         """instantiates this command tree
         """
+        self.__id = next(CommandTree.__id_counter)
+
         self.root_node = CommandNode()
         self.current_node = self.root_node
 
+        xlogging.info('{}: instantiated', self)
+
+    def __str__(self):
+        """computes a string representation of this tree
+
+        Returns:
+            a string representation of this tree
+        """
+        return 'command tree {}'.format(self.__id)
+
+    # command ******************************************************************
     def add_command(self, command, inputs):
         """adds a command to this tree
 
@@ -32,6 +52,13 @@ class CommandTree:
 
         current_node.command = command
 
+        xlogging.info(
+            '{}: command {} added with inputs {}',
+            self,
+            command,
+            inputs
+        )
+
     @property
     def command(self):
         """gets the command holded by the current node
@@ -41,6 +68,7 @@ class CommandTree:
         """
         return self.current_node.command
 
+    # move in the tree *********************************************************
     def next_node(self, input):
         """moves on to a child of the current node linked to it by the given
         input
@@ -57,6 +85,13 @@ class CommandTree:
 
         self.current_node = self.current_node.children[input]
 
+        xlogging.info(
+            '{}: current node changed for {} with input {}',
+            self,
+            self.current_node,
+            input
+        )
+
         return True
 
     def previous_node(self):
@@ -70,6 +105,12 @@ class CommandTree:
             return False
 
         self.current_node = self.current_node.parent
+
+        xlogging.info(
+            '{}: current node changed for its parent {}',
+            self,
+            self.current_node
+        )
         
         return True
 
@@ -77,3 +118,9 @@ class CommandTree:
         """returns to the top of the tree
         """
         self.current_node = self.root_node
+
+        xlogging.info(
+            '{}: current node changed for root {}',
+            self,
+            self.current_node
+        )

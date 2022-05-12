@@ -1,6 +1,7 @@
+import itertools
 import kivy.core.window as kwindow
-import kivy.logger as klogger
 import xindmap.input as xinput
+import xindmap.logging as xlogging
 
 class KeyboardController:
     """keyboard controller
@@ -8,10 +9,15 @@ class KeyboardController:
     Attributes:
         keyboard: the controlled keyboard
     """
+    # static *******************************************************************
+    __id_counter = itertools.count()
 
+    # dunder *******************************************************************
     def __init__(self):
         """instantiates this controller
         """
+        self.__id = next(KeyboardController.__id_counter)
+
         self.keyboard = kwindow.Window.request_keyboard(
             self.on_keyboard_closed,
             None
@@ -19,6 +25,17 @@ class KeyboardController:
         self.keyboard.bind(on_key_down=self.on_key_down)
         self.keyboard.bind(on_textinput=self.on_textinput)
 
+        xlogging.info('{}: instantiated', self)
+
+    def __str__(self):
+        """computes a string representation of this controller
+
+        Returns:
+            a string representation of this controller
+        """
+        return 'keyboard controller {}'.format(self.__id)
+
+    # init *********************************************************************
     def init(self, input_controller):
         """initializes this controller
 
@@ -27,6 +44,9 @@ class KeyboardController:
         """
         self._input_controller = input_controller
 
+        xlogging.info('{}: initialized', self)
+
+    # callback *****************************************************************
     def on_key_down(self, keyboard, keycode, text, modifiers):
         """callback raised when a key is pressed down on the keyboard
 
@@ -37,9 +57,7 @@ class KeyboardController:
             modifiers: list of modifiers key that have been pressed alongside 
                 the key
         """
-        klogger.Logger.debug(
-            '[keyboard controller] key {} pressed'.format(keycode)
-        )
+        xlogging.debug('{}: on key down', self)
 
         keycode, keyname = keycode
 
@@ -64,9 +82,7 @@ class KeyboardController:
             keyboard: the keyboard on which text has been entered
             text: the text that has been entered
         """
-        klogger.Logger.debug(
-            '[keyboard controller] text input {}'.format(text)
-        )
+        xlogging.debug('{}: on text input', self)
 
         input = xinput.Input(xinput.InputType.default, text)
 
@@ -78,4 +94,4 @@ class KeyboardController:
         Args:
             keyboard: the keyboard
         """
-        klogger.Logger.critical('[keyboard controller] keyboard closed')
+        xlogging.critical('{}: on keyboard closed', self)

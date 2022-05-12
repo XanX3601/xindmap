@@ -1,8 +1,9 @@
 import collections
+import itertools
 import kivy.event as kevent
-import kivy.logger as klogger
 import kivy.properties as kproperties
 import xindmap.input as xinput
+import xindmap.logging as xlogging
 import xindmap.state as xstate
 
 class InputController(kevent.EventDispatcher):
@@ -13,16 +14,34 @@ class InputController(kevent.EventDispatcher):
         inputs_text: the concatenation of string representation of the inputs in
             the inputs sequence
     """
+    # static *******************************************************************
+    __id_counter = itertools.count()
+
+    # property *****************************************************************
     inputs_text = kproperties.StringProperty()
 
+    # dunder *******************************************************************
     def __init__(self):
         """instantiates this controller
         """
         super().__init__()
 
+        self.__id = next(InputController.__id_counter)
+
         self.inputs = collections.deque()
         self.inputs_result = collections.deque()
 
+        xlogging.info('{}: instantiated', self)
+
+    def __str__(self):
+        """computes a string representation of this controller
+
+        Returns:
+            a string representation of this controller
+        """
+        return 'input controller {}'.format(self.__id)
+
+    # init *********************************************************************
     def init(
         self,
         editor_state,
@@ -45,14 +64,20 @@ class InputController(kevent.EventDispatcher):
         self._input_widget = input_widget
         self._insert_controller = insert_controller
 
+        xlogging.info('{}: initialized', self)
+
+    # unput ********************************************************************
     def input(self, input):
         """inputs to this controller dependending on the state of the editor
 
         Args:
             input: an input
         """
-        klogger.Logger.debug(
-            '[input controller] input type {} value {}'.format(input.type.name, input.value)
+        xlogging.info(
+            '{}: input type {} value {}',
+            self,
+            input.type,
+            input.value
         )
 
         if self._editor_state.state == xstate.State.command:
@@ -112,6 +137,7 @@ class InputController(kevent.EventDispatcher):
         elif input.type == xinput.InputType.escape:
             self._editor_state.state = xstate.State.command
 
+    # callback *****************************************************************
     def on_inputs_text(self, _, text):
         """callback raised when the property inputs_text is changed
 
@@ -120,5 +146,7 @@ class InputController(kevent.EventDispatcher):
                 ignored
             text: the new value of inputs_text
         """
+        xlogging.debug('{}: on inputs text', self)
+
         self._input_widget.text = text
 

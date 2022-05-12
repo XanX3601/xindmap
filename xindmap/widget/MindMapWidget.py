@@ -1,6 +1,7 @@
-import kivy.logger as klogger
+import itertools
 import kivy.properties as kproperties
 import kivy.uix.widget as kwidget
+import xindmap.logging as xlogging
 
 from .MindNodeWidget import MindNodeWidget
 
@@ -14,8 +15,13 @@ class MindMapWidget(kwidget.Widget):
             mind node widget that is used to display it
         scatter: the scatter widget in which are displayed the mind node widgets
     """
+    # static *******************************************************************
+    __id_counter = itertools.count()
+
+    # property *****************************************************************
     scatter = kproperties.ObjectProperty()
 
+    # dunder *******************************************************************
     def __init__(self, **kwargs):
         """instantiates this widget
 
@@ -24,9 +30,34 @@ class MindMapWidget(kwidget.Widget):
         """
         super().__init__(**kwargs)
 
+        self.__id = next(MindMapWidget.__id_counter)
+
         self.current_mind_node_widget = None
         self.mind_node_to_mind_node_widget = {}
 
+        xlogging.info('{}: instantiated', self)
+
+    def __str__(self):
+        """computes a string representation of this widget
+
+        Returns:
+            a string representation of this widget
+        """
+        return 'mind map widget {}'.format(self.__id)
+
+    # init *********************************************************************
+    def init(self, mind_map):
+        """initializes this widget
+
+        Args:
+            mind_map: the mind map
+        """
+        self._mind_map = mind_map
+        self._mind_map.bind(current_node=self.on_mind_map_current_node)
+
+        xlogging.info('{}: initialized', self)
+
+    # control ******************************************************************
     def add_mind_node_widget(self, mind_node):
         """adds a mind node widget that displays a given mind node
 
@@ -53,6 +84,12 @@ class MindMapWidget(kwidget.Widget):
         # display the new mind node widget
         self.scatter.add_widget(mind_node_widget)
 
+        xlogging.info(
+            '{}: added mind node widget for mind node {}',
+            self,
+            mind_node
+        )
+
     def center_on_current_mind_node_widget(self):
         """centers this widget on the current mind node widget
         """
@@ -66,16 +103,10 @@ class MindMapWidget(kwidget.Widget):
 
             self.scatter.x += delta_x
             self.scatter.y += delta_y
+
+            xlogging.info('{}: center view on current node', self)
         
-    def init(self, mind_map):
-        """initializes this widget
-
-        Args:
-            mind_map: the mind map
-        """
-        self._mind_map = mind_map
-        self._mind_map.bind(current_node=self.on_mind_map_current_node)
-
+    # callback *****************************************************************
     def on_mind_map_current_node(self, mind_map, current_node):
         """callback raised upon changing the current node of the mind map
 
@@ -83,6 +114,8 @@ class MindMapWidget(kwidget.Widget):
             mind_map: the mind map
             current_node: the new current node
         """
+        xlogging.debug('{}: on mind map current node', self)
+
         if current_node not in self.mind_node_to_mind_node_widget:
             self.add_mind_node_widget(current_node)
 

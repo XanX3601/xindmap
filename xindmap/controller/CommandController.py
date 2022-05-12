@@ -1,30 +1,47 @@
 import inspect
+import itertools
 import kivy.app as kapp
-import kivy.logger as klogger
 import xindmap.input as xinput
+import xindmap.logging as xlogging
 import xindmap.state as xstate
 
 class CommandController:
     """command controller
     """
+    # static *******************************************************************
+    __id_counter = itertools.count()
+
+    # dunder *******************************************************************
     def __init__(self):
         """instantiates this controller
         """
-        pass
+        self.__id = next(CommandController.__id_counter)
 
+        xlogging.info('{}: instantiated', self)
+
+    def __str__(self):
+        """computes a string representation of this controller
+
+        Returns:
+            a string representation of this controller
+        """
+        return 'command controller {}'.format(self.__id)
+
+    # execute ******************************************************************
     def execute(self, command):
         """executes a command
 
         Args:
             command: the command to execute
         """
-        klogger.Logger.info(
-            '[command controller] command {} submitted'.format(command)
-        )
-
         if command in self._commands:
-            self._commands[command]()
+            xlogging.info('{}: execute command {}', self, command)
 
+            self._commands[command]()
+        else:
+            xlogging.debug('{}: command {} unknown', self, command)
+
+    # init *********************************************************************
     def init(self,
         editor_state,
         command_tree,
@@ -62,11 +79,15 @@ class CommandController:
 
                 self._command_tree.add_command(command_name, inputs)
 
+        xlogging.info('{}: initialized', self)
+
+    # command ******************************************************************
     def command_add_node(self):
         """adds a node in the mind map
         """
         self._mind_map.add_node()
-        klogger.Logger.info('[command controller] command add_node done')
+
+        xlogging.info('{}: command add_node done', self)
 
     def command_insert_mode(self):
         """changes the cu
@@ -76,7 +97,7 @@ class CommandController:
         else:
             self._editor_state.state = xstate.State.insert
 
-        klogger.Logger.info('[command controller] command insert_mode done')
+        xlogging.info('{}: command insert_node done', self)
 
     def command_quit(self):
         """quits the application
@@ -87,6 +108,8 @@ class CommandController:
         """centers the view on the current mind node
         """
         self._mind_map_widget.center_on_current_mind_node_widget()
+
+        xlogging.info('{}: command view_center done', self)
 
     """
     def command_test(self):
