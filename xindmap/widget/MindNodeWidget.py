@@ -173,6 +173,9 @@ class MindNodeWidget(kwidget.Widget):
 
         self.compute_full_height()
 
+        if len(self.mind_node_widget_children) == 1:
+            self.compute_mind_node_widget_children_center_y()
+
         for child in self.mind_node_widget_children:
             child.bind(full_height=self.on_mind_node_widget_child_full_height)
 
