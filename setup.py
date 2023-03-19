@@ -8,5 +8,10 @@ setup(
     author_email="thomas.petiteau@outlook.com",
     url="https://github.com/XanX3601/xindmap",
     entry_points={"console_scripts": ["xindmap=xindmap.main:main"]},
-    install_requires=["customtkinter==5.0.5", "rich_click==1.6.0"],
+    install_requires=[
+        "customtkinter==5.0.5",
+        "pytest==7.2.1",
+        "rich_click==1.6.0",
+        "singleton-decorator==1.0.0",
+    ],
 )

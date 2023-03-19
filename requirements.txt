@@ -1,2 +1,4 @@
 customtkinter==5.0.5
+pytest==7.2.1
 rich_click==1.6.0
+singleton-decorator==1.0.0

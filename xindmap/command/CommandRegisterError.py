@@ -1,0 +1,2 @@
+class CommandRegisterError(Exception):
+    pass

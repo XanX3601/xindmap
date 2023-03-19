@@ -1,0 +1,2 @@
+class PluginImportError(Exception):
+    pass
