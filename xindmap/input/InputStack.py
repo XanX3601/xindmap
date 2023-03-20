@@ -1,4 +1,5 @@
 import collections
+
 import xindmap.event
 
 from .InputStackEvent import InputStackEvent

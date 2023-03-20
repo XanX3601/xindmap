@@ -1,6 +1,8 @@
 import collections
-import customtkinter as ctk
 import logging
+
+import customtkinter as ctk
+
 import xindmap.input
 
 

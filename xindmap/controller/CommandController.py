@@ -1,5 +1,6 @@
 import enum
 import logging
+
 import xindmap.command
 import xindmap.config
 import xindmap.input

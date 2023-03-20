@@ -1,5 +1,7 @@
-import singleton_decorator
 import inspect
+
+import singleton_decorator
+
 import xindmap.event
 
 from .ConfigError import ConfigError

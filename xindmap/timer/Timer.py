@@ -1,5 +1,6 @@
-import singleton_decorator
 import tkinter as tk
+
+import singleton_decorator
 
 
 @singleton_decorator.singleton

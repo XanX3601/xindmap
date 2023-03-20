@@ -1,8 +1,10 @@
 import logging
 import pathlib
+
 import rich.logging
 import rich.traceback
 import rich_click as click
+
 import xindmap.app
 
 

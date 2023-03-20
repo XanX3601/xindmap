@@ -1,4 +1,5 @@
 import logging
+
 import xindmap.event
 
 from .CommandExecutorEvent import CommandExecutorEvent

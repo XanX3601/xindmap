@@ -1,4 +1,5 @@
 import collections
+
 import singleton_decorator
 
 from .EventSourceError import EventSourceError

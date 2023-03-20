@@ -1,5 +1,7 @@
-import customtkinter as ctk
 import logging
+
+import customtkinter as ctk
+
 import xindmap.command
 import xindmap.config
 import xindmap.controller
