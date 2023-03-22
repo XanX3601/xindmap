@@ -1,4 +1,4 @@
-from distutils.core import setup
+from setuptools import setup, find_packages
 
 setup(
     name="xindmap",
@@ -7,6 +7,7 @@ setup(
     author="Thomas Petiteau",
     author_email="thomas.petiteau@outlook.com",
     url="https://github.com/XanX3601/xindmap",
+    packages=find_packages(),
     entry_points={"console_scripts": ["xindmap=xindmap.main:main"]},
     install_requires=[
         "customtkinter==5.0.5",
@@ -14,4 +15,10 @@ setup(
         "rich_click==1.6.0",
         "singleton-decorator==1.0.0",
     ],
+    extras_require={
+        "dev": [
+            "mkdocs==1.4.2",
+            "mkdocstrings==0.20.0",
+        ]
+    }
 )
