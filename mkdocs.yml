@@ -4,8 +4,7 @@ site_description: Xindmap documentation
 repo_url: https://github.com/XanX3601/xindmap
 
 theme:
-  name: mkdocs
-
+  name: material
 
 nav:
   - Home: "index.md"

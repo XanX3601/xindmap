@@ -18,6 +18,7 @@ setup(
     extras_require={
         "dev": [
             "mkdocs==1.4.2",
+            "mkdocs-material==9.1.3",
             "mkdocstrings==0.20.0",
         ]
     }
