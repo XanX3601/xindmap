@@ -1,0 +1,3 @@
+import xindmap
+
+xindmap.main()

@@ -12,6 +12,13 @@ import xindmap.widget
 
 
 class XindmapApp:
+    """Xindmap application root object.
+
+    It contains all the models, controller, executor and widget composing the
+    application.
+    It ensures their lifecycle during the application lifetime.
+    It also ensures the registration of the callbacks to the events.
+    """
     # callback *****************************************************************
     def __callback_setup(self):
         self.__command_call_queue.register_callbacks(
@@ -42,6 +49,14 @@ class XindmapApp:
         self.__main_window.bind("<Configure>", self.on_configure)
 
     def on_configure(self, event):
+        """Callback ìnvoked upon modification of the main window size or
+        position.
+
+        Places the widgets if the size of the main window changed.
+
+        Args:
+            event: The even for which the callback is invoked.
+        """
         logging.debug(f"xindmap app {id(self)}: on_configure(event={event})")
 
         height = self.__main_window.winfo_height()
@@ -65,6 +80,11 @@ class XindmapApp:
 
     # constructor **************************************************************
     def __init__(self, init_file_path):
+        """Instantiates this xindmap app.
+
+        Instantiates all the models, controllers, executors and widgets 
+        independently.
+        """
         # data *******************************************************
         self.__init_file_path = init_file_path
 
@@ -100,6 +120,12 @@ class XindmapApp:
 
     # initialize ***************************************************************
     def init(self):
+        """Initializes this application by setupping callbacks, registering the
+        commands and reading the initialization file.
+
+        This method should be called before starting the application via the 
+        [`Xindmap.start`][xindmap.app.XindmapApp.XindmapApp.start] method.
+        """
         self.__callback_setup()
 
         self.__command_register.register_command("import", self.__command_import)
@@ -131,6 +157,12 @@ class XindmapApp:
 
     # start ********************************************************************
     def start(self):
+        """Starts this application.
+
+        Without initialization this application first via the
+        [`Xindmap.init`][xindmap.app.XindmapApp.XindmapApp.init] method, the
+        application will not behave as intented.
+        """
         self.__main_window.mainloop()
 
     # widget *******************************************************************

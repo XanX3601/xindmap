@@ -8,8 +8,17 @@ theme:
 
 nav:
   - Home: "index.md"
+  - References:
+    - xindmap: "references/xindmap.md"
+    - xindmap.app: "references/xindmap.app.md"
+    - xindmap.app.XindmapApp: "references/xindmap.app.XindmapApp.md"
+    - xindmap.main: "references/xindmap.main.md"
 
 plugins:
   - search
   - autorefs
-  - mkdocstrings
+  - mkdocstrings:
+      handlers:
+        python:
+          import:
+            - url: https://docs.python.org/3/objects.inv

@@ -13,8 +13,16 @@ import xindmap.app
     "--init-file",
     "init_file_path",
     type=click.Path(exists=True, file_okay=True, dir_okay=False, readable=True),
+    help="path to the initialization file",
 )
 def main(init_file_path):
+    """Main function to run xindmap.
+
+    Args:
+        init_file_path:
+            Path to the init file that is read before starting the application.
+            This path is given to [pathlib.Path][].
+    """
     logging.basicConfig(
         level="NOTSET",
         format="%(message)s",
