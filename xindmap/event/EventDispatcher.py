@@ -8,8 +8,78 @@ from .EventTypeError import EventTypeError
 
 @singleton_decorator.singleton
 class EventDispatcher:
+    """The event dispatcher centralizes the dispatching of
+    [events][xindmap.event.Event.Event] to ensure they are dispatched one at a
+    time even if dispatching an [event][xindmap.event.Event.Event] leads to 
+    dispatching another one.
+    
+    This is a singleton and is therefore unique during runtime.
+
+    This class should not be called upon and is only made to be used by
+    [event sources][xindmap.event.EventSource.EventSource] as a way to register
+    [callbacks][xindmap.event.EventSource.EventSource--callback] and dispatch
+    their events in the same place.
+
+    This dispatcher was designed to work on top of [`tkinter`][] main loop and
+    was therefore designed for a single thread environment.
+    It may work in a multi thread environment but no protection is being added
+    to ensure that race condition are properly handled.
+
+    Attributes:
+        __event_queue:
+            Queue used as buffer for [events][xindmap.event.Event.Event] to
+            dispatch to make sure they are dispatched in the right order.
+        __event_source_to_event_type_to_callbacks:
+            A dictionnary mapping an
+            [event source][xindmap.event.EventSource.EventSource] to the
+            [event types][xindmap.event.EventSource.EventSource--event-type]
+            it produces to
+            [callbacks][xindmap.event.EventSource.EventSource--callback]
+            registered to each ones.
+        __is_dispatching:
+            [`True`][] if [events][xindmap.event.Event.Event] are being
+            dispatched, [`False`][] otherwise.
+    """
     # callback *****************************************************************
     def register_callback(self, event_source, event_type, callback):
+        """Registers a
+        [callback][xindmap.event.EventSource.EventSource--callback] to an
+        [event type][xindmap.event.EventSource.EventSource--event-type]
+        produced by a given
+        [event source][xindmap.event.EventSource.EventSource].
+
+        Registering a
+        [callback][xindmap.event.EventSource.EventSource--callback] means that
+        it will be called whenever the
+        [event source][xindmap.event.EventSource.EventSource] dispatches an
+        [event][xindmap.event.Event.Event] of a given
+        [type][xindmap.event.EventSource.EventSource--event-type].
+
+        Args:
+            event_source:
+                The [event source][xindmap.event.EventSource.EventSource]
+                producing [events][xindmap.event.Event.Event] of the given
+                [type][xindmap.event.EventSource.EventSource--event-type] to
+                which register the
+                [callback][xindmap.event.EventSource.EventSource--callback].
+            event_type:
+                The
+                [event type][xindmap.event.EventSource.EventSource--event-type]
+                to which register the
+                [callback][xindmap.event.EventSource.EventSource--callback].
+            callback:
+                The [callback][xindmap.event.EventSource.EventSource--callback]
+                to register.
+
+        Raises:
+            EventSourceError: If the
+                [event source][xindmap.event.EventSource.EventSource] is unknown
+                to this dispatcher.
+            EventTypeError: If the
+                [event source][xindmap.event.EventSource.EventSource] does not
+                dispatch [event][xindmap.event.Event.Event] of the given
+                [type][xindmap.event.EventSource.EventSource--event-type].
+        """
         # prevent unregistered event source **************************
         if event_source not in self.__event_source_to_event_type_to_callbacks:
             raise EventSourceError(f"event source not registered")
@@ -34,12 +104,39 @@ class EventDispatcher:
 
     # constructor **************************************************************
     def __init__(self):
+        """Instantiates this dispatcher.
+
+        As it is a singleton, this method is called once during runtime.
+        """
         self.__event_queue = collections.deque()
         self.__event_source_to_event_type_to_callbacks = {}
         self.__is_dispatching = False
 
     # dispatch *****************************************************************
     def dispatch_event(self, event_source, event):
+        """Dispatches an [event][xindmap.event.Event.Event].
+
+        It adds the [event][xindmap.event.Event.Event] to the internal event
+        queue and starts to dispatch them using the internal
+        [dispatch method][xindmap.event.EventDispatcher.EventDispatcher.__dispatch_event_queue].
+        if is not already dispatching the queue.
+
+        Args:
+            event_source:
+                The [source][xindmap.event.EventSource.EventSource] of the
+                [event][xindmap.event.Event.Event].
+            event: 
+                The [event][xindmap.event.Event.Event] to dispatch.
+
+        Raises:
+            EventSourceError: If the
+                [event source][xindmap.event.EventSource.EventSource] is unknown
+                to this dispatcher.
+            EventTypeError: If the
+                [event source][xindmap.event.EventSource.EventSource] does not
+                dispatch [events][xindmap.event.Event.Event] of this
+                [type][xindmap.event.EventSource.EventSource--event-type].
+        """
         # prevent unregistered event source **************************
         if event_source not in self.__event_source_to_event_type_to_callbacks:
             raise EventSourceError(f"event source not registered")
@@ -61,6 +158,14 @@ class EventDispatcher:
             self.__dispatch_event_queue()
 
     def __dispatch_event_queue(self):
+        """Internal method in charge of dispatching events stored in the
+        internal event queue.
+
+        It calls every
+        [callbacks][xindmap.event.EventSource.EventSource--callback] in their
+        registration order linked to [events][xindmap.event.Event.Event] stored
+        in the internal event queue till it is empty.
+        """
         while self.__event_queue:
             event_source, event = self.__event_queue.pop()
 
@@ -73,6 +178,24 @@ class EventDispatcher:
 
     # source *******************************************************************
     def register_event_source(self, event_source, event_types):
+        """Registers an [event source][xindmap.event.EventSource.EventSource]
+        making it known to this dispatcher.
+
+        Without this registration step, the
+        [event source][xindmap.event.EventSource.EventSource] can not dispatch
+        events using
+        [`dispatch_event`][xindmap.event.EventDispatcher.EventDispatcher.dispatch_event].
+
+        Args:
+            event_source:
+                The [event source][xindmap.event.EventSource.EventSource] to 
+                register.
+            event_types:
+                Iterable containing
+                [event types][xindmap.event.EventSource.EventSource--event-type]
+                the [event source][xindmap.event.EventSource.EventSource] can
+                dispatch.
+        """
         self.__event_source_to_event_type_to_callbacks[event_source] = {
             event_type: [] for event_type in event_types
         }

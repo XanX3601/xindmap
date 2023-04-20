@@ -5,14 +5,73 @@ repo_url: https://github.com/XanX3601/xindmap
 
 theme:
   name: material
+  features:
+    - navigation.expand
+    - navigation.indexes
+    - navigation.sections
 
 nav:
-  - Home: "index.md"
+  - Home: index.md
   - References:
-    - xindmap: "references/xindmap.md"
-    - xindmap.app: "references/xindmap.app.md"
-    - xindmap.app.XindmapApp: "references/xindmap.app.XindmapApp.md"
-    - xindmap.main: "references/xindmap.main.md"
+    - xindmap:
+      - references/xindmap/index.md
+      - main: references/xindmap/main.md
+      - app:
+        - references/xindmap/app/index.md
+        - XindmapApp: references/xindmap/app/XindmapApp.md
+      - command:
+        - references/xindmap/command/index.md
+        - CommandApi: references/xindmap/command/CommandApi.md
+        - CommandCallQueue: references/xindmap/command/CommandCallQueue.md
+        - CommandCallQueueError: references/xindmap/command/CommandCallQueueError.md
+        - CommandCallQueueEvent: references/xindmap/command/CommandCallQueueEvent.md
+        - CommandExecutor: references/xindmap/command/CommandExecutor.md
+        - CommandRegister: references/xindmap/command/CommandRegister.md
+        - CommandRegisterError: references/xindmap/command/CommandRegisterError.md
+        - CommandRegistrationError: references/xindmap/command/CommandRegistrationError.md
+      - config:
+        - references/xindmap/config/index.md
+        - Config: references/xindmap/config/Config.md
+        - ConfigError: references/xindmap/config/ConfigError.md
+        - Configurable: references/xindmap/config/Configurable.md
+        - Variable: references/xindmap/config/Variable.md
+        - VariableTypes: references/xindmap/config/VariableTypes.md
+        - Variables: references/xindmap/config/Variables.md
+      - controller:
+        - references/xindmap/controller/index.md
+        - CommandController: references/xindmap/controller/CommandController.md
+        - InputController: references/xindmap/controller/InputController.md
+      - event:
+        - references/xindmap/event/index.md
+        - Event: references/xindmap/event/Event.md
+        - EventAttributeError: references/xindmap/event/EventAttributeError.md
+        - EventDispatcher: references/xindmap/event/EventDispatcher.md
+        - EventSource: references/xindmap/event/EventSource.md
+        - EventSourceError: references/xindmap/event/EventSourceError.md
+        - EventTypeError: references/xindmap/event/EventTypeError.md
+      - input:
+        - references/xindmap/input/index.md
+        - Input: references/xindmap/input/Input.md
+        - InputMappingTree: references/xindmap/input/InputMappingTree.md
+        - InputStack: references/xindmap/input/InputStack.md
+        - InputStackEvent: references/xindmap/input/InputStackEvent.md
+        - InputType: references/xindmap/input/InputType.md
+      - plugin:
+        - references/xindmap/plugin/index.md
+        - Plugin: references/xindmap/plugin/Plugin.md
+        - PluginImportError: references/xindmap/plugin/PluginImportError.md
+        - PluginImporter: references/xindmap/plugin/PluginImporter.md
+      - state:
+        - references/xindmap/state/index.md
+        - State: references/xindmap/state/State.md
+        - StateHolder: references/xindmap/state/StateHolder.md
+        - StateHolderEvent: references/xindmap/state/StateHolderEvent.md
+      - timer:
+        - references/xindmap/timer/index.md
+        - Timer: references/xindmap/timer/Timer.md
+      - widget:
+        - references/xindmap/widget/index.md
+        - InputStackViewer: references/xindmap/widget/InputStackViewer.md
 
 plugins:
   - search
@@ -24,8 +83,12 @@ plugins:
             - url: https://docs.python.org/3/objects.inv
 
 markdown_extensions:
+  - tables
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
+
+watch:
+  - xindmap

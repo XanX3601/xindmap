@@ -1,0 +1,1 @@
+::: xindmap.config.Config

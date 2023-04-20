@@ -1,0 +1,1 @@
+::: xindmap.widget.InputStackViewer
