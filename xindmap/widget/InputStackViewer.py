@@ -3,10 +3,11 @@ import logging
 
 import customtkinter as ctk
 
+import xindmap.config
 import xindmap.input
 
 
-class InputStackViewer(ctk.CTkFrame):
+class InputStackViewer(ctk.CTkFrame, xindmap.config.Configurable):
     """Widget displaying the content of an
     [input stack][xindmap.input.InputStack.InputStack].
 
@@ -16,6 +17,7 @@ class InputStackViewer(ctk.CTkFrame):
         __label_text: A `customtkinter.StringVar` holding the text to display.
         __label: A `customtkinter.CTkLabel` displaying the text.
     """
+
     # callback *****************************************************************
     def on_input_stack_stack_cleared(self, input_stack, event):
         """Callback to be called upon
@@ -74,7 +76,7 @@ class InputStackViewer(ctk.CTkFrame):
 
         Args:
             input_stack:
-                The [input stack][xindmap.input.InputStack.InputStack] that 
+                The [input stack][xindmap.input.InputStack.InputStack] that
                 dispatched the evnet.
             event:
                 The
@@ -85,8 +87,18 @@ class InputStackViewer(ctk.CTkFrame):
             f"input stack viewer {id(self)}: on_input_stack_input_pushed(event={event})"
         )
 
-        self.__input_text_queue.append(self.__input_to_text(event.input))
+        self.__input_text_queue.append(
+            xindmap.input.InputParser.stringify_input(event.input)
+        )
         self.__update_label_text()
+
+    # config callback **********************************************************
+    def on_config_variable_input_stack_viewer_height_px_set(self, value):
+        """Config callback called whenerver
+        [`input_stack_viewer_height_px`][xindmap.config.Variables.Variables.input_stack_viewer_height_px]
+        config variable is set.
+        """
+        self.__label.configure(height=value)
 
     # constructor **************************************************************
     def __init__(self, parent):
@@ -95,32 +107,21 @@ class InputStackViewer(ctk.CTkFrame):
         Args:
             parent: The widget holding this input stack viewer.
         """
-        super().__init__(parent)
+        ctk.CTkFrame.__init__(self, parent)
+        xindmap.config.Configurable.__init__(
+            self, (xindmap.config.Variables.input_stack_viewer_height_px,)
+        )
 
         self.__input_text_queue = collections.deque()
 
         self.__label_text = ctk.StringVar(value="")
-        self.__label = ctk.CTkLabel(self, textvariable=self.__label_text)
+        self.__label = ctk.CTkLabel(
+            self,
+            textvariable=self.__label_text,
+            height=xindmap.config.Variables.input_stack_viewer_height_px.default,
+        )
 
         self.__label.pack(fill=ctk.BOTH, expand=True)
-
-    # input ********************************************************************
-    def __input_to_text(self, input):
-        """Transforms an [input][xindmap.input.Input.Input] into a text
-        representation that can be displayed.
-
-        Args:
-            input: The [input][xindmap.input.Input.Input] to transform.
-
-        Returns:
-            The text representation of the input.
-        """
-        if input.type == xindmap.input.InputType.enter:
-            return "<CR>"
-        elif input.type == xindmap.input.InputType.backspace:
-            return "<BS>"
-        elif input.type == xindmap.input.InputType.default:
-            return input.value
 
     # text *********************************************************************
     def __update_label_text(self):

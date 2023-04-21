@@ -14,6 +14,10 @@ class Variables(enum.Enum):
     when having to decide wether accepting a mapping or wait for the user to
     finish the mapping.
     """
+    input_stack_viewer_height_px = Variable(VariableTypes.int, 20)
+    """The height (in pixel) of 
+    [input stack viewer][xindmap.widget.InputStackViewer.InputStackViewer].
+    """
 
     # property *****************************************************************
     @property

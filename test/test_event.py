@@ -21,8 +21,8 @@ def test_basic_event():
     def toggle_b():
         event_b_dispatched[0] = not event_a_dispatched[0]
 
-    source.register_callback("a", lambda event_source, event: toggle_a())
-    source.register_callback("b", lambda event_source, event: toggle_b())
+    source.register_callbacks("a", lambda event_source, event: toggle_a())
+    source.register_callbacks("b", lambda event_source, event: toggle_b())
 
     source._dispatch_event(xindmap.event.Event("a"))
 

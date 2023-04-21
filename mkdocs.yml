@@ -53,6 +53,7 @@ nav:
         - references/xindmap/input/index.md
         - Input: references/xindmap/input/Input.md
         - InputMappingTree: references/xindmap/input/InputMappingTree.md
+        - InputParser: references/xindmap/input/InputParser.md
         - InputStack: references/xindmap/input/InputStack.md
         - InputStackEvent: references/xindmap/input/InputStackEvent.md
         - InputType: references/xindmap/input/InputType.md

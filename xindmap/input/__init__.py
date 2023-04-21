@@ -12,6 +12,7 @@ This module exposes classes that describe user inputs.
 
 - [`xindmap.input.Input.Input`][]
 - [`xindmap.input.InputMappingTree.InputMappingTree`][]
+- [`xindmap.input.InputParser.InputParser`][]
 - [`xindmap.input.InputStack.InputStack`][]
 - [`xindmap.input.InputStackEvent.InputStackEvent`][]
 - [`xindmap.input.InputType.InputType`][]
@@ -19,6 +20,7 @@ This module exposes classes that describe user inputs.
 
 from .Input import Input
 from .InputMappingTree import InputMappingTree
+from .InputParser import InputParser
 from .InputStack import InputStack
 from .InputStackEvent import InputStackEvent
 from .InputType import InputType

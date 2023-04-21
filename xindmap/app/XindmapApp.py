@@ -1,4 +1,5 @@
 import logging
+import shlex
 
 import customtkinter as ctk
 
@@ -376,12 +377,15 @@ class XindmapApp:
         # model ******************************************************
         self.__plugin_importer = xindmap.plugin.PluginImporter()
 
-        self.__command_api = xindmap.command.CommandApi()
         self.__input_mapping_tree = xindmap.input.InputMappingTree()
         self.__command_call_queue = xindmap.command.CommandCallQueue()
         self.__command_register = xindmap.command.CommandRegister()
         self.__input_stack = xindmap.input.InputStack()
         self.__state_holder = xindmap.state.StateHolder()
+
+        self.__command_api = xindmap.command.CommandApi(
+            self.__input_mapping_tree
+        )
 
         # controller / executor **************************************
         self.__command_executor = xindmap.command.CommandExecutor(
@@ -453,7 +457,7 @@ class XindmapApp:
                 if line.startswith("#"):
                     continue
 
-                line_split = line.split()
+                line_split = shlex.split(line)
 
                 command_call = xindmap.command.CommandCall(
                     line_split[0], line_split[1:]
@@ -477,7 +481,6 @@ class XindmapApp:
         self.__input_stack_viewer.place(
             anchor=ctk.NW,
             relwidth=0.95,
-            height=20,
             relx=0.025,
             y=self.__main_window.winfo_height() - 30,
         )

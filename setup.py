@@ -10,7 +10,7 @@ setup(
     packages=find_packages(),
     entry_points={"console_scripts": ["xindmap=xindmap.main:main"]},
     install_requires=[
-        "customtkinter==5.0.5",
+        "customtkinter==5.1.2",
         "pytest==7.2.1",
         "rich_click==1.6.0",
         "singleton-decorator==1.0.0",

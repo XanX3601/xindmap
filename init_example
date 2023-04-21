@@ -1,2 +1,4 @@
 # import ***********************************************************************
-import xindmap.plugin.internal.test
+import xindmap.plugin.internal.mapping
+
+map aaa ":import xindmap.plugin.internal.test<CR>:test<CR>"

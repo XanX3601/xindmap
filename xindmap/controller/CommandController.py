@@ -1,5 +1,6 @@
 import enum
 import logging
+import shlex
 
 import xindmap.command
 import xindmap.config
@@ -299,7 +300,7 @@ class CommandController(xindmap.config.Configurable):
             self.__free_typing_content += input.value
 
         elif input.type == xindmap.input.InputType.enter:
-            free_typing_content_split = self.__free_typing_content.split()
+            free_typing_content_split = shlex.split(self.__free_typing_content)
 
             command_name = free_typing_content_split[0]
             args = free_typing_content_split[1:]
