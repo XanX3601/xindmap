@@ -200,6 +200,7 @@ class CommandController(xindmap.config.Configurable):
         # input then, set the state to free typing
         if (
             self.__input_mapping_tree.is_on_root()
+            and self.__state != CommandControllerState.free_typing
             and event.input == self.__free_typing_input
         ):
             self.__set_state(CommandControllerState.free_typing)
