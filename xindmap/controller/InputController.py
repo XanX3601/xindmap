@@ -23,7 +23,9 @@ class InputController:
 
         input = None
 
-        if event.keycode == 22:
+        if event.keycode == 9:
+            input = xindmap.input.Input(xindmap.input.InputType.escape)
+        elif event.keycode == 22:
             input = xindmap.input.Input(xindmap.input.InputType.backspace)
         elif event.keycode == 36:
             input = xindmap.input.Input(xindmap.input.InputType.enter)

@@ -319,6 +319,9 @@ class CommandController(xindmap.config.Configurable):
             self.__input_stack.pop()
             self.__input_stack.pop()
 
+        elif input.type == xindmap.input.InputType.escape:
+            self.__input_stack.clear()
+
     def __mapping_input_inputs(self, inputs):
         """Pushes the given inputs in the
         [input stack][xindmap.input.InputStack.InputStack].

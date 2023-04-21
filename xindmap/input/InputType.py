@@ -13,3 +13,6 @@ class InputType(enum.Enum):
     enter = enum.auto()
     """Validate / enter key.
     """
+    escape = enum.auto()
+    """Escape key.
+    """

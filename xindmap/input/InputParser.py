@@ -16,6 +16,7 @@ class InputParser:
         InputType.backspace: "<BS>",
         InputType.default: ".",
         InputType.enter: "<CR>",
+        InputType.escape: "<ESC>",
     }
 
     __input_type_to_compiled_regex = {
