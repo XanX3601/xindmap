@@ -30,6 +30,26 @@ def test_parse_inputs():
             xindmap.input.Input(xindmap.input.InputType.default, "b"),
             xindmap.input.Input(xindmap.input.InputType.default, "<"),
             xindmap.input.Input(xindmap.input.InputType.default, ">"),
+        ],
+        "import test<CR>:test<CR>": [
+            xindmap.input.Input(xindmap.input.InputType.default, "i"),
+            xindmap.input.Input(xindmap.input.InputType.default, "m"),
+            xindmap.input.Input(xindmap.input.InputType.default, "p"),
+            xindmap.input.Input(xindmap.input.InputType.default, "o"),
+            xindmap.input.Input(xindmap.input.InputType.default, "r"),
+            xindmap.input.Input(xindmap.input.InputType.default, "t"),
+            xindmap.input.Input(xindmap.input.InputType.default, " "),
+            xindmap.input.Input(xindmap.input.InputType.default, "t"),
+            xindmap.input.Input(xindmap.input.InputType.default, "e"),
+            xindmap.input.Input(xindmap.input.InputType.default, "s"),
+            xindmap.input.Input(xindmap.input.InputType.default, "t"),
+            xindmap.input.Input(xindmap.input.InputType.enter),
+            xindmap.input.Input(xindmap.input.InputType.default, ":"),
+            xindmap.input.Input(xindmap.input.InputType.default, "t"),
+            xindmap.input.Input(xindmap.input.InputType.default, "e"),
+            xindmap.input.Input(xindmap.input.InputType.default, "s"),
+            xindmap.input.Input(xindmap.input.InputType.default, "t"),
+            xindmap.input.Input(xindmap.input.InputType.enter),
         ]
     }
 

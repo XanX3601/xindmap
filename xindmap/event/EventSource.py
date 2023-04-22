@@ -23,7 +23,7 @@ class EventSource:
     Each event must have a type which can be any hashable object.
 
     During design, it was thought that event type could be members of
-    [enum][`enum.Enum`] so that they are declared as variable in the code rather
+    [enum][enum.Enum] so that they are declared as variable in the code rather
     than [strings][str] that must be listed in a documentation.
     """
     # callback *****************************************************************
@@ -61,12 +61,20 @@ class EventSource:
         event_dispatcher.register_event_source(self, event_types)
 
     # dispatch *****************************************************************
-    def _dispatch_event(self, event):
+    def _dispatch_event(self, event, priority=10):
         """Dispatches an [event][xindmap.event.Event.Event] to registered 
         [callbacks][xindmap.event.EventSource.EventSource--callback].
 
+        The priority of the [event][xindmap.event.Event.Event] can be changed
+        in order to prioritize its dispatching.
+        The lower the priority value, the higher the priority.
+
         Args:
             event: The [event][xindmap.event.Event.Event] to dispatch.
+            priority:
+                The priority of the dispatching, 10 by default
+                A lower priority value means an higher priority for the
+                dispatching.
         """
         event_dispatcher = EventDispatcher()
-        event_dispatcher.dispatch_event(self, event)
+        event_dispatcher.dispatch_event(self, event, priority)

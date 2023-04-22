@@ -1,11 +1,12 @@
 import collections
 
+import xindmap.config
 import xindmap.event
 
 from .InputStackEvent import InputStackEvent
 
 
-class InputStack(xindmap.event.EventSource):
+class InputStack(xindmap.event.EventSource, xindmap.config.Configurable):
     """A stack containing [inputs][xindmap.input.Input.Input].
 
     # Events
@@ -29,7 +30,7 @@ class InputStack(xindmap.event.EventSource):
 
     Args:
         input: The [input][xindmap.input.Input.Input] that has been pushed.
-    
+
     ### stack cleared
 
     **Type**:
@@ -40,12 +41,26 @@ class InputStack(xindmap.event.EventSource):
             The underlying [`deque`][collections.deque] containing the
             [inputs][xindmap.input.Input.Input].
     """
+
+    # config callback **********************************************************
+    def on_config_variable_input_stack_input_pushed_event_priority_set(self, value):
+        """Config callback called whenever
+        [`input_stack_input_pushed_event_priority`][xindmap.config.Variables.Variables.input_stack_input_pushed_event_priority]
+        config variable is set.
+        """
+        self.__input_pushed_event_priority = value
+
     # constructor **************************************************************
     def __init__(self):
-        """Instantiates this stack.
-        """
-        super().__init__(InputStackEvent)
+        """Instantiates this stack."""
+        xindmap.event.EventSource.__init__(self, InputStackEvent)
+        xindmap.config.Configurable.__init__(
+            self, [xindmap.config.Variables.input_stack_input_pushed_event_priority]
+        )
 
+        self.__input_pushed_event_priority = (
+            xindmap.config.Variables.input_stack_input_pushed_event_priority.default
+        )
         self.__stack = collections.deque()
 
     # modification *************************************************************
@@ -90,7 +105,7 @@ class InputStack(xindmap.event.EventSource):
         self.__stack.append(input)
 
         event = xindmap.event.Event(InputStackEvent.input_pushed, input=input)
-        self._dispatch_event(event)
+        self._dispatch_event(event, self.__input_pushed_event_priority)
 
     # size *********************************************************************
     def __len__(self):

@@ -14,6 +14,11 @@ class Variables(enum.Enum):
     when having to decide wether accepting a mapping or wait for the user to
     finish the mapping.
     """
+    input_stack_input_pushed_event_priority = Variable(VariableTypes.int, 20)
+    """The priority to which [event][xindmap.event.Event.Event]
+    [input pushed][xindmap.input.InputStack.InputStack--input-pushed]
+    is dispatched.
+    """
     input_stack_viewer_height_px = Variable(VariableTypes.int, 20)
     """The height (in pixel) of 
     [input stack viewer][xindmap.widget.InputStackViewer.InputStackViewer].

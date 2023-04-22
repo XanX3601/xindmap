@@ -1,4 +1,7 @@
-import collections
+import dataclasses
+import itertools
+import queue
+import typing
 
 import singleton_decorator
 
@@ -6,13 +9,39 @@ from .EventSourceError import EventSourceError
 from .EventTypeError import EventTypeError
 
 
+@dataclasses.dataclass(order=True)
+class EventQueueItem:
+    """Dataclass used to store events in a [priority queue][queue.PriorityQueue]
+    used by the
+    [event dispatcher][xindmap.event.EventDispatcher.EventDispatcher].
+
+    Attributes:
+        priority:
+            The level of priority (the lower the value, the higher the
+            priority).
+        item_id:
+            The identifier of the item.
+            It is initialized automaticaly.
+        event_source:
+            The [source][xindmap.event.EventSource.EventSource] of the store
+            [event][xindmap.event.Event.Event]
+        event: The stored [event][xindmap.event.Event.Event].
+    """
+    priority: int
+    item_id: int = dataclasses.field(
+        default_factory=itertools.count().__next__, init=False
+    )
+    event_source: typing.Any = dataclasses.field(compare=False)
+    event: typing.Any = dataclasses.field(compare=False)
+
+
 @singleton_decorator.singleton
 class EventDispatcher:
     """The event dispatcher centralizes the dispatching of
     [events][xindmap.event.Event.Event] to ensure they are dispatched one at a
-    time even if dispatching an [event][xindmap.event.Event.Event] leads to 
+    time even if dispatching an [event][xindmap.event.Event.Event] leads to
     dispatching another one.
-    
+
     This is a singleton and is therefore unique during runtime.
 
     This class should not be called upon and is only made to be used by
@@ -40,6 +69,7 @@ class EventDispatcher:
             [`True`][] if [events][xindmap.event.Event.Event] are being
             dispatched, [`False`][] otherwise.
     """
+
     # callback *****************************************************************
     def register_callback(self, event_source, event_type, callback):
         """Registers a
@@ -108,12 +138,12 @@ class EventDispatcher:
 
         As it is a singleton, this method is called once during runtime.
         """
-        self.__event_queue = collections.deque()
+        self.__event_queue = queue.PriorityQueue()
         self.__event_source_to_event_type_to_callbacks = {}
         self.__is_dispatching = False
 
     # dispatch *****************************************************************
-    def dispatch_event(self, event_source, event):
+    def dispatch_event(self, event_source, event, priority):
         """Dispatches an [event][xindmap.event.Event.Event].
 
         It adds the [event][xindmap.event.Event.Event] to the internal event
@@ -121,12 +151,20 @@ class EventDispatcher:
         [dispatch method][xindmap.event.EventDispatcher.EventDispatcher.__dispatch_event_queue].
         if is not already dispatching the queue.
 
+        [events][xindmap.event.Event.Event] can be dispatched with different 
+        priority.
+        It is represented by an integer value.
+        The lower the value, the higher the priority.
+
         Args:
             event_source:
                 The [source][xindmap.event.EventSource.EventSource] of the
                 [event][xindmap.event.Event.Event].
-            event: 
+            event:
                 The [event][xindmap.event.Event.Event] to dispatch.
+            priority:
+                The priority value of the [event][xindmap.event.Event.Event].
+                The lower it is, the higher the priority.
 
         Raises:
             EventSourceError: If the
@@ -149,7 +187,7 @@ class EventDispatcher:
             raise EventTypeError("event type not dispatched by event source")
 
         # add event to queue *****************************************
-        self.__event_queue.appendleft((event_source, event))
+        self.__event_queue.put(EventQueueItem(priority, event_source, event))
 
         # dispatch event *********************************************
         if not self.__is_dispatching:
@@ -166,8 +204,9 @@ class EventDispatcher:
         registration order linked to [events][xindmap.event.Event.Event] stored
         in the internal event queue till it is empty.
         """
-        while self.__event_queue:
-            event_source, event = self.__event_queue.pop()
+        while not self.__event_queue.empty():
+            queue_item = self.__event_queue.get()
+            event_source, event = queue_item.event_source, queue_item.event
 
             for callback in self.__event_source_to_event_type_to_callbacks[
                 event_source
@@ -188,7 +227,7 @@ class EventDispatcher:
 
         Args:
             event_source:
-                The [event source][xindmap.event.EventSource.EventSource] to 
+                The [event source][xindmap.event.EventSource.EventSource] to
                 register.
             event_types:
                 Iterable containing
