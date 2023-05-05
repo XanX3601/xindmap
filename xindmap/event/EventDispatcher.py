@@ -141,6 +141,7 @@ class EventDispatcher:
         self.__event_queue = queue.PriorityQueue()
         self.__event_source_to_event_type_to_callbacks = {}
         self.__is_dispatching = False
+        self.__dispatching_priority = None
 
     # dispatch *****************************************************************
     def dispatch_event(self, event_source, event, priority):
@@ -206,11 +207,16 @@ class EventDispatcher:
         """
         while not self.__event_queue.empty():
             queue_item = self.__event_queue.get()
+            priority = queue_item.priority
             event_source, event = queue_item.event_source, queue_item.event
+
+            self.__dispatching_priority = priority
 
             for callback in self.__event_source_to_event_type_to_callbacks[
                 event_source
             ][event.type]:
+                print(callback)
+                print(event)
                 callback(event_source, event)
 
         self.__is_dispatching = False

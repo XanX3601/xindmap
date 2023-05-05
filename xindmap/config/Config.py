@@ -114,6 +114,9 @@ class Config(xindmap.event.EventSource):
         return isinstance(value, str)
 
     # variable *****************************************************************
+    def get(self, variable):
+        return self.__variable_name_to_value[variable.name]
+
     def set(self, variable, value):
         """Sets the value of a variable.
 

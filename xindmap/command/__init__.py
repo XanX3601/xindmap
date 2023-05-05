@@ -22,6 +22,7 @@ processed by the
 """
 
 from .CommandApi import CommandApi
+from .CommandApiError import CommandApiError
 from .CommandCall import CommandCall
 from .CommandCallQueue import CommandCallQueue
 from .CommandCallQueueEvent import CommandCallQueueEvent

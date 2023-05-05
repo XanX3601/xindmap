@@ -7,6 +7,7 @@ import xindmap.command
 import xindmap.config
 import xindmap.controller
 import xindmap.input
+import xindmap.mind_map
 import xindmap.plugin
 import xindmap.state
 import xindmap.widget
@@ -299,6 +300,14 @@ class XindmapApp:
             self.__command_controller.on_input_stack_stack_cleared,
             self.__input_stack_viewer.on_input_stack_stack_cleared,
         )
+        self.__mind_map.register_callbacks(
+            xindmap.mind_map.MindMapEvent.node_added,
+            self.__mind_map_viewer.on_mind_map_node_added
+        )
+        self.__mind_map.register_callbacks(
+            xindmap.mind_map.MindMapEvent.node_selected,
+            self.__mind_map_viewer.on_mind_map_node_selected
+        )
         self.__state_holder.register_callbacks(
             xindmap.state.StateHolderEvent.state_set,
             self.__command_controller.on_state_holder_state_set,
@@ -377,21 +386,14 @@ class XindmapApp:
         # model ******************************************************
         self.__plugin_importer = xindmap.plugin.PluginImporter()
 
-        self.__input_mapping_tree = xindmap.input.InputMappingTree()
         self.__command_call_queue = xindmap.command.CommandCallQueue()
         self.__command_register = xindmap.command.CommandRegister()
+        self.__input_mapping_tree = xindmap.input.InputMappingTree()
         self.__input_stack = xindmap.input.InputStack()
+        self.__mind_map = xindmap.mind_map.MindMap()
         self.__state_holder = xindmap.state.StateHolder()
 
-        self.__command_api = xindmap.command.CommandApi(
-            self.__input_mapping_tree
-        )
-
-        # controller / executor **************************************
-        self.__command_executor = xindmap.command.CommandExecutor(
-            self.__command_api, self.__command_register
-        )
-
+        # controller ************************************************
         self.__command_controller = xindmap.controller.CommandController(
             self.__command_call_queue,
             self.__input_mapping_tree,
@@ -402,7 +404,20 @@ class XindmapApp:
 
         # widget *****************************************************
         self.__main_window = ctk.CTk()
+        self.__mind_map_viewer = xindmap.widget.MindMapViewer(self.__main_window)
         self.__input_stack_viewer = xindmap.widget.InputStackViewer(self.__main_window)
+
+        # api ********************************************************
+        self.__command_api = xindmap.command.CommandApi(
+            self.__input_mapping_tree,
+            self.__mind_map,
+            self.__mind_map_viewer
+        )
+
+        # executor ***************************************************
+        self.__command_executor = xindmap.command.CommandExecutor(
+            self.__command_api, self.__command_register
+        )
 
     # initialize ***************************************************************
     def init(self):
@@ -483,4 +498,11 @@ class XindmapApp:
             relwidth=0.95,
             relx=0.025,
             y=self.__main_window.winfo_height() - 30,
+        )
+        self.__mind_map_viewer.place(
+            anchor=ctk.NW,
+            relwidth=1,
+            relheight=1,
+            x=0,
+            y=0
         )

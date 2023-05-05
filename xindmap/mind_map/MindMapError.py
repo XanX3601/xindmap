@@ -1,0 +1,2 @@
+class MindMapError(Exception):
+    pass

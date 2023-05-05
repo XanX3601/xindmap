@@ -14,6 +14,7 @@ setup(
         "pytest==7.2.1",
         "rich_click==1.6.0",
         "singleton-decorator==1.0.0",
+        "sortedcontainers==2.4.0",
     ],
     extras_require={
         "dev": [

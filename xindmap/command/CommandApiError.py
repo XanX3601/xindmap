@@ -1,0 +1,2 @@
+class CommandApiError(Exception):
+    pass

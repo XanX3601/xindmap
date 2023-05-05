@@ -74,3 +74,9 @@ class CommandExecutor:
         """
         self.__command_api = command_api
         self.__command_register = command_register
+
+        self.__command_execution_queue()
+
+    # thread *******************************************************************
+    def command_execution_thread(self):
+        pass

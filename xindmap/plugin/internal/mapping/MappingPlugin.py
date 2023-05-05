@@ -28,4 +28,4 @@ class MappingPlugin(xindmap.plugin.Plugin):
     # constructor **************************************************************
     def __init__(self):
         """Instantiates this plugin"""
-        pass
+        super().__init__()

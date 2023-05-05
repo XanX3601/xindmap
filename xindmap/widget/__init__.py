@@ -12,3 +12,5 @@ background of the application.
 """
 
 from .InputStackViewer import InputStackViewer
+
+from xindmap.widget.mind_map_viewer import MindMapViewer

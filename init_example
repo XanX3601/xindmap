@@ -1,4 +1,15 @@
 # import ***********************************************************************
 import xindmap.plugin.internal.mapping
+import xindmap.plugin.internal.move
+import xindmap.plugin.internal.node
+import xindmap.plugin.internal.view
 
-map aaa ":import xindmap.plugin.internal.test<CR>:test<CR>"
+map h :move_left<CR>
+map j :move_down<CR>
+map k :move_up<CR>
+map l :move_right<CR>
+
+map a :add_node<CR>
+
+map zz :center_view<CR>
+
