@@ -215,8 +215,6 @@ class EventDispatcher:
             for callback in self.__event_source_to_event_type_to_callbacks[
                 event_source
             ][event.type]:
-                print(callback)
-                print(event)
                 callback(event_source, event)
 
         self.__is_dispatching = False

@@ -1,5 +1,6 @@
 import logging
 import shlex
+import sys
 
 import customtkinter as ctk
 
@@ -360,6 +361,9 @@ class XindmapApp:
 
         logging.info(f'imported plugin "{plugin_name}"')
 
+    def __command_quit(self, api):
+        self.__command_executor.stop()
+
     # constructor **************************************************************
     def __init__(self, init_file_path):
         """Instantiates the application.
@@ -434,6 +438,8 @@ class XindmapApp:
         self.__callback_setup()
 
         self.__command_register.register_command("import", self.__command_import)
+        self.__command_register.register_command("quit", self.__command_quit)
+        self.__command_register.register_command("q", self.__command_quit)
 
         self.__read_init_file()
 

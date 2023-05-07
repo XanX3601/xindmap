@@ -1,4 +1,6 @@
 import logging
+import queue
+import threading
 
 from .CommandRegisterError import CommandRegisterError
 
@@ -17,6 +19,7 @@ class CommandExecutor:
             [command register][xindmap.command.CommandRegister.CommandRegister]
             in which find the executable commands.
     """
+
     # callback *****************************************************************
     def on_command_call_queue_call_enqueued(self, command_call_queue, event):
         """Callback to be called upon
@@ -44,17 +47,8 @@ class CommandExecutor:
 
         command_call = event.call
 
-        try:
-            command = self.__command_register[command_call.command_name]
-        except CommandRegisterError as error:
-            logging.warning(f'command "{command_call.command_name}" not found')
-            return
-
-        try:
-            command(*command_call.args, api=self.__command_api)
-        except Exception as error:
-            logging.warning(f"command bugged, what to do ?")
-            logging.warning(error)
+        command_execution_item = (command_call.command_name, command_call.args)
+        self.__command_execution_queue.put(command_execution_item)
 
         command_call_queue.dequeue()
 
@@ -75,8 +69,41 @@ class CommandExecutor:
         self.__command_api = command_api
         self.__command_register = command_register
 
-        self.__command_execution_queue()
+        self.__command_execution_queue = queue.Queue()
+        self.__command_execution_thread_running = True
+        self.__command_execution_thread = threading.Thread(
+            target=self.__command_execution_thread_target
+        )
+        self.__command_execution_thread.start()
 
     # thread *******************************************************************
-    def command_execution_thread(self):
-        pass
+    def __command_execution_thread_target(self):
+        while self.__command_execution_thread_running:
+            print("waiting for command")
+            command_name, args = self.__command_execution_queue.get()
+            print(command_name)
+
+            if command_name is None:
+                print("I am supposed to stop")
+                self.__command_execution_thread_running = False
+                continue
+
+            try:
+                command = self.__command_register[command_name]
+            except CommandRegisterError as error:
+                logging.warning(f'command "{command_name}" not found')
+                continue
+
+            try:
+                command(*args, api=self.__command_api)
+            except Exception as error:
+                logging.warning("command bugged, what to do ?")
+                logging.warning(error)
+
+            print(self.__command_execution_queue.qsize())
+
+    def stop(self):
+        while self.__command_execution_thread.is_alive():
+            self.__command_execution_queue.put((None, None))
+            print(self.__command_execution_thread.is_alive())
+            input()
