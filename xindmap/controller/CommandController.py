@@ -303,11 +303,12 @@ class CommandController(xindmap.config.Configurable):
         elif input.type == xindmap.input.InputType.enter:
             free_typing_content_split = shlex.split(self.__free_typing_content)
 
-            command_name = free_typing_content_split[0]
-            args = free_typing_content_split[1:]
+            if free_typing_content_split:
+                command_name = free_typing_content_split[0]
+                args = free_typing_content_split[1:]
 
-            command_call = xindmap.command.CommandCall(command_name, args)
-            self.__command_call_queue.enqueue(command_call)
+                command_call = xindmap.command.CommandCall(command_name, args)
+                self.__command_call_queue.enqueue(command_call)
 
             self.__input_stack.clear()
 

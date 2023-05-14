@@ -34,6 +34,17 @@ class MindMap(xindmap.event.EventSource, xindmap.editable.Editable):
         event = xindmap.event.Event(MindMapEvent.node_title_set, node_id=node.id, title=node.title)
         self._dispatch_event(event)
 
+    def remove_last_char(self):
+        if self.__current_node_id is None:
+            return
+
+        node = self.__node_id_to_node[self.__current_node_id]
+        node.title = node.title[:-1]
+
+        event = xindmap.event.Event(MindMapEvent.node_title_set, node_id=node.id, title=node.title)
+        self._dispatch_event(event)
+
+
     # node *********************************************************************
     def node_add(self, parent_id=None):
         if parent_id is None:

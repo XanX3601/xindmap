@@ -22,8 +22,9 @@ class EditController:
 
         if input.type == xindmap.input.InputType.escape:
             self.__state_holder.set_state(xindmap.state.State.command)
-
-        if self.__editable is not None:
+        if input.type == xindmap.input.InputType.backspace and self.__editable is not None:
+            self.__editable.remove_last_char()
+        elif self.__editable is not None:
             self.__editable.add_text(text)
 
     def on_state_holder_state_set(self, state_hoder, event):

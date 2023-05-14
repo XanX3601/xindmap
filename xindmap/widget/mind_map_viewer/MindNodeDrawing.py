@@ -17,7 +17,7 @@ class MindNodeDrawing:
     @x.setter
     def x(self, x):
         self._x = x
-        self.truc()
+        self._place_components()
 
     @property
     def y(self):
@@ -26,7 +26,7 @@ class MindNodeDrawing:
     @y.setter
     def y(self, y):
         self._y = y
-        self.truc()
+        self._place_components()
 
     # constructor **************************************************************
     def __init__(self, canvas):
@@ -39,13 +39,14 @@ class MindNodeDrawing:
 
         self._is_selected = False
 
-        self._body_id = self.__canvas.create_rectangle(
+        self._hitbox_id = self.__canvas.create_rectangle(
             self._x, self._y, self._x + self._width, self._y + self._height
         )
-        self._title_id = self.__canvas.create_text(self._x, self._y, text="hello is this centered ?", anchor=ctk.CENTER)
+        self._title_id = self.__canvas.create_text(self._x, self._y, text="", anchor=ctk.CENTER)
 
-    def truc(self):
-        self.__canvas.coords(self._body_id, self._x, self._y, self._x+self._width, self._y+self._height)
+    # draw *********************************************************************
+    def _place_components(self):
+        self.__canvas.coords(self._hitbox_id, self._x, self._y, self._x+self._width, self._y+self._height)
         self.__canvas.coords(self._title_id, self.center_x, self.center_y)
 
     # select *******************************************************************
@@ -58,9 +59,9 @@ class MindNodeDrawing:
         self.__is_selected = is_selected
 
         if is_selected:
-            self.__canvas.itemconfigure(self._body_id, fill="red")
+            self.__canvas.itemconfigure(self._hitbox_id, fill="red")
         else:
-            self.__canvas.itemconfigure(self._body_id, fill="")
+            self.__canvas.itemconfigure(self._hitbox_id, fill="")
 
     # size *********************************************************************
     @property
@@ -70,7 +71,7 @@ class MindNodeDrawing:
     @height.setter
     def height(self, height):
         self._height = height
-        self.truc()
+        self._place_components()
 
     @property
     def width(self):
@@ -79,9 +80,18 @@ class MindNodeDrawing:
     @width.setter
     def width(self, width):
         self._width = width
-        self.truc()
+        self._place_components()
 
     # title ********************************************************************
     @property
     def title(self):
         return self.__canvas.itemcget(self._title_id, "text")
+
+    @title.setter
+    def title(self, title):
+        self.__canvas.itemconfigure(self._title_id, text=title)
+
+    def title_width(self):
+        x1, _, x2, _ = self.__canvas.bbox(self._title_id)
+        return abs(x1 - x2)
+

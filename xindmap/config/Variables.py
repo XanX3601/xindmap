@@ -24,6 +24,8 @@ class Variables(enum.Enum):
     [input stack viewer][xindmap.widget.InputStackViewer.InputStackViewer].
     """
     mind_map_viewer_node_height = Variable(VariableTypes.int, 20)
+    mind_map_viewer_node_margin_x = Variable(VariableTypes.int, 30)
+    mind_map_viewer_node_margin_y = Variable(VariableTypes.int, 30)
     mind_map_viewer_node_min_width = Variable(VariableTypes.int, 10)
     mind_map_viewer_node_padding_x = Variable(VariableTypes.int, 5)
     mind_map_viewer_node_padding_y = Variable(VariableTypes.int, 5)

@@ -18,7 +18,7 @@ class RootNodeDrawing(MindNodeDrawing):
         self._y = y
 
         self._height = height
-        super().truc()
+        super()._place_components()
 
     @property
     def width(self):
@@ -32,4 +32,4 @@ class RootNodeDrawing(MindNodeDrawing):
         self._x = x
 
         self._width = width
-        super().truc()
+        super()._place_components()
