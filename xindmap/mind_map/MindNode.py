@@ -15,6 +15,8 @@ class MindNode:
         self.__parent = parent
         self.__child_id_to_child = {}
 
+        self.title = ""
+
     # id ***********************************************************************
     __id_count = itertools.count()
 
@@ -26,3 +28,4 @@ class MindNode:
     @property
     def parent(self):
         return self.__parent
+

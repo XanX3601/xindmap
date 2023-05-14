@@ -2,6 +2,7 @@
 import xindmap.plugin.internal.mapping
 import xindmap.plugin.internal.move
 import xindmap.plugin.internal.node
+import xindmap.plugin.internal.state
 import xindmap.plugin.internal.view
 
 map h :move_left<CR>
@@ -13,3 +14,6 @@ map a :add_node<CR>
 
 map zz :center_view<CR>
 
+map ZZ :q<CR>
+
+map i :edit_mode<CR>

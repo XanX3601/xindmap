@@ -1,3 +1,4 @@
+import xindmap.editable
 import xindmap.event
 
 from .MindMapEvent import MindMapEvent
@@ -5,10 +6,11 @@ from .MindMapError import MindMapError
 from .MindNode import MindNode
 
 
-class MindMap(xindmap.event.EventSource):
+class MindMap(xindmap.event.EventSource, xindmap.editable.Editable):
     # constructor **************************************************************
     def __init__(self):
-        super().__init__(MindMapEvent)
+        xindmap.event.EventSource.__init__(self, MindMapEvent)
+        xindmap.editable.Editable.__init__(self)
 
         self.__node_id_to_node = {}
         self.__root = None
@@ -18,6 +20,19 @@ class MindMap(xindmap.event.EventSource):
     @property
     def current_node_id(self):
         return self.__current_node_id
+
+    # edit *********************************************************************
+    def add_text(self, text):
+        if self.__current_node_id is None:
+            return
+
+        text = text.replace("\n", "")
+
+        node = self.__node_id_to_node[self.__current_node_id]
+        node.title += text
+
+        event = xindmap.event.Event(MindMapEvent.node_title_set, node_id=node.id, title=node.title)
+        self._dispatch_event(event)
 
     # node *********************************************************************
     def node_add(self, parent_id=None):
@@ -78,6 +93,17 @@ class MindMap(xindmap.event.EventSource):
             node_id=node_id,
         )
         self._dispatch_event(event)
+
+    def node_title(self, node_id=None):
+        if node_id is None:
+            node_id = self.__current_node_id
+
+        if node_id not in self.__node_id_to_node:
+            raise MindMapError(f"unknown node id {node_id}")
+
+        node = self.__node_id_to_node[node_id]
+
+        return node.title
 
     # root *********************************************************************
     @property

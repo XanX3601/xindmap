@@ -1,3 +1,5 @@
+import customtkinter as ctk
+
 class MindNodeDrawing:
     # coords *******************************************************************
     @property
@@ -40,9 +42,11 @@ class MindNodeDrawing:
         self._body_id = self.__canvas.create_rectangle(
             self._x, self._y, self._x + self._width, self._y + self._height
         )
+        self._title_id = self.__canvas.create_text(self._x, self._y, text="hello is this centered ?", anchor=ctk.CENTER)
 
     def truc(self):
         self.__canvas.coords(self._body_id, self._x, self._y, self._x+self._width, self._y+self._height)
+        self.__canvas.coords(self._title_id, self.center_x, self.center_y)
 
     # select *******************************************************************
     @property
@@ -76,3 +80,8 @@ class MindNodeDrawing:
     def width(self, width):
         self._width = width
         self.truc()
+
+    # title ********************************************************************
+    @property
+    def title(self):
+        return self.__canvas.itemcget(self._title_id, "text")

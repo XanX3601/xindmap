@@ -89,6 +89,13 @@ class InputParser:
         return inputs
 
     # string *******************************************************************
+    __input_type_to_text = {
+        InputType.backspace: "",
+        InputType.default: "",
+        InputType.enter: "\n",
+        InputType.escape: "",
+    }
+
     @classmethod
     def stringify_input(cls, input):
         """Converts an [input][xindmap.input.Input.Input] into a [string][str]
@@ -103,4 +110,10 @@ class InputParser:
         """
         if input.type != InputType.default:
             return cls.__input_type_to_regex[input.type]
+        return input.value
+
+    @classmethod
+    def textify_input(cls, input):
+        if input.type != InputType.default:
+            return cls.__input_type_to_text[input.type]
         return input.value

@@ -1,6 +1,7 @@
 import dataclasses
 import itertools
 import queue
+import threading
 import typing
 
 import singleton_decorator
@@ -8,6 +9,13 @@ import singleton_decorator
 from .EventSourceError import EventSourceError
 from .EventTypeError import EventTypeError
 
+
+dispatching_condition = threading.Condition()
+dispatching_lock = threading.Lock()
+
+def wait_for_event_dispatching():
+    dispatching_lock.acquire()
+    dispatching_lock.release()
 
 @dataclasses.dataclass(order=True)
 class EventQueueItem:
@@ -192,8 +200,6 @@ class EventDispatcher:
 
         # dispatch event *********************************************
         if not self.__is_dispatching:
-            self.__is_dispatching = True
-
             self.__dispatch_event_queue()
 
     def __dispatch_event_queue(self):
@@ -205,19 +211,25 @@ class EventDispatcher:
         registration order linked to [events][xindmap.event.Event.Event] stored
         in the internal event queue till it is empty.
         """
-        while not self.__event_queue.empty():
-            queue_item = self.__event_queue.get()
-            priority = queue_item.priority
-            event_source, event = queue_item.event_source, queue_item.event
+        with dispatching_lock:
+            self.__is_dispatching = True
 
-            self.__dispatching_priority = priority
+            while not self.__event_queue.empty():
+                queue_item = self.__event_queue.get()
+                priority = queue_item.priority
+                event_source, event = queue_item.event_source, queue_item.event
 
-            for callback in self.__event_source_to_event_type_to_callbacks[
-                event_source
-            ][event.type]:
-                callback(event_source, event)
+                self.__dispatching_priority = priority
 
-        self.__is_dispatching = False
+                for callback in self.__event_source_to_event_type_to_callbacks[
+                    event_source
+                ][event.type]:
+                    callback(event_source, event)
+
+            self.__is_dispatching = False
+
+    def is_dispatching(self):
+        return self.__is_dispatching
 
     # source *******************************************************************
     def register_event_source(self, event_source, event_types):

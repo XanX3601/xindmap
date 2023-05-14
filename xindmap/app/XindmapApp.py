@@ -7,6 +7,7 @@ import customtkinter as ctk
 import xindmap.command
 import xindmap.config
 import xindmap.controller
+import xindmap.editable
 import xindmap.input
 import xindmap.mind_map
 import xindmap.plugin
@@ -286,6 +287,10 @@ class XindmapApp:
             xindmap.command.CommandCallQueueEvent.call_enqueued,
             self.__command_executor.on_command_call_queue_call_enqueued,
         )
+        self.__editable_holder.register_callbacks(
+            xindmap.editable.EditableHolderEvent.editable_set,
+            self.__edit_controller.on_editable_holder_editable_set
+        )
         self.__input_stack.register_callbacks(
             xindmap.input.InputStackEvent.input_poped,
             self.__command_controller.on_input_stack_input_poped,
@@ -294,6 +299,7 @@ class XindmapApp:
         self.__input_stack.register_callbacks(
             xindmap.input.InputStackEvent.input_pushed,
             self.__command_controller.on_input_stack_input_pushed,
+            self.__edit_controller.on_input_stack_input_pushed,
             self.__input_stack_viewer.on_input_stack_input_pushed,
         )
         self.__input_stack.register_callbacks(
@@ -312,6 +318,7 @@ class XindmapApp:
         self.__state_holder.register_callbacks(
             xindmap.state.StateHolderEvent.state_set,
             self.__command_controller.on_state_holder_state_set,
+            self.__edit_controller.on_state_holder_state_set,
         )
 
         self.__main_window.bind("<Configure>", self.on_configure)
@@ -362,7 +369,8 @@ class XindmapApp:
         logging.info(f'imported plugin "{plugin_name}"')
 
     def __command_quit(self, api):
-        self.__command_executor.stop()
+        self.__main_window.quit()
+        exit(0)
 
     # constructor **************************************************************
     def __init__(self, init_file_path):
@@ -392,6 +400,7 @@ class XindmapApp:
 
         self.__command_call_queue = xindmap.command.CommandCallQueue()
         self.__command_register = xindmap.command.CommandRegister()
+        self.__editable_holder = xindmap.editable.EditableHolder()
         self.__input_mapping_tree = xindmap.input.InputMappingTree()
         self.__input_stack = xindmap.input.InputStack()
         self.__mind_map = xindmap.mind_map.MindMap()
@@ -404,6 +413,7 @@ class XindmapApp:
             xindmap.input.Input(xindmap.input.InputType.default, ":"),
             self.__input_stack,
         )
+        self.__edit_controller = xindmap.controller.EditController(self.__state_holder)
         self.__input_controller = xindmap.controller.InputController(self.__input_stack)
 
         # widget *****************************************************
@@ -415,7 +425,8 @@ class XindmapApp:
         self.__command_api = xindmap.command.CommandApi(
             self.__input_mapping_tree,
             self.__mind_map,
-            self.__mind_map_viewer
+            self.__mind_map_viewer,
+            self.__state_holder
         )
 
         # executor ***************************************************
@@ -443,6 +454,7 @@ class XindmapApp:
 
         self.__read_init_file()
 
+        self.__editable_holder.set_editable(self.__mind_map)
         self.__state_holder.set_state(xindmap.state.State.command)
 
     def __read_init_file(self):

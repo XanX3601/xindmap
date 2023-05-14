@@ -173,6 +173,7 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
             node_parent_id = self.__node_id_to_parent_id[node_id]
 
             width = config.get(xindmap.config.Variables.mind_map_viewer_node_min_width) + config.get(xindmap.config.Variables.mind_map_viewer_node_padding_x)
+
             node_drawing.width = width
 
             if node_parent_id is not None:

@@ -13,4 +13,5 @@ They are object containing logic bricks from the application.
 """
 
 from .CommandController import CommandController
+from .EditController import EditController
 from .InputController import InputController

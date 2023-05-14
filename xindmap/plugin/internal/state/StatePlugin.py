@@ -1,18 +1,16 @@
 import xindmap.plugin
+import xindmap.state
 
-class NodePlugin(xindmap.plugin.Plugin):
+class StatePlugin(xindmap.plugin.Plugin):
     # command ******************************************************************
     def commands(self):
         return [
-            ("add_node", self.command_add_node)
+            ("edit_mode", self.command_edit_state),
         ]
 
-    def command_add_node(self, api):
-        node = api.add_node(wait=True)
+    def command_edit_state(self, api):
+        api.set_state(xindmap.state.State.edit)
 
-        if node == api.root_node():
-            api.select_node(node)
-            api.center_view(node)
 
     # constructor **************************************************************
     def __init__(self):

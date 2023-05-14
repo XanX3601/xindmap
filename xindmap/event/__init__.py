@@ -19,6 +19,7 @@ Callbacks can be registered to be called upon an event dispatching.
 
 from .Event import Event
 from .EventAttributeError import EventAttributeError
+from .EventDispatcher import wait_for_event_dispatching
 from .EventSource import EventSource
 from .EventSourceError import EventSourceError
 from .EventTypeError import EventTypeError

@@ -79,12 +79,9 @@ class CommandExecutor:
     # thread *******************************************************************
     def __command_execution_thread_target(self):
         while self.__command_execution_thread_running:
-            print("waiting for command")
             command_name, args = self.__command_execution_queue.get()
-            print(command_name)
 
             if command_name is None:
-                print("I am supposed to stop")
                 self.__command_execution_thread_running = False
                 continue
 
@@ -100,10 +97,3 @@ class CommandExecutor:
                 logging.warning("command bugged, what to do ?")
                 logging.warning(error)
 
-            print(self.__command_execution_queue.qsize())
-
-    def stop(self):
-        while self.__command_execution_thread.is_alive():
-            self.__command_execution_queue.put((None, None))
-            print(self.__command_execution_thread.is_alive())
-            input()
