@@ -16,7 +16,14 @@ class EdgeDrawing:
     @from_y.setter
     def from_y(self, from_y):
         self.__from_y = from_y
-        self.__place_components
+        self.__place_components()
+
+    def set_coords(self, from_x, from_y, to_x, to_y):
+        self.__from_x = from_x
+        self.__from_y = from_y
+        self.__to_x = to_x
+        self.__to_y = to_y
+        self.__place_components()
 
     @property
     def to_x(self):
