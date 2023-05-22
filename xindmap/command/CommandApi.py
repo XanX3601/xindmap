@@ -33,6 +33,15 @@ class CommandApi:
         """
         self.__input_mapping_tree.add_mapping(inputs, mapped_inputs)
 
+    # mind map *****************************************************************
+    def populate_from_dict(self, node_dict, wait=False):
+        self.__mind_map.populate_from_dict(node_dict)
+        if wait:
+            self.__wait()
+            
+    def to_dict(self):
+        return self.__mind_map.to_dict()
+
     # node *********************************************************************
     def add_node(self, parent_id=None, wait=False):
         node_id = self.__mind_map.node_add(parent_id)
@@ -45,6 +54,11 @@ class CommandApi:
 
     def current_node(self):
         return self.__mind_map.current_node_id
+
+    def delete_node(self, node_id=None, wait=False):
+        self.__mind_map.node_delete(node_id)
+        if wait:
+            self.__wait()
 
     def parent_node(self, node_id=None):
         return self.__mind_map.node_parent_id(node_id)

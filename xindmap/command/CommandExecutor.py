@@ -1,6 +1,7 @@
 import logging
 import queue
 import threading
+import traceback
 
 from .CommandRegisterError import CommandRegisterError
 
@@ -96,4 +97,5 @@ class CommandExecutor:
             except Exception as error:
                 logging.warning("command bugged, what to do ?")
                 logging.warning(error)
+                logging.warning(traceback.format_exc())
 

@@ -1,6 +1,7 @@
 import logging
+import json
+import pathlib
 import shlex
-import sys
 
 import customtkinter as ctk
 
@@ -308,8 +309,16 @@ class XindmapApp:
             self.__input_stack_viewer.on_input_stack_stack_cleared,
         )
         self.__mind_map.register_callbacks(
+            xindmap.mind_map.MindMapEvent.cleared,
+            self.__mind_map_viewer.on_mind_map_cleared
+        )
+        self.__mind_map.register_callbacks(
             xindmap.mind_map.MindMapEvent.node_added,
             self.__mind_map_viewer.on_mind_map_node_added
+        )
+        self.__mind_map.register_callbacks(
+            xindmap.mind_map.MindMapEvent.node_deleted,
+            self.__mind_map_viewer.on_mind_map_node_deleted
         )
         self.__mind_map.register_callbacks(
             xindmap.mind_map.MindMapEvent.node_selected,
@@ -323,6 +332,7 @@ class XindmapApp:
             xindmap.state.StateHolderEvent.state_set,
             self.__command_controller.on_state_holder_state_set,
             self.__edit_controller.on_state_holder_state_set,
+            self.__state_viewer.on_state_holder_state_set,
         )
 
         self.__main_window.bind("<Configure>", self.on_configure)
@@ -372,9 +382,38 @@ class XindmapApp:
 
         logging.info(f'imported plugin "{plugin_name}"')
 
+    def __command_load(self, file_path, api):
+        self.__mind_map.clear()
+
+        file_path = pathlib.Path(file_path)
+        if not file_path.is_file():
+            raise ValueError(f"not a file \"{file_path}\"")
+
+        with file_path.open("r") as file:
+            node_dict = json.load(file)
+        
+        api.populate_from_dict(node_dict, True)
+        api.select_node(self.__mind_map.root_node_id)
+        api.center_view(self.__mind_map.root_node_id)
+
+        self.__last_file_path = file_path
+
     def __command_quit(self, api):
         self.__main_window.quit()
         exit(0)
+
+    def __command_save(self, file_path=None, api=None):
+        if file_path is None:
+            file_path = self.__last_file_path
+
+        if file_path is None:
+            raise ValueError(f"can not save as no file was given")
+
+        file_path = pathlib.Path(file_path)
+        root_dict = api.to_dict()
+
+        with file_path.open("w") as file:
+            json.dump(root_dict, file, indent=2)
 
     # constructor **************************************************************
     def __init__(self, init_file_path):
@@ -398,6 +437,8 @@ class XindmapApp:
 
         self.__previous_height = None
         self.__previous_width = None
+
+        self.__last_file_path = None
 
         # model ******************************************************
         self.__plugin_importer = xindmap.plugin.PluginImporter()
@@ -424,6 +465,7 @@ class XindmapApp:
         self.__main_window = ctk.CTk()
         self.__mind_map_viewer = xindmap.widget.MindMapViewer(self.__main_window)
         self.__input_stack_viewer = xindmap.widget.InputStackViewer(self.__main_window)
+        self.__state_viewer = xindmap.widget.StateViewer(self.__main_window)
 
         # api ********************************************************
         self.__command_api = xindmap.command.CommandApi(
@@ -455,6 +497,8 @@ class XindmapApp:
         self.__command_register.register_command("import", self.__command_import)
         self.__command_register.register_command("quit", self.__command_quit)
         self.__command_register.register_command("q", self.__command_quit)
+        self.__command_register.register_command("load", self.__command_load)
+        self.__command_register.register_command("save", self.__command_save)
 
         self.__read_init_file()
 
@@ -517,8 +561,8 @@ class XindmapApp:
         """
         self.__input_stack_viewer.place(
             anchor=ctk.NW,
-            relwidth=0.95,
-            relx=0.025,
+            relwidth=0.825,
+            relx=0.15,
             y=self.__main_window.winfo_height() - 30,
         )
         self.__mind_map_viewer.place(
@@ -527,4 +571,10 @@ class XindmapApp:
             relheight=1,
             x=0,
             y=0
+        )
+        self.__state_viewer.place(
+            anchor=ctk.NW,
+            relwidth=.10,
+            relx=0.025,
+            y=self.__main_window.winfo_height() - 30,
         )

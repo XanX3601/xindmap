@@ -7,6 +7,9 @@ class MindNode:
 
     def child_ids(self):
         return list(self.__child_id_to_child.keys())
+    
+    def remove_child(self, mind_node):
+        del self.__child_id_to_child[mind_node.id]
 
     # constructor **************************************************************
     def __init__(self, parent):

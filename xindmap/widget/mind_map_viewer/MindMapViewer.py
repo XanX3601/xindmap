@@ -12,6 +12,19 @@ from .RootNodeDrawing import RootNodeDrawing
 
 class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
     # callback *****************************************************************
+    def on_mind_map_cleared(self, mind_map, event):
+        logging.debug(
+            f"mind map viewer {id(self)}: on_mind_map_cleared(event={event})"
+        )
+
+        self.__node_id_to_edge_drawings = {}
+        self.__node_id_to_child_ids = {}
+        self.__node_id_to_drawing = {}
+        self.__node_id_to_parent_id = {}
+        self.__root_id = None
+
+        self.__canvas.delete("all")
+
     def on_mind_map_node_added(self, mind_map, event):
         logging.debug(
             f"mind map viewer {id(self)}: on_mind_map_node_added(event={event})"
@@ -41,6 +54,40 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
 
         self.__node_drawing_compute_height_and_y(node_id)
         self.__node_drawing_compute_width_and_x(node_id)
+
+    def on_mind_map_node_deleted(self, mind_map, event):
+        def on_mind_map_node_deleted_recursivity(node_id):
+            child_ids = list(self.__node_id_to_child_ids[node_id])
+            for child_id in child_ids:
+                on_mind_map_node_deleted_recursivity(child_id)
+            del self.__node_id_to_child_ids[node_id]
+
+            for edge_drawing in self.__node_id_to_edge_drawings[node_id].values():
+                edge_drawing.clear()
+            del self.__node_id_to_edge_drawings[node_id]
+
+            self.__node_id_to_drawing[node_id].clear()
+            del self.__node_id_to_drawing[node_id]
+
+            parent_id = self.__node_id_to_parent_id.get(node_id, None)
+            if parent_id is not None:
+                self.__node_id_to_child_ids[parent_id].remove(node_id)
+                self.__node_id_to_edge_drawings[parent_id][node_id].clear()
+                del self.__node_id_to_edge_drawings[parent_id][node_id]
+
+            if node_id == self.__root_id:
+                self.__root_id = None
+
+        logging.debug(f"mind map viewer {id(self)}: on_mind_map_node_deleted(event={event})")
+
+        node_id = event.node_id
+        parent_id = self.__node_id_to_parent_id.get(node_id, None)
+
+        on_mind_map_node_deleted_recursivity(node_id)
+
+        if parent_id is not None:
+            self.__node_drawing_compute_height_and_y(parent_id)
+            self.__node_drawing_compute_width_and_x(parent_id)
 
     def on_mind_map_node_selected(self, mind_map, event):
         logging.debug(f"mind map viewer {id(self)}: on_mind_map_node_selected(event={event})")

@@ -11,6 +11,7 @@ map k :move_up<CR>
 map l :move_right<CR>
 
 map a :add_node<CR>
+map dd :delete_node<CR>
 
 map zz :center_view<CR>
 

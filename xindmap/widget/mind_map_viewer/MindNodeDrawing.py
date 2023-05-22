@@ -45,6 +45,12 @@ class MindNodeDrawing:
         self._title_id = self.__canvas.create_text(self._x, self._y, text="", anchor=ctk.CENTER)
 
     # draw *********************************************************************
+    def clear(self):
+        self.__canvas.delete(
+            self._hitbox_id,
+            self._title_id
+        )
+
     def _place_components(self):
         self.__canvas.coords(self._hitbox_id, self._x, self._y, self._x+self._width, self._y+self._height)
         self.__canvas.coords(self._title_id, self.center_x, self.center_y)
