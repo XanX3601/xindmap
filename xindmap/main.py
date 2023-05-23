@@ -15,7 +15,12 @@ import xindmap.app
     type=click.Path(exists=True, file_okay=True, dir_okay=False, readable=True),
     help="path to the initialization file",
 )
-def main(init_file_path):
+@click.argument(
+    "file",
+    type=click.Path(exists=True, file_okay=True, dir_okay=False, readable=True),
+    required=False
+)
+def main(init_file_path, file):
     """Main function to run xindmap.
 
     Args:
@@ -36,7 +41,7 @@ def main(init_file_path):
         init_file_path = pathlib.Path(init_file_path)
 
     app = xindmap.app.XindmapApp(init_file_path)
-    app.init()
+    app.init(file)
     app.start()
 
 

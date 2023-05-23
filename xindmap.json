@@ -1,0 +1,40 @@
+{
+  "title": "xindmap",
+  "childs": [
+    {
+      "title": "plugin",
+      "childs": [
+        {
+          "title": "config",
+          "childs": []
+        }
+      ]
+    },
+    {
+      "title": "design",
+      "childs": []
+    },
+    {
+      "title": "edit",
+      "childs": [
+        {
+          "title": "cursor",
+          "childs": []
+        }
+      ]
+    },
+    {
+      "title": "features",
+      "childs": [
+        {
+          "title": "node as tasks",
+          "childs": []
+        },
+        {
+          "title": "detail panel",
+          "childs": []
+        }
+      ]
+    }
+  ]
+}

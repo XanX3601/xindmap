@@ -481,7 +481,7 @@ class XindmapApp:
         )
 
     # initialize ***************************************************************
-    def init(self):
+    def init(self, file_path=None):
         """Initializes this application.
 
         Setups callbacks between attributes.
@@ -498,12 +498,19 @@ class XindmapApp:
         self.__command_register.register_command("quit", self.__command_quit)
         self.__command_register.register_command("q", self.__command_quit)
         self.__command_register.register_command("load", self.__command_load)
+        self.__command_register.register_command("e", self.__command_load)
         self.__command_register.register_command("save", self.__command_save)
+        self.__command_register.register_command("w", self.__command_save)
 
         self.__read_init_file()
 
         self.__editable_holder.set_editable(self.__mind_map)
         self.__state_holder.set_state(xindmap.state.State.command)
+
+        if file_path is not None:
+            self.__command_call_queue.enqueue(
+                xindmap.command.CommandCall("load", (file_path,))
+            )
 
     def __read_init_file(self):
         """Reads the initialization file and enqueues command call read.

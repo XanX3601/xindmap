@@ -96,6 +96,7 @@ class CommandExecutor:
                 command(*args, api=self.__command_api)
             except Exception as error:
                 logging.warning("command bugged, what to do ?")
+                logging.warning(f"{command_name}({args})")
                 logging.warning(error)
                 logging.warning(traceback.format_exc())
 
