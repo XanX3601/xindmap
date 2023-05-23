@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 setup(
     name="xindmap",
@@ -22,5 +22,5 @@ setup(
             "mkdocs-material==9.1.3",
             "mkdocstrings==0.20.0",
         ]
-    }
+    },
 )

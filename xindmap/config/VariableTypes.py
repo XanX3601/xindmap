@@ -5,6 +5,7 @@ class VariableTypes(enum.Enum):
     """The list of available types for
     [variables][xindmap.config.Variable.Variable].
     """
+
     int = enum.auto()
     """Integer.
     """

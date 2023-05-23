@@ -8,7 +8,7 @@ from .Variables import Variables
 
 class Configurable:
     """A configurable is an object using the
-    [config][xindmap.config.Config.Config] to expose part of its settings 
+    [config][xindmap.config.Config.Config] to expose part of its settings
     through statically declared [variables][xindmap.config.Variable.Variable] in
     the [variable list][xindmap.config.Variables.Variables].
 
@@ -35,6 +35,7 @@ class Configurable:
             variable value is set by through the
             [config][xindmap.config.Config.Config].
     """
+
     # callback *****************************************************************
     __callback_regex = re.compile("on_config_variable_(.*)_set")
     """Compiled regex used to identify callbacks among the methods of a

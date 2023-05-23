@@ -8,6 +8,7 @@ class CommandRegister:
     Attributes:
         __command_name_to_command: Dictionnary mapping command name to command.
     """
+
     # command ******************************************************************
     def __getitem__(self, command_name):
         """Gets a command from its name.
@@ -31,8 +32,7 @@ class CommandRegister:
 
     @property
     def command_names(self):
-        """Returns all registered command names.
-        """
+        """Returns all registered command names."""
         return self.__command_name_to_command.keys()
 
     def register_command(self, name, command):
@@ -53,6 +53,5 @@ class CommandRegister:
 
     # constructor **************************************************************
     def __init__(self):
-        """Instantiates this register.
-        """
+        """Instantiates this register."""
         self.__command_name_to_command = {}

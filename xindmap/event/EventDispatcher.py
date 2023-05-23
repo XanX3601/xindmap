@@ -9,13 +9,14 @@ import singleton_decorator
 from .EventSourceError import EventSourceError
 from .EventTypeError import EventTypeError
 
-
 dispatching_condition = threading.Condition()
 dispatching_lock = threading.Lock()
+
 
 def wait_for_event_dispatching():
     dispatching_lock.acquire()
     dispatching_lock.release()
+
 
 @dataclasses.dataclass(order=True)
 class EventQueueItem:
@@ -35,6 +36,7 @@ class EventQueueItem:
             [event][xindmap.event.Event.Event]
         event: The stored [event][xindmap.event.Event.Event].
     """
+
     priority: int
     item_id: int = dataclasses.field(
         default_factory=itertools.count().__next__, init=False
@@ -160,7 +162,7 @@ class EventDispatcher:
         [dispatch method][xindmap.event.EventDispatcher.EventDispatcher.__dispatch_event_queue].
         if is not already dispatching the queue.
 
-        [events][xindmap.event.Event.Event] can be dispatched with different 
+        [events][xindmap.event.Event.Event] can be dispatched with different
         priority.
         It is represented by an integer value.
         The lower the value, the higher the priority.

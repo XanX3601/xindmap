@@ -1,5 +1,6 @@
 import itertools
 
+
 class MindNode:
     # child ********************************************************************
     def add_child(self, mind_node):
@@ -7,7 +8,7 @@ class MindNode:
 
     def child_ids(self):
         return list(self.__child_id_to_child.keys())
-    
+
     def remove_child(self, mind_node):
         del self.__child_id_to_child[mind_node.id]
 
@@ -31,4 +32,3 @@ class MindNode:
     @property
     def parent(self):
         return self.__parent
-

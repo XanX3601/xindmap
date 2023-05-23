@@ -11,7 +11,7 @@ background of the application.
 - [`xindmap.widget.InputStackViewer.InputStackViewer`][]
 """
 
-from .InputStackViewer import InputStackViewer
-
 from xindmap.widget.mind_map_viewer import MindMapViewer
+
+from .InputStackViewer import InputStackViewer
 from .StateViewer import StateViewer

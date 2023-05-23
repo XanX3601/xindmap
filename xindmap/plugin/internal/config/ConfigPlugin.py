@@ -1,13 +1,13 @@
 import inspect
+
 import xindmap.config
 import xindmap.plugin
+
 
 class ConfigPlugin(xindmap.plugin.Plugin):
     # command ******************************************************************
     def commands(self):
-        return [
-            ("set", self.command_set)
-        ]
+        return [("set", self.command_set)]
 
     def command_set(self, variable_name, variable_value=None, api=None):
         variable = ConfigPlugin.variable_name_to_variable.get(variable_name, None)
@@ -23,9 +23,7 @@ class ConfigPlugin(xindmap.plugin.Plugin):
         super().__init__()
 
         methods = inspect.getmembers(self, inspect.ismethod)
-        method_name_to_method = {
-            method_name: method for method_name, method in methods
-        }
+        method_name_to_method = {method_name: method for method_name, method in methods}
 
         self.variable_type_to_parser = {}
         for type in xindmap.config.VariableTypes:
@@ -34,10 +32,8 @@ class ConfigPlugin(xindmap.plugin.Plugin):
 
             self.variable_type_to_parser[type] = method
 
-
     # variable *****************************************************************
-    variable_name_to_variable = {
-    }
+    variable_name_to_variable = {}
 
     @classmethod
     def parse_int_value(cls, value):

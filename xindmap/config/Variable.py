@@ -2,6 +2,7 @@ import itertools
 
 from .VariableTypes import VariableTypes
 
+
 class Variable:
     # compare ******************************************************************
     def __eq__(self, variable):

@@ -15,10 +15,10 @@ class Timer:
         __widget:
             A [`tkinter`][] widget used to access methods from the library.
     """
+
     # constructor **************************************************************
     def __init__(self):
-        """Instantiates this timer.
-        """
+        """Instantiates this timer."""
         self.__widget = tk.Widget(None, None)
 
     # timer ********************************************************************

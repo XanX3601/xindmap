@@ -18,7 +18,7 @@ import xindmap.app
 @click.argument(
     "file",
     type=click.Path(exists=True, file_okay=True, dir_okay=False, readable=True),
-    required=False
+    required=False,
 )
 def main(init_file_path, file):
     """Main function to run xindmap.

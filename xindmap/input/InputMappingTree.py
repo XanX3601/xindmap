@@ -10,10 +10,11 @@ class InputMappingNode:
 
     Attributes:
         __children:
-            A dictionnary mapping an [input][xindmap.input.Input.Input] to a 
+            A dictionnary mapping an [input][xindmap.input.Input.Input] to a
             child of this node.
         inputs: A list of inputs saved in this node or [`None`][].
     """
+
     # child ********************************************************************
     def add_child(self, input):
         """Adds a child to this node linked by a given
@@ -49,7 +50,7 @@ class InputMappingNode:
 
         Returns:
             The child node linked to this one by the given
-            [input][xindmap.input.Input.Input] or [`None`][] if no such node 
+            [input][xindmap.input.Input.Input] or [`None`][] if no such node
             exists.
         """
         if input.type not in self.__children:
@@ -65,8 +66,7 @@ class InputMappingNode:
 
     # constructor **************************************************************
     def __init__(self):
-        """Instantiates this node.
-        """
+        """Instantiates this node."""
         self.inputs = None
         self.__children = {}
 
@@ -94,6 +94,7 @@ class InputMappingTree:
             The [node][xindmap.input.InputMappingTree.InputMappingNode] on which
             the cursor is currently on.
     """
+
     # command ******************************************************************
     @property
     def inputs(self):

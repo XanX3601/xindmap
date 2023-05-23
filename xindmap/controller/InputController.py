@@ -12,6 +12,7 @@ class InputController:
             The [input stack][xindmap.input.InputStack.InputStack] in which push
             the [input][xindmap.input.Input.Input] created by this controller
     """
+
     # callback *****************************************************************
     def on_key(self, event):
         """Callback to be called whenever the user press on the keyboard.
@@ -44,7 +45,7 @@ class InputController:
         Args:
             input_stack:
                 The [input stack][xindmap.input.InputStack.InputStack] in which
-                push the [input][xindmap.input.Input.Input] created by this 
+                push the [input][xindmap.input.Input.Input] created by this
                 controller.
         """
         self.input_stack = input_stack

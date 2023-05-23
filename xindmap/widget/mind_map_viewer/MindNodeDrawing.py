@@ -1,5 +1,6 @@
 import customtkinter as ctk
 
+
 class MindNodeDrawing:
     # coords *******************************************************************
     @property
@@ -42,17 +43,22 @@ class MindNodeDrawing:
         self._hitbox_id = self.__canvas.create_rectangle(
             self._x, self._y, self._x + self._width, self._y + self._height
         )
-        self._title_id = self.__canvas.create_text(self._x, self._y, text="", anchor=ctk.CENTER)
+        self._title_id = self.__canvas.create_text(
+            self._x, self._y, text="", anchor=ctk.CENTER
+        )
 
     # draw *********************************************************************
     def clear(self):
-        self.__canvas.delete(
-            self._hitbox_id,
-            self._title_id
-        )
+        self.__canvas.delete(self._hitbox_id, self._title_id)
 
     def _place_components(self):
-        self.__canvas.coords(self._hitbox_id, self._x, self._y, self._x+self._width, self._y+self._height)
+        self.__canvas.coords(
+            self._hitbox_id,
+            self._x,
+            self._y,
+            self._x + self._width,
+            self._y + self._height,
+        )
         self.__canvas.coords(self._title_id, self.center_x, self.center_y)
 
     # select *******************************************************************
@@ -100,4 +106,3 @@ class MindNodeDrawing:
     def title_width(self):
         x1, _, x2, _ = self.__canvas.bbox(self._title_id)
         return abs(x1 - x2)
-

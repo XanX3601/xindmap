@@ -99,4 +99,3 @@ class CommandExecutor:
                 logging.warning(f"{command_name}({args})")
                 logging.warning(error)
                 logging.warning(traceback.format_exc())
-

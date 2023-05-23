@@ -1,7 +1,9 @@
-import customtkinter as ctk
 import logging
 import queue
+
+import customtkinter as ctk
 import sortedcontainers
+
 import xindmap.config
 
 from .EdgeDrawing import EdgeDrawing
@@ -13,9 +15,7 @@ from .RootNodeDrawing import RootNodeDrawing
 class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
     # callback *****************************************************************
     def on_mind_map_cleared(self, mind_map, event):
-        logging.debug(
-            f"mind map viewer {id(self)}: on_mind_map_cleared(event={event})"
-        )
+        logging.debug(f"mind map viewer {id(self)}: on_mind_map_cleared(event={event})")
 
         self.__node_id_to_edge_drawings = {}
         self.__node_id_to_child_ids = {}
@@ -78,7 +78,9 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
             if node_id == self.__root_id:
                 self.__root_id = None
 
-        logging.debug(f"mind map viewer {id(self)}: on_mind_map_node_deleted(event={event})")
+        logging.debug(
+            f"mind map viewer {id(self)}: on_mind_map_node_deleted(event={event})"
+        )
 
         node_id = event.node_id
         parent_id = self.__node_id_to_parent_id.get(node_id, None)
@@ -90,7 +92,9 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
             self.__node_drawing_compute_width_and_x(parent_id)
 
     def on_mind_map_node_selected(self, mind_map, event):
-        logging.debug(f"mind map viewer {id(self)}: on_mind_map_node_selected(event={event})")
+        logging.debug(
+            f"mind map viewer {id(self)}: on_mind_map_node_selected(event={event})"
+        )
 
         previous_node_id = event.previous_node_id
         node_id = event.node_id
@@ -104,7 +108,9 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
             node_drawing.is_selected = True
 
     def on_mind_map_node_title_set(self, mind_map, event):
-        logging.debug(f"mind map viewer {id(self)}: on_mind_map_node_title_set(event={event})")
+        logging.debug(
+            f"mind map viewer {id(self)}: on_mind_map_node_title_set(event={event})"
+        )
 
         node_id = event.node_id
         title = event.title
@@ -197,7 +203,7 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
                 ) + config.get(xindmap.config.Variables.mind_map_viewer_node_padding_y)
 
                 node_drawing.height = height
-                
+
                 if node_parent_id is not None:
                     item = (priority + 1, node_parent_id)
                     if item not in priority_queue_items:
@@ -215,7 +221,9 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
                     self.__node_id_to_drawing[child_id].height
                     for child_id in node_child_ids
                 )
-                height += config.get(xindmap.config.Variables.mind_map_viewer_node_margin_y) * (len(node_child_ids) - 1)
+                height += config.get(
+                    xindmap.config.Variables.mind_map_viewer_node_margin_y
+                ) * (len(node_child_ids) - 1)
 
                 node_drawing.height = height
 
@@ -235,12 +243,14 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
 
             node_child_ids = self.__node_id_to_child_ids[node_id]
             node_drawing = self.__node_id_to_drawing[node_id]
-            
+
             y = node_drawing.y
             for child_id in node_child_ids:
                 child_drawing = self.__node_id_to_drawing[child_id]
                 child_drawing.y = y
-                y += child_drawing.height + config.get(xindmap.config.Variables.mind_map_viewer_node_margin_y)
+                y += child_drawing.height + config.get(
+                    xindmap.config.Variables.mind_map_viewer_node_margin_y
+                )
 
                 item = (priority + 1, child_id)
                 priority_queue.put(item)
@@ -264,9 +274,13 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
             node_drawing = self.__node_id_to_drawing[node_id]
             node_parent_id = self.__node_id_to_parent_id[node_id]
 
-            min_width = config.get(xindmap.config.Variables.mind_map_viewer_node_min_width) + config.get(xindmap.config.Variables.mind_map_viewer_node_padding_x)
+            min_width = config.get(
+                xindmap.config.Variables.mind_map_viewer_node_min_width
+            ) + config.get(xindmap.config.Variables.mind_map_viewer_node_padding_x)
             title_width = node_drawing.title_width()
-            width = title_width + config.get(xindmap.config.Variables.mind_map_viewer_node_padding_x)
+            width = title_width + config.get(
+                xindmap.config.Variables.mind_map_viewer_node_padding_x
+            )
             width = max(min_width, width)
 
             node_drawing.width = width
@@ -274,7 +288,11 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
             if node_parent_id is not None:
                 parent_drawing = self.__node_id_to_drawing[node_parent_id]
 
-                x = parent_drawing.x + parent_drawing.width + config.get(xindmap.config.Variables.mind_map_viewer_node_margin_x)
+                x = (
+                    parent_drawing.x
+                    + parent_drawing.width
+                    + config.get(xindmap.config.Variables.mind_map_viewer_node_margin_x)
+                )
                 node_drawing.x = x
 
                 node_index = self.__node_id_to_child_ids[node_parent_id].index(node_id)
@@ -305,4 +323,3 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
 
         self.__canvas.scan_mark(x, y)
         self.__canvas.scan_dragto(center_x, center_y, 1)
-

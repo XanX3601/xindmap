@@ -1,5 +1,5 @@
-import logging
 import json
+import logging
 import pathlib
 import shlex
 
@@ -234,7 +234,7 @@ class XindmapApp(xindmap.config.Configurable):
     The goal of the config is for component to expose some variables to
     configure them or share variable among them.
     Components that derives from
-    [`Configurable`][xindmap.config.Configurable.Configurable] class can be 
+    [`Configurable`][xindmap.config.Configurable.Configurable] class can be
     configured on [`variables`][xindmap.config.Variables.Variables] they
     declared during their instantiation.
     Upon modifying variables through the
@@ -272,6 +272,7 @@ class XindmapApp(xindmap.config.Configurable):
             the main window.
         __state_hoder: [state holder](#state-holder)
     """
+
     # callback *****************************************************************
     def __callback_setup(self):
         """Registers callbacks from the attributes of this application for their
@@ -290,7 +291,7 @@ class XindmapApp(xindmap.config.Configurable):
         )
         self.__editable_holder.register_callbacks(
             xindmap.editable.EditableHolderEvent.editable_set,
-            self.__edit_controller.on_editable_holder_editable_set
+            self.__edit_controller.on_editable_holder_editable_set,
         )
         self.__input_stack.register_callbacks(
             xindmap.input.InputStackEvent.input_poped,
@@ -310,23 +311,23 @@ class XindmapApp(xindmap.config.Configurable):
         )
         self.__mind_map.register_callbacks(
             xindmap.mind_map.MindMapEvent.cleared,
-            self.__mind_map_viewer.on_mind_map_cleared
+            self.__mind_map_viewer.on_mind_map_cleared,
         )
         self.__mind_map.register_callbacks(
             xindmap.mind_map.MindMapEvent.node_added,
-            self.__mind_map_viewer.on_mind_map_node_added
+            self.__mind_map_viewer.on_mind_map_node_added,
         )
         self.__mind_map.register_callbacks(
             xindmap.mind_map.MindMapEvent.node_deleted,
-            self.__mind_map_viewer.on_mind_map_node_deleted
+            self.__mind_map_viewer.on_mind_map_node_deleted,
         )
         self.__mind_map.register_callbacks(
             xindmap.mind_map.MindMapEvent.node_selected,
-            self.__mind_map_viewer.on_mind_map_node_selected
+            self.__mind_map_viewer.on_mind_map_node_selected,
         )
         self.__mind_map.register_callbacks(
             xindmap.mind_map.MindMapEvent.node_title_set,
-            self.__mind_map_viewer.on_mind_map_node_title_set
+            self.__mind_map_viewer.on_mind_map_node_title_set,
         )
         self.__state_holder.register_callbacks(
             xindmap.state.StateHolderEvent.state_set,
@@ -364,8 +365,12 @@ class XindmapApp(xindmap.config.Configurable):
 
             if self.__main_window_has_been_configure_once:
                 config = xindmap.config.Config()
-                config.set(xindmap.config.Variables.xindmap_app_main_window_height_px, height)
-                config.set(xindmap.config.Variables.xindmap_app_main_window_width_px, width)
+                config.set(
+                    xindmap.config.Variables.xindmap_app_main_window_height_px, height
+                )
+                config.set(
+                    xindmap.config.Variables.xindmap_app_main_window_width_px, width
+                )
 
             self.__main_window_has_been_configure_once = True
 
@@ -397,11 +402,11 @@ class XindmapApp(xindmap.config.Configurable):
 
         file_path = pathlib.Path(file_path)
         if not file_path.is_file():
-            raise ValueError(f"not a file \"{file_path}\"")
+            raise ValueError(f'not a file "{file_path}"')
 
         with file_path.open("r") as file:
             node_dict = json.load(file)
-        
+
         api.populate_from_dict(node_dict, True)
         api.select_node(self.__mind_map.root_node_id)
         api.center_view(self.__mind_map.root_node_id)
@@ -449,7 +454,12 @@ class XindmapApp(xindmap.config.Configurable):
                 of the application.
                 It is expected to be an instance of [`pathlib.Path`][] class.
         """
-        super().__init__([xindmap.config.Variables.xindmap_app_main_window_height_px, xindmap.config.Variables.xindmap_app_main_window_width_px])
+        super().__init__(
+            [
+                xindmap.config.Variables.xindmap_app_main_window_height_px,
+                xindmap.config.Variables.xindmap_app_main_window_width_px,
+            ]
+        )
 
         # data *******************************************************
         self.__init_file_path = init_file_path
@@ -493,7 +503,7 @@ class XindmapApp(xindmap.config.Configurable):
             self.__input_mapping_tree,
             self.__mind_map,
             self.__mind_map_viewer,
-            self.__state_holder
+            self.__state_holder,
         )
 
         # executor ***************************************************
@@ -533,7 +543,7 @@ class XindmapApp(xindmap.config.Configurable):
                 xindmap.command.CommandCall("load", (file_path,))
             )
 
-        #self.__place_main_window()
+        # self.__place_main_window()
 
     def __read_init_file(self):
         """Reads the initialization file and enqueues command call read.
@@ -577,8 +587,7 @@ class XindmapApp(xindmap.config.Configurable):
 
     # start ********************************************************************
     def start(self):
-        """Starts this application by starting [`tkinter`][] main loop.
-        """
+        """Starts this application by starting [`tkinter`][] main loop."""
         self.__place_main_window()
         self.__main_window.mainloop()
 
@@ -596,16 +605,10 @@ class XindmapApp(xindmap.config.Configurable):
             relx=0.15,
             y=self.__main_window.winfo_height() - 30,
         )
-        self.__mind_map_viewer.place(
-            anchor=ctk.NW,
-            relwidth=1,
-            relheight=1,
-            x=0,
-            y=0
-        )
+        self.__mind_map_viewer.place(anchor=ctk.NW, relwidth=1, relheight=1, x=0, y=0)
         self.__state_viewer.place(
             anchor=ctk.NW,
-            relwidth=.10,
+            relwidth=0.10,
             relx=0.025,
             y=self.__main_window.winfo_height() - 30,
         )

@@ -13,13 +13,10 @@ class MappingPlugin(xindmap.plugin.Plugin):
     # command ******************************************************************
     def commands(self):
         """Returns the list of commands exposed by this mapping plugin."""
-        return [
-            ("map", self.command_mapping)
-        ]
+        return [("map", self.command_mapping)]
 
     def command_mapping(self, inputs_as_string, mapped_inputs_as_string, api):
-        """Maps a list of inputs to another list of inputs
-        """
+        """Maps a list of inputs to another list of inputs"""
         inputs = xindmap.input.InputParser.parse_inputs(inputs_as_string)
         mapped_inputs = xindmap.input.InputParser.parse_inputs(mapped_inputs_as_string)
 

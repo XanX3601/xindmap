@@ -1,5 +1,6 @@
 import enum
 
+
 class MindMapEvent(enum.Enum):
     cleared = enum.auto()
     node_added = enum.auto()

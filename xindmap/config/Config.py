@@ -51,10 +51,10 @@ class Config(xindmap.event.EventSource):
             [variable type][xindmap.config.VariableTypes.VariableTypes]
             to a method checking if a value complies with the type.
     """
+
     # constructor **************************************************************
     def __init__(self):
-        """Instantiates this config.
-        """
+        """Instantiates this config."""
         super().__init__(Variables)
 
         self.__variable_name_to_value = {}

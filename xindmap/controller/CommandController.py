@@ -13,6 +13,7 @@ class CommandControllerState(enum.Enum):
     """Internal state of
     [command controller][xindmap.controller.CommandController.CommandController].
     """
+
     free_typing = enum.auto()
     """Free typing mode.
     """
@@ -31,7 +32,7 @@ class CommandController(xindmap.config.Configurable):
 
     # State
 
-    This controller works differently according to the the content of the 
+    This controller works differently according to the the content of the
     [input stack][xindmap.input.InputStack.InputStack] it deals with.
 
     ## free typing mode
@@ -45,7 +46,7 @@ class CommandController(xindmap.config.Configurable):
     It then creates a [command call][xindmap.command.CommandCall.CommandCall]
     based on the [stack][xindmap.input.InputStack.InputStack] content.
 
-    To enter this mode, the first [input][xindmap.input.Input.Input] in the 
+    To enter this mode, the first [input][xindmap.input.Input.Input] in the
     [stack][xindmap.input.InputStack.InputStack] must equal the
     `free_typing_input` passed upon instantiating this controller.
 
@@ -109,6 +110,7 @@ class CommandController(xindmap.config.Configurable):
             [state][xindmap.controller.CommandController.CommandControllerState]
             to a method used to process an [input][xindmap.input.Input.Input].
     """
+
     # callback *****************************************************************
     def on_input_stack_stack_cleared(self, input_stack, event):
         """Callback to be called upon

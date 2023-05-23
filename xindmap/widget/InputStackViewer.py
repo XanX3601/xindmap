@@ -119,7 +119,7 @@ class InputStackViewer(ctk.CTkFrame, xindmap.config.Configurable):
             self,
             textvariable=self.__label_text,
             height=xindmap.config.Variables.input_stack_viewer_height_px.default,
-            bg_color="red"
+            bg_color="red",
         )
 
         self.__label.pack(fill=ctk.BOTH, expand=True)

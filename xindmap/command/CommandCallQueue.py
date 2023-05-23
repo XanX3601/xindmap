@@ -32,7 +32,7 @@ class CommandCallQueue(xindmap.event.EventSource):
 
     Args:
         call:
-            The [command call][xindmap.command.CommandCall.CommandCall] that has 
+            The [command call][xindmap.command.CommandCall.CommandCall] that has
             been enqueued.
 
     ### call dequeued
@@ -49,6 +49,7 @@ class CommandCallQueue(xindmap.event.EventSource):
             The underlying container in which the
             [command calls][xindmap.command.CommandCall.CommandCall] are stored.
     """
+
     # command ******************************************************************
     def dequeue(self):
         """Dequeues a [command call][xindmap.command.CommandCall.CommandCall]
@@ -93,8 +94,7 @@ class CommandCallQueue(xindmap.event.EventSource):
 
     # constructor **************************************************************
     def __init__(self):
-        """Instantiates this queue.
-        """
+        """Instantiates this queue."""
         super().__init__(CommandCallQueueEvent)
 
         self.__queue = collections.deque()

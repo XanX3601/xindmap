@@ -1,5 +1,6 @@
 import xindmap.plugin
 
+
 class NodePlugin(xindmap.plugin.Plugin):
     # command ******************************************************************
     def commands(self):

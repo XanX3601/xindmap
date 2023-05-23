@@ -6,6 +6,7 @@ class CommandCallQueueEvent(enum.Enum):
     [`CommandCallQueue`][xindmap.command.CommandCallQueue.CommandCallQueue]
     class.
     """
+
     call_dequeued = enum.auto()
     """A call has been dequeued from the command call queue."""
     call_enqueued = enum.auto()

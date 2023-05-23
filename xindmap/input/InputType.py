@@ -2,8 +2,8 @@ import enum
 
 
 class InputType(enum.Enum):
-    """Types of [input][xindmap.input.Input.Input].
-    """
+    """Types of [input][xindmap.input.Input.Input]."""
+
     backspace = enum.auto()
     """Equivalent of a backspace key.
     """

@@ -14,10 +14,10 @@ class PluginImporter:
     Attributes:
         __plugins: A dictionnary mapping a plugin identifier to the plugin.
     """
+
     # constructor **************************************************************
     def __init__(self):
-        """Instantiates this plugin importer.
-        """
+        """Instantiates this plugin importer."""
         self.__plugins = {}
 
     # plugin *******************************************************************

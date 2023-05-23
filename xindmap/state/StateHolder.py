@@ -28,10 +28,10 @@ class StateHolder(xindmap.event.EventSource):
             The current [state][xindmap.state.State.State] stored in this
             holder.
     """
+
     # constructor **************************************************************
     def __init__(self):
-        """Instantiates this state holder.
-        """
+        """Instantiates this state holder."""
         super().__init__(StateHolderEvent)
 
         self.__state = State.none

@@ -13,7 +13,7 @@ class EventSource:
     ## Callback
 
     Callbacks are function like object that can be invoked and that take two
-    arguments: 
+    arguments:
 
     - the source of the event
     - the [event][xindmap.event.Event.Event]
@@ -26,6 +26,7 @@ class EventSource:
     [enum][enum.Enum] so that they are declared as variable in the code rather
     than [strings][str] that must be listed in a documentation.
     """
+
     # callback *****************************************************************
     def register_callbacks(self, event_type, *callbacks):
         """Registers
@@ -36,7 +37,7 @@ class EventSource:
         Args:
             event_type:
                 The [type][xindmap.event.EventSource.EventSource--event-type] of
-                [event][xindmap.event.Event.Event] for which the registered 
+                [event][xindmap.event.Event.Event] for which the registered
                 [callback][xindmap.event.EventSource.EventSource--callback]
                 must be called.
             callbacks:
@@ -62,7 +63,7 @@ class EventSource:
 
     # dispatch *****************************************************************
     def _dispatch_event(self, event, priority=10):
-        """Dispatches an [event][xindmap.event.Event.Event] to registered 
+        """Dispatches an [event][xindmap.event.Event.Event] to registered
         [callbacks][xindmap.event.EventSource.EventSource--callback].
 
         The priority of the [event][xindmap.event.Event.Event] can be changed

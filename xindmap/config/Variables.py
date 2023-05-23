@@ -8,6 +8,7 @@ class Variables(enum.Enum):
     """Statically declared list of all variables that can be set through the
     [config][xindmap.config.Config.Config].
     """
+
     command_controller_mapping_delay_s = Variable(VariableTypes.float, 1)
     """The delay (in seconds) used by
     [command controller][xindmap.controller.CommandController.CommandController]

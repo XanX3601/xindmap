@@ -52,11 +52,15 @@ class EdgeDrawing:
         self.__to_x = 0
         self.__to_y = 0
 
-        self.__line_id = self.__canvas.create_line(self.__from_x, self.__from_y, self.__to_x, self.__to_y)
+        self.__line_id = self.__canvas.create_line(
+            self.__from_x, self.__from_y, self.__to_x, self.__to_y
+        )
 
     # draw *********************************************************************
     def clear(self):
         self.__canvas.delete(self.__line_id)
 
     def __place_components(self):
-        self.__canvas.coords(self.__line_id, self.__from_x, self.__from_y, self.__to_x, self.__to_y)
+        self.__canvas.coords(
+            self.__line_id, self.__from_x, self.__from_y, self.__to_x, self.__to_y
+        )

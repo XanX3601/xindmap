@@ -3,8 +3,8 @@ import collections
 import xindmap.editable
 import xindmap.event
 
-from .MindMapEvent import MindMapEvent
 from .MindMapError import MindMapError
+from .MindMapEvent import MindMapEvent
 from .MindNode import MindNode
 
 
@@ -48,7 +48,9 @@ class MindMap(xindmap.event.EventSource, xindmap.editable.Editable):
             parent_id = self.__current_node_id
 
         if parent_id is None and self.__root is not None:
-            raise MindMapError(f"can not populate from dict with no parent id if mind map is not empty")
+            raise MindMapError(
+                f"can not populate from dict with no parent id if mind map is not empty"
+            )
 
         from_dict_recursivity(node_dict, parent_id)
 
@@ -56,11 +58,8 @@ class MindMap(xindmap.event.EventSource, xindmap.editable.Editable):
         def to_dict_recursivity(node_id):
             node = self.__node_id_to_node[node_id]
 
-            node_dict = {
-                "title": node.title,
-                "childs": []
-            }
-            
+            node_dict = {"title": node.title, "childs": []}
+
             for child_id in node.child_ids():
                 node_dict["childs"].append(to_dict_recursivity(child_id))
 
@@ -78,7 +77,9 @@ class MindMap(xindmap.event.EventSource, xindmap.editable.Editable):
         node = self.__node_id_to_node[self.__current_node_id]
         node.title += text
 
-        event = xindmap.event.Event(MindMapEvent.node_title_set, node_id=node.id, title=node.title)
+        event = xindmap.event.Event(
+            MindMapEvent.node_title_set, node_id=node.id, title=node.title
+        )
         self._dispatch_event(event)
 
     def remove_last_char(self):
@@ -88,9 +89,10 @@ class MindMap(xindmap.event.EventSource, xindmap.editable.Editable):
         node = self.__node_id_to_node[self.__current_node_id]
         node.title = node.title[:-1]
 
-        event = xindmap.event.Event(MindMapEvent.node_title_set, node_id=node.id, title=node.title)
+        event = xindmap.event.Event(
+            MindMapEvent.node_title_set, node_id=node.id, title=node.title
+        )
         self._dispatch_event(event)
-
 
     # node *********************************************************************
     def node_add(self, parent_id=None):
@@ -191,9 +193,7 @@ class MindMap(xindmap.event.EventSource, xindmap.editable.Editable):
         node.title = title
 
         event = xindmap.event.Event(
-            MindMapEvent.node_title_set,
-            node_id=node_id,
-            title=title
+            MindMapEvent.node_title_set, node_id=node_id, title=title
         )
         self._dispatch_event(event)
 
@@ -213,11 +213,9 @@ class MindMap(xindmap.event.EventSource, xindmap.editable.Editable):
         self.__current_node_id = None
 
         event = xindmap.event.Event(
-            MindMapEvent.node_unselected,
-            previous_node_id=previous_node_id
+            MindMapEvent.node_unselected, previous_node_id=previous_node_id
         )
         self._dispatch_event(event)
-
 
     # root *********************************************************************
     @property

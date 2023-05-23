@@ -5,6 +5,7 @@ class Input:
         __type: The [type][xindmap.input.InputType.InputType] of the input.
         __value: The value of the input.
     """
+
     # constructor **************************************************************
     def __init__(self, type, value=None):
         """Instantiates this input
@@ -40,23 +41,19 @@ class Input:
     # property *****************************************************************
     @property
     def type(self):
-        """Returns the type of this input
-        """
+        """Returns the type of this input"""
         return self.__type
 
     @property
     def value(self):
-        """Returns the value of this input
-        """
+        """Returns the value of this input"""
         return self.__value
 
     # string *******************************************************************
     def __repr__(self):
-        """Same as [`__str__`][xindmap.input.Input.Input.__str__].
-        """
+        """Same as [`__str__`][xindmap.input.Input.Input.__str__]."""
         return str(self)
 
     def __str__(self):
-        """Returns a string representation of this input.
-        """
+        """Returns a string representation of this input."""
         return f"<input {self.type.name} value={self.value}>"

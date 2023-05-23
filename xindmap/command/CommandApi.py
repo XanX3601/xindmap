@@ -1,15 +1,17 @@
 import xindmap.config
 import xindmap.event
 
+
 class CommandApi:
     """Api for the commands to interact with the application.
 
     Attributes:
-        __input_mapping_tree: 
+        __input_mapping_tree:
             An
             [input mapping tree][xindmap.input.InputMappingTree.InputMappingTree]
             used to register mapping.
     """
+
     # config *******************************************************************
     def get_config(self, variable):
         config = xindmap.config.Config()
@@ -50,7 +52,7 @@ class CommandApi:
         self.__mind_map.populate_from_dict(node_dict)
         if wait:
             self.__wait()
-            
+
     def to_dict(self):
         return self.__mind_map.to_dict()
 
@@ -98,4 +100,3 @@ class CommandApi:
     # wait *********************************************************************
     def __wait(self):
         xindmap.event.wait_for_event_dispatching()
-

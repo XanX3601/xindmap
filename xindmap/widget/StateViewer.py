@@ -1,5 +1,7 @@
-import customtkinter as ctk
 import logging
+
+import customtkinter as ctk
+
 import xindmap.config
 import xindmap.state
 
@@ -7,7 +9,9 @@ import xindmap.state
 class StateViewer(ctk.CTkFrame, xindmap.config.Configurable):
     # callback *****************************************************************
     def on_state_holder_state_set(self, state_holder, event):
-        logging.debug(f"state viewer {id(self)}: on_state_holder_state_set(event={event})")
+        logging.debug(
+            f"state viewer {id(self)}: on_state_holder_state_set(event={event})"
+        )
 
         self.__update_label_text(event.state)
 

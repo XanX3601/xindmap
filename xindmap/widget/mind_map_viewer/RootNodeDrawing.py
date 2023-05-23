@@ -1,5 +1,6 @@
 from .MindNodeDrawing import MindNodeDrawing
 
+
 class RootNodeDrawing(MindNodeDrawing):
     # constructor **************************************************************
     def __init__(self, canvas):

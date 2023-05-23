@@ -2,6 +2,7 @@ import xindmap.event
 
 from .EditableHolderEvent import EditableHolderEvent
 
+
 class EditableHolder(xindmap.event.EventSource):
     # constructor **************************************************************
     def __init__(self):

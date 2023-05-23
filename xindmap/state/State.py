@@ -2,8 +2,8 @@ import enum
 
 
 class State(enum.Enum):
-    """States of xindmap application.
-    """
+    """States of xindmap application."""
+
     command = enum.auto()
     """The application is waiting for the user to enter commands.
     """

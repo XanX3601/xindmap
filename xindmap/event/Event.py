@@ -17,6 +17,7 @@ class Event:
             The [type][xindmap.event.EventSource.EventSource--event-type] of the
             event.
     """
+
     # attribute ****************************************************************
     def __getattr__(self, attribute_name):
         """Gets an attribute that is not statically declared.
@@ -52,13 +53,11 @@ class Event:
 
     # string *******************************************************************
     def __repr__(self):
-        """Same as [`__str__`][xindmap.event.Event.Event.__str__].
-        """
+        """Same as [`__str__`][xindmap.event.Event.Event.__str__]."""
         return str(self)
 
     def __str__(self):
-        """Returns a string representation of this event.
-        """
+        """Returns a string representation of this event."""
         return f"event {repr(self.__type)} {self.__attribute_name_to_value}"
 
     # type *********************************************************************

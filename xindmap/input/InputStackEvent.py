@@ -5,6 +5,7 @@ class InputStackEvent(enum.Enum):
     """Event types dispatched by
     [`InputStack`][xindmap.input.InputStack.InputStack] class.
     """
+
     input_poped = enum.auto()
     """An [input][xindmap.input.Input.Input] has been poped out of the stack."""
     input_pushed = enum.auto()
