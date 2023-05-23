@@ -16,7 +16,7 @@ import xindmap.state
 import xindmap.widget
 
 
-class XindmapApp:
+class XindmapApp(xindmap.config.Configurable):
     """Core / root object of the Xindmap application.
 
     This object, considered to be unique during the lifetime of the application
@@ -352,12 +352,22 @@ class XindmapApp:
         """
         logging.debug(f"xindmap app {id(self)}: on_configure(event={event})")
 
+        if event.widget != self.__main_window:
+            return
+
         height = self.__main_window.winfo_height()
         width = self.__main_window.winfo_width()
 
         if self.__previous_height != height or self.__previous_width != width:
             self.__previous_width = width
             self.__previous_height = height
+
+            if self.__main_window_has_been_configure_once:
+                config = xindmap.config.Config()
+                config.set(xindmap.config.Variables.xindmap_app_main_window_height_px, height)
+                config.set(xindmap.config.Variables.xindmap_app_main_window_width_px, width)
+
+            self.__main_window_has_been_configure_once = True
 
             self.__place_widget()
 
@@ -415,6 +425,13 @@ class XindmapApp:
         with file_path.open("w") as file:
             json.dump(root_dict, file, indent=2)
 
+    # config callback **********************************************************
+    def on_config_variable_xindmap_app_main_window_height_px_set(self, value):
+        self.__place_main_window()
+
+    def on_config_variable_xindmap_app_main_window_width_px_set(self, value):
+        self.__place_main_window()
+
     # constructor **************************************************************
     def __init__(self, init_file_path):
         """Instantiates the application.
@@ -432,6 +449,8 @@ class XindmapApp:
                 of the application.
                 It is expected to be an instance of [`pathlib.Path`][] class.
         """
+        super().__init__([xindmap.config.Variables.xindmap_app_main_window_height_px, xindmap.config.Variables.xindmap_app_main_window_width_px])
+
         # data *******************************************************
         self.__init_file_path = init_file_path
 
@@ -439,6 +458,8 @@ class XindmapApp:
         self.__previous_width = None
 
         self.__last_file_path = None
+
+        self.__main_window_has_been_configure_once = False
 
         # model ******************************************************
         self.__plugin_importer = xindmap.plugin.PluginImporter()
@@ -512,6 +533,8 @@ class XindmapApp:
                 xindmap.command.CommandCall("load", (file_path,))
             )
 
+        #self.__place_main_window()
+
     def __read_init_file(self):
         """Reads the initialization file and enqueues command call read.
 
@@ -556,6 +579,7 @@ class XindmapApp:
     def start(self):
         """Starts this application by starting [`tkinter`][] main loop.
         """
+        self.__place_main_window()
         self.__main_window.mainloop()
 
     # widget *******************************************************************
@@ -585,3 +609,13 @@ class XindmapApp:
             relx=0.025,
             y=self.__main_window.winfo_height() - 30,
         )
+
+    # window *******************************************************************
+    def __place_main_window(self):
+        config = xindmap.config.Config()
+
+        height = config.get(xindmap.config.Variables.xindmap_app_main_window_height_px)
+        width = config.get(xindmap.config.Variables.xindmap_app_main_window_width_px)
+
+        geometry = f"{width}x{height}"
+        self.__main_window.geometry(geometry)

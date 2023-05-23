@@ -33,6 +33,14 @@
         {
           "title": "detail panel",
           "childs": []
+        },
+        {
+          "title": "zoom in/out",
+          "childs": []
+        },
+        {
+          "title": "mapping in edit",
+          "childs": []
         }
       ]
     }

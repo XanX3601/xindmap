@@ -25,3 +25,4 @@ They can be accessed through the
 from .Config import Config
 from .Configurable import Configurable
 from .Variables import Variables
+from .VariableTypes import VariableTypes

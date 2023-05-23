@@ -1,4 +1,5 @@
 # import ***********************************************************************
+import xindmap.plugin.internal.config
 import xindmap.plugin.internal.mapping
 import xindmap.plugin.internal.move
 import xindmap.plugin.internal.node

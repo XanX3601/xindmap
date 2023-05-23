@@ -1,14 +1,21 @@
-import collections
+import itertools
 
 from .VariableTypes import VariableTypes
 
-Variable = collections.namedtuple("Variable", ["type", "default"])
-"""A variable exposed or shared between components declared in the
-[variable list][xindmap.config.Variables.Variables] that can be set through the
-[config][xindmap.config.Config.Config].
+class Variable:
+    # compare ******************************************************************
+    def __eq__(self, variable):
+        if not isinstance(variable, Variable):
+            return False
 
-Attributes:
-    type:
-        The [type][xindmap.config.VariableTypes.VariableTypes] of the variable.
-    default: The default value of the variable.
-"""
+        return self.__id == variable.__id
+
+    # constructor **************************************************************
+    def __init__(self, type, default):
+        self.__id = next(Variable.__id_counter)
+
+        self.type = type
+        self.default = default
+
+    # id ***********************************************************************
+    __id_counter = itertools.count()

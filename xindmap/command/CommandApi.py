@@ -1,3 +1,4 @@
+import xindmap.config
 import xindmap.event
 
 class CommandApi:
@@ -9,6 +10,17 @@ class CommandApi:
             [input mapping tree][xindmap.input.InputMappingTree.InputMappingTree]
             used to register mapping.
     """
+    # config *******************************************************************
+    def get_config(self, variable):
+        config = xindmap.config.Config()
+        return config.get(variable)
+
+    def set_config(self, variable, value, wait=False):
+        config = xindmap.config.Config()
+        config.set(variable, value)
+        if wait:
+            self.__wait()
+
     # constructor **************************************************************
     def __init__(self, input_mapping_tree, mind_map, mind_map_viewer, state_holder):
         """Instantiates this api.
