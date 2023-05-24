@@ -85,6 +85,11 @@ class CommandApi:
         if wait:
             self.__wait()
 
+    def set_node_status(self, status, node_id=None, wait=False):
+        self.__mind_map.node_set_status(status, node_id)
+        if wait:
+            self.__wait()
+
     # state ********************************************************************
     def set_state(self, state, wait=False):
         self.__state_holder.set_state(state)

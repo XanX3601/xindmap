@@ -1,7 +1,31 @@
 import customtkinter as ctk
 
+import xindmap.config
+import xindmap.mind_map
 
-class MindNodeDrawing:
+
+class MindNodeDrawing(xindmap.config.Configurable):
+    # config callback **********************************************************
+    def on_config_variable_mind_map_viewer_node_status_done_fill_color_set(self, value):
+        if self._status == xindmap.mind_map.MindNodeStatus.done:
+            self.__canvas.itemconfigure(self._hitbox_id, fill=value)
+
+    def on_config_variable_mind_map_viewer_node_status_in_progress_fill_color_set(
+        self, value
+    ):
+        if self._status == xindmap.mind_map.MindNodeStatus.in_progress:
+            self.__canvas.itemconfigure(self._hitbox_id, fill=value)
+
+    def on_config_variable_mind_map_viewer_node_status_none_fill_color_set(self, value):
+        if self._status == xindmap.mind_map.MindNodeStatus.none:
+            self.__canvas.itemconfigure(self._hitbox_id, fill=value)
+
+    def on_config_variable_mind_map_viewer_node_status_to_do_fill_color_set(
+        self, value
+    ):
+        if self._status == xindmap.mind_map.MindNodeStatus.to_do:
+            self.__canvas.itemconfigure(self._hitbox_id, fill=value)
+
     # coords *******************************************************************
     @property
     def center_x(self):
@@ -31,6 +55,15 @@ class MindNodeDrawing:
 
     # constructor **************************************************************
     def __init__(self, canvas):
+        super().__init__(
+            [
+                xindmap.config.Variables.mind_map_viewer_node_status_done_fill_color,
+                xindmap.config.Variables.mind_map_viewer_node_status_in_progress_fill_color,
+                xindmap.config.Variables.mind_map_viewer_node_status_none_fill_color,
+                xindmap.config.Variables.mind_map_viewer_node_status_to_do_fill_color,
+            ]
+        )
+
         self.__canvas = canvas
 
         self._x = 0
@@ -39,9 +72,16 @@ class MindNodeDrawing:
         self._height = 0
 
         self._is_selected = False
+        self._status = xindmap.mind_map.MindNodeStatus.none
 
         self._hitbox_id = self.__canvas.create_rectangle(
-            self._x, self._y, self._x + self._width, self._y + self._height
+            self._x,
+            self._y,
+            self._x + self._width,
+            self._y + self._height,
+            fill=xindmap.config.Config().get(
+                xindmap.config.Variables.mind_map_viewer_node_status_none_fill_color
+            ),
         )
         self._title_id = self.__canvas.create_text(
             self._x, self._y, text="", anchor=ctk.CENTER
@@ -71,9 +111,9 @@ class MindNodeDrawing:
         self.__is_selected = is_selected
 
         if is_selected:
-            self.__canvas.itemconfigure(self._hitbox_id, fill="red")
+            self.__canvas.itemconfigure(self._hitbox_id, outline="red")
         else:
-            self.__canvas.itemconfigure(self._hitbox_id, fill="")
+            self.__canvas.itemconfigure(self._hitbox_id, outline="systemTextColor")
 
     # size *********************************************************************
     @property
@@ -93,6 +133,27 @@ class MindNodeDrawing:
     def width(self, width):
         self._width = width
         self._place_components()
+
+    # status *******************************************************************
+    __status_to_variable = {
+        xindmap.mind_map.MindNodeStatus.done: xindmap.config.Variables.mind_map_viewer_node_status_done_fill_color,
+        xindmap.mind_map.MindNodeStatus.in_progress: xindmap.config.Variables.mind_map_viewer_node_status_in_progress_fill_color,
+        xindmap.mind_map.MindNodeStatus.none: xindmap.config.Variables.mind_map_viewer_node_status_none_fill_color,
+        xindmap.mind_map.MindNodeStatus.to_do: xindmap.config.Variables.mind_map_viewer_node_status_to_do_fill_color,
+    }
+
+    @property
+    def status(self):
+        return self._status
+
+    @status.setter
+    def status(self, status):
+        self._status = status
+
+        variable = MindNodeDrawing.__status_to_variable[status]
+        color = xindmap.config.Config().get(variable)
+
+        self.__canvas.itemconfigure(self._hitbox_id, fill=color)
 
     # title ********************************************************************
     @property

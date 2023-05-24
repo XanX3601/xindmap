@@ -28,6 +28,12 @@ class EventSource:
     """
 
     # callback *****************************************************************
+    def deregister_callbacks(self, event_type, *callbacks):
+        event_dispatcher = EventDispatcher()
+
+        for callback in callbacks:
+            event_dispatcher.deregister_callback(self, event_type, callback)
+
     def register_callbacks(self, event_type, *callbacks):
         """Registers
         [callbacks][xindmap.event.EventSource.EventSource--callback] on

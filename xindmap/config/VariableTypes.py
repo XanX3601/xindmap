@@ -6,6 +6,7 @@ class VariableTypes(enum.Enum):
     [variables][xindmap.config.Variable.Variable].
     """
 
+    color = enum.auto()
     int = enum.auto()
     """Integer.
     """

@@ -6,6 +6,7 @@ import xindmap.event
 from .MindMapError import MindMapError
 from .MindMapEvent import MindMapEvent
 from .MindNode import MindNode
+from .MindNodeStatus import MindNodeStatus
 
 
 class MindMap(xindmap.event.EventSource, xindmap.editable.Editable):
@@ -40,6 +41,9 @@ class MindMap(xindmap.event.EventSource, xindmap.editable.Editable):
             if "title" in node_dict:
                 self.node_set_title(node_dict["title"], node_id)
 
+            if "status" in node_dict:
+                self.node_set_status(MindNodeStatus[node_dict["status"]], node_id)
+
             if "childs" in node_dict:
                 for child_dict in node_dict["childs"]:
                     from_dict_recursivity(child_dict, node_id)
@@ -58,7 +62,7 @@ class MindMap(xindmap.event.EventSource, xindmap.editable.Editable):
         def to_dict_recursivity(node_id):
             node = self.__node_id_to_node[node_id]
 
-            node_dict = {"title": node.title, "childs": []}
+            node_dict = {"title": node.title, "status": node.status.name, "childs": []}
 
             for child_id in node.child_ids():
                 node_dict["childs"].append(to_dict_recursivity(child_id))
@@ -182,6 +186,21 @@ class MindMap(xindmap.event.EventSource, xindmap.editable.Editable):
         )
         self._dispatch_event(event)
 
+    def node_set_status(self, status, node_id=None):
+        if node_id is None:
+            node_id = self.__current_node_id
+
+        if node_id not in self.__node_id_to_node:
+            raise MindMapError(f"unknown node id {node_id}")
+
+        node = self.__node_id_to_node[node_id]
+        node.status = status
+
+        event = xindmap.event.Event(
+            MindMapEvent.node_status_set, node_id=node_id, status=status
+        )
+        self._dispatch_event(event)
+
     def node_set_title(self, title, node_id=None):
         if node_id is None:
             node_id = self.__current_node_id
@@ -196,6 +215,17 @@ class MindMap(xindmap.event.EventSource, xindmap.editable.Editable):
             MindMapEvent.node_title_set, node_id=node_id, title=title
         )
         self._dispatch_event(event)
+
+    def node_status(self, node_id=None):
+        if node_id is None:
+            node_id = self.__current_node_id
+
+        if node_id not in self.__node_id_to_node:
+            raise MindMapError(f"unknown node id {node_id}")
+
+        node = self.__node_id_to_node[node_id]
+
+        return node.status
 
     def node_title(self, node_id=None):
         if node_id is None:

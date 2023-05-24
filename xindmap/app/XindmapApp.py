@@ -326,6 +326,10 @@ class XindmapApp(xindmap.config.Configurable):
             self.__mind_map_viewer.on_mind_map_node_selected,
         )
         self.__mind_map.register_callbacks(
+            xindmap.mind_map.MindMapEvent.node_status_set,
+            self.__mind_map_viewer.on_mind_map_node_statuts_set,
+        )
+        self.__mind_map.register_callbacks(
             xindmap.mind_map.MindMapEvent.node_title_set,
             self.__mind_map_viewer.on_mind_map_node_title_set,
         )

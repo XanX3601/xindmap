@@ -81,6 +81,27 @@ class EventDispatcher:
     """
 
     # callback *****************************************************************
+    def deregister_callback(self, event_source, event_type, callback):
+        # prevent unregisterd event source ***************************
+        if event_source not in self.__event_source_to_event_type_to_callbacks:
+            raise EventSourceError(f"event source not registered")
+
+        # prevent unknown event type *********************************
+        if (
+            event_type
+            not in self.__event_source_to_event_type_to_callbacks[event_source]
+        ):
+            raise EventSourceError(f"event type not dispatched by event source")
+
+        # remove callback if it has been added ***********************
+        if (
+            callback
+            in self.__event_source_to_event_type_to_callbacks[event_source][event_type]
+        ):
+            self.__event_source_to_event_type_to_callbacks[event_source][
+                event_type
+            ].remove(callback)
+
     def register_callback(self, event_source, event_type, callback):
         """Registers a
         [callback][xindmap.event.EventSource.EventSource--callback] to an

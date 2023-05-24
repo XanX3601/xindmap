@@ -1,45 +1,133 @@
 {
   "title": "xindmap",
+  "status": "none",
   "childs": [
     {
       "title": "plugin",
+      "status": "none",
       "childs": [
         {
-          "title": "config done !",
+          "title": "config",
+          "status": "none",
+          "childs": [
+            {
+              "title": "add more customization",
+              "status": "in_progress",
+              "childs": []
+            }
+          ]
+        },
+        {
+          "title": "move",
+          "status": "none",
+          "childs": [
+            {
+              "title": "improve movement",
+              "status": "to_do",
+              "childs": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "node as task",
+      "status": "none",
+      "childs": [
+        {
+          "title": "status",
+          "status": "done",
+          "childs": []
+        },
+        {
+          "title": "detail",
+          "status": "to_do",
+          "childs": []
+        }
+      ]
+    },
+    {
+      "title": "edit mode",
+      "status": "none",
+      "childs": [
+        {
+          "title": "cursor",
+          "status": "to_do",
+          "childs": []
+        },
+        {
+          "title": "move around using arrows",
+          "status": "to_do",
+          "childs": []
+        },
+        {
+          "title": "replace node title",
+          "status": "to_do",
+          "childs": []
+        }
+      ]
+    },
+    {
+      "title": "viewer",
+      "status": "none",
+      "childs": [
+        {
+          "title": "zoom in/out",
+          "status": "to_do",
+          "childs": []
+        },
+        {
+          "title": "explore with mouse",
+          "status": "to_do",
           "childs": []
         }
       ]
     },
     {
       "title": "design",
-      "childs": []
-    },
-    {
-      "title": "edit",
+      "status": "none",
       "childs": [
         {
-          "title": "cursor",
+          "title": "node drawing",
+          "status": "to_do",
+          "childs": []
+        },
+        {
+          "title": "node animation",
+          "status": "to_do",
           "childs": []
         }
       ]
     },
     {
-      "title": "features",
+      "title": "error",
+      "status": "none",
       "childs": [
         {
-          "title": "node as tasks",
+          "title": "display error to user",
+          "status": "to_do",
           "childs": []
-        },
+        }
+      ]
+    },
+    {
+      "title": "help",
+      "status": "none",
+      "childs": [
         {
-          "title": "detail panel",
+          "title": "give help on commands",
+          "status": "to_do",
           "childs": []
-        },
+        }
+      ]
+    },
+    {
+      "title": "command",
+      "status": "none",
+      "childs": [
         {
-          "title": "zoom in/out",
-          "childs": []
-        },
-        {
-          "title": "mapping in edit",
+          "title": "autocompletion",
+          "status": "to_do",
           "childs": []
         }
       ]

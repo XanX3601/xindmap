@@ -1,5 +1,7 @@
 import itertools
 
+from .MindNodeStatus import MindNodeStatus
+
 
 class MindNode:
     # child ********************************************************************
@@ -20,6 +22,7 @@ class MindNode:
         self.__child_id_to_child = {}
 
         self.title = ""
+        self.status = MindNodeStatus.none
 
     # id ***********************************************************************
     __id_count = itertools.count()

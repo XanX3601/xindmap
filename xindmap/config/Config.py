@@ -1,4 +1,5 @@
 import inspect
+import re
 
 import singleton_decorator
 
@@ -74,6 +75,12 @@ class Config(xindmap.event.EventSource):
             self.__variable_type_to_check_function[type] = function
 
     # type *********************************************************************
+    @staticmethod
+    def __variable_type_color_check(value):
+        return isinstance(value, str) and re.fullmatch(
+            r"#[\dabcdef]{6}|#[\dabcdef]{3}", value
+        )
+
     @staticmethod
     def __variable_type_int_check(value):
         """Checks if a value complies with type

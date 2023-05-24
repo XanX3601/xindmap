@@ -107,6 +107,18 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
             node_drawing = self.__node_id_to_drawing[node_id]
             node_drawing.is_selected = True
 
+    def on_mind_map_node_statuts_set(self, mind_map, event):
+        logging.debug(
+            f"mind map viewer {id(self)}: on_mind_map_node_status_set(event={event})"
+        )
+
+        node_id = event.node_id
+        status = event.status
+
+        if node_id in self.__node_id_to_drawing:
+            node_drawing = self.__node_id_to_drawing[node_id]
+            node_drawing.status = status
+
     def on_mind_map_node_title_set(self, mind_map, event):
         logging.debug(
             f"mind map viewer {id(self)}: on_mind_map_node_title_set(event={event})"

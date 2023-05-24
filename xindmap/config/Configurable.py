@@ -76,6 +76,8 @@ class Configurable:
                 [variable list][xindmap.config.Variables.Variables] on which
                 this configurable can be configured.
         """
+        self.__config_variables = config_variables
+
         config = Config()
 
         for variable in config_variables:
@@ -91,3 +93,10 @@ class Configurable:
 
             variable_name = result.groups()[0]
             self.__variable_name_to_callback[variable_name] = method
+
+    # destructor ***************************************************************
+    def __delf__(self):
+        config = Config()
+
+        for variable in self.__config_variables:
+            config.deregister_callbacks(variable, self.__on_config_variable_set)
