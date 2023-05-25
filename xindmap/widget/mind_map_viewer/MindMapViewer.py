@@ -119,17 +119,19 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
             node_drawing = self.__node_id_to_drawing[node_id]
             node_drawing.status = status
 
-    def on_mind_map_node_title_set(self, mind_map, event):
+    def on_mind_map_node_text_set(self, mind_map, event):
         logging.debug(
             f"mind map viewer {id(self)}: on_mind_map_node_title_set(event={event})"
         )
 
         node_id = event.node_id
-        title = event.title
+        title = mind_map.node_title(node_id)
+        description = mind_map.node_description(node_id)
 
         if node_id in self.__node_id_to_drawing:
             node_drawing = self.__node_id_to_drawing[node_id]
             node_drawing.title = title
+            node_drawing.description = description
 
             self.__node_drawing_compute_width_and_x(node_id)
 

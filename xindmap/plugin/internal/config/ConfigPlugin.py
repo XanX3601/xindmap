@@ -36,6 +36,10 @@ class ConfigPlugin(xindmap.plugin.Plugin):
     variable_name_to_variable = {}
 
     @classmethod
+    def parse_color_value(cls, value):
+        return str(value)
+
+    @classmethod
     def parse_int_value(cls, value):
         return int(value)
 

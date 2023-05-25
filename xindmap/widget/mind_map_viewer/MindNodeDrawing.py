@@ -86,6 +86,18 @@ class MindNodeDrawing(xindmap.config.Configurable):
         self._title_id = self.__canvas.create_text(
             self._x, self._y, text="", anchor=ctk.CENTER
         )
+        self._description_id = self.__canvas.create_text(
+            self._x, self._y, text="", anchor=ctk.NW, state=ctk.HIDDEN
+        )
+
+    # description **************************************************************
+    @property
+    def description(self):
+        return self.__canvas.itemcget(self._description_id, "text")
+
+    @description.setter
+    def description(self, description):
+        self.__canvas.itemconfigure(self._description_id, text=description)
 
     # draw *********************************************************************
     def clear(self):
@@ -100,6 +112,7 @@ class MindNodeDrawing(xindmap.config.Configurable):
             self._y + self._height,
         )
         self.__canvas.coords(self._title_id, self.center_x, self.center_y)
+        self.__canvas.coords(self._description_id, self._x, self._y + self._height)
 
     # select *******************************************************************
     @property
@@ -112,8 +125,10 @@ class MindNodeDrawing(xindmap.config.Configurable):
 
         if is_selected:
             self.__canvas.itemconfigure(self._hitbox_id, outline="red")
+            self.__canvas.itemconfigure(self._description_id, state=ctk.NORMAL)
         else:
             self.__canvas.itemconfigure(self._hitbox_id, outline="systemTextColor")
+            self.__canvas.itemconfigure(self._description_id, state=ctk.HIDDEN)
 
     # size *********************************************************************
     @property

@@ -32,7 +32,7 @@ class Variables(enum.Enum):
     mind_map_viewer_node_padding_y = Variable(VariableTypes.int, 5)
     mind_map_viewer_node_status_done_fill_color = Variable(VariableTypes.color, "#0f0")
     mind_map_viewer_node_status_in_progress_fill_color = Variable(
-        VariableTypes.color, "#ff0"
+        VariableTypes.color, "#aa0"
     )
     mind_map_viewer_node_status_none_fill_color = Variable(VariableTypes.color, "#000")
     mind_map_viewer_node_status_to_do_fill_color = Variable(VariableTypes.color, "#00f")

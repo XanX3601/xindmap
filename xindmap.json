@@ -1,28 +1,28 @@
 {
-  "title": "xindmap",
+  "text": "xindmap",
   "status": "none",
   "childs": [
     {
-      "title": "plugin",
+      "text": "plugin",
       "status": "none",
       "childs": [
         {
-          "title": "config",
+          "text": "config",
           "status": "none",
           "childs": [
             {
-              "title": "add more customization",
+              "text": "add more customization",
               "status": "in_progress",
               "childs": []
             }
           ]
         },
         {
-          "title": "move",
+          "text": "move",
           "status": "none",
           "childs": [
             {
-              "title": "improve movement",
+              "text": "improve movement",
               "status": "to_do",
               "childs": []
             }
@@ -31,102 +31,107 @@
       ]
     },
     {
-      "title": "node as task",
+      "text": "node as task",
       "status": "none",
       "childs": [
         {
-          "title": "status",
+          "text": "status",
           "status": "done",
           "childs": []
         },
         {
-          "title": "detail",
-          "status": "to_do",
+          "text": "detail",
+          "status": "done",
           "childs": []
         }
       ]
     },
     {
-      "title": "edit mode",
+      "text": "edit mode",
       "status": "none",
       "childs": [
         {
-          "title": "cursor",
+          "text": "cursor",
           "status": "to_do",
           "childs": []
         },
         {
-          "title": "move around using arrows",
+          "text": "move around using arrows",
           "status": "to_do",
           "childs": []
         },
         {
-          "title": "replace node title",
+          "text": "replace node title",
           "status": "to_do",
           "childs": []
         }
       ]
     },
     {
-      "title": "viewer",
+      "text": "viewer",
       "status": "none",
       "childs": [
         {
-          "title": "zoom in/out",
+          "text": "zoom in/out",
           "status": "to_do",
           "childs": []
         },
         {
-          "title": "explore with mouse",
-          "status": "to_do",
-          "childs": []
-        }
-      ]
-    },
-    {
-      "title": "design",
-      "status": "none",
-      "childs": [
-        {
-          "title": "node drawing",
+          "text": "explore with mouse",
           "status": "to_do",
           "childs": []
         },
         {
-          "title": "node animation",
+          "text": "hide / show nodes\nIt could be usefull to be able to hide and show nodes on will",
+          "status": "none",
+          "childs": []
+        }
+      ]
+    },
+    {
+      "text": "design",
+      "status": "none",
+      "childs": [
+        {
+          "text": "node drawing",
+          "status": "to_do",
+          "childs": []
+        },
+        {
+          "text": "node animation",
           "status": "to_do",
           "childs": []
         }
       ]
     },
     {
-      "title": "error",
+      "text": "error",
       "status": "none",
       "childs": [
         {
-          "title": "display error to user",
+          "text": "display error to user",
           "status": "to_do",
           "childs": []
         }
       ]
     },
     {
-      "title": "help",
+      "text": "help",
       "status": "none",
       "childs": [
         {
-          "title": "give help on commands",
+          "text": "give help on commands",
           "status": "to_do",
           "childs": []
         }
       ]
     },
     {
-      "title": "command",
+      "text": "command",
       "status": "none",
       "childs": [
         {
-          "title": "autocompletion",
+          "text": "autocompletion",
           "status": "to_do",
           "childs": []
         }

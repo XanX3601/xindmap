@@ -21,7 +21,8 @@ class MindNode:
         self.__parent = parent
         self.__child_id_to_child = {}
 
-        self.title = ""
+        self.__text = ""
+        self.__title_index = None
         self.status = MindNodeStatus.none
 
     # id ***********************************************************************
@@ -35,3 +36,34 @@ class MindNode:
     @property
     def parent(self):
         return self.__parent
+
+    # text *********************************************************************
+    def add_text(self, text):
+        self.__text += text
+
+        if self.__title_index is None and "\n" in text:
+            self.__title_index = self.__text.index("\n")
+
+    def delete_last_char(self):
+        self.__text = self.__text[:-1]
+
+        if self.__title_index is not None and self.__title_index <= len(self.__text):
+            self.__title_index = None
+
+    @property
+    def description(self):
+        return None if self.__title_index is None else self.__text[self.__title_index+1:]
+
+    @property
+    def text(self):
+        return self.__text
+
+    @text.setter
+    def text(self, text):
+        self.__title_index = text.index("\n") if "\n" in text else None
+
+        self.__text = text
+
+    @property
+    def title(self):
+        return self.__text if self.__title_index is None else self.__text[:self.__title_index]
