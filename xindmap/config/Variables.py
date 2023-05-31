@@ -24,18 +24,18 @@ class Variables(enum.Enum):
     """The height (in pixel) of 
     [input stack viewer][xindmap.widget.InputStackViewer.InputStackViewer].
     """
-    mind_map_viewer_node_height = Variable(VariableTypes.int, 20)
-    mind_map_viewer_node_margin_x = Variable(VariableTypes.int, 30)
-    mind_map_viewer_node_margin_y = Variable(VariableTypes.int, 30)
-    mind_map_viewer_node_min_width = Variable(VariableTypes.int, 10)
-    mind_map_viewer_node_padding_x = Variable(VariableTypes.int, 5)
-    mind_map_viewer_node_padding_y = Variable(VariableTypes.int, 5)
-    mind_map_viewer_node_status_done_fill_color = Variable(VariableTypes.color, "#0f0")
-    mind_map_viewer_node_status_in_progress_fill_color = Variable(
-        VariableTypes.color, "#aa0"
+    mind_map_viewer_edge_drawing_width = Variable(VariableTypes.int, 2)
+    mind_map_viewer_mind_node_drawing_body_height = Variable(VariableTypes.int, 6)
+    mind_map_viewer_mind_node_drawing_body_min_width = Variable(VariableTypes.int, 10)
+    mind_map_viewer_mind_node_drawing_description_width = Variable(
+        VariableTypes.int, 100
     )
-    mind_map_viewer_node_status_none_fill_color = Variable(VariableTypes.color, "#000")
-    mind_map_viewer_node_status_to_do_fill_color = Variable(VariableTypes.color, "#00f")
+    mind_map_viewer_mind_node_drawing_margin_x = Variable(VariableTypes.int, 50)
+    mind_map_viewer_mind_mode_drawing_margin_y = Variable(VariableTypes.int, 30)
+    mind_map_viewer_mind_node_drawing_padding_x = Variable(VariableTypes.int, 5)
+    mind_map_viewer_mind_node_drawing_padding_y = Variable(VariableTypes.int, 5)
+    mind_map_viewer_mind_node_drawing_selector_radius = Variable(VariableTypes.int, 5)
+
     state_viewer_height_px = Variable(VariableTypes.int, 20)
     xindmap_app_main_window_height_px = Variable(VariableTypes.int, 600)
     xindmap_app_main_window_width_px = Variable(VariableTypes.int, 800)

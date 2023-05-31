@@ -166,7 +166,7 @@ class MindMap(xindmap.event.EventSource, xindmap.editable.Editable):
             raise MindMapError(f"unknown node id {node_id}")
 
         node = self.__node_id_to_node[node_id]
-        
+
         return node.description
 
     def node_id_exists(self, node_id):

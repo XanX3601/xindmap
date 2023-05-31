@@ -2,29 +2,20 @@ import customtkinter as ctk
 
 import xindmap.config
 import xindmap.mind_map
+import xindmap.widget.tools
 
 
 class MindNodeDrawing(xindmap.config.Configurable):
     # config callback **********************************************************
-    def on_config_variable_mind_map_viewer_node_status_done_fill_color_set(self, value):
-        if self._status == xindmap.mind_map.MindNodeStatus.done:
-            self.__canvas.itemconfigure(self._hitbox_id, fill=value)
-
-    def on_config_variable_mind_map_viewer_node_status_in_progress_fill_color_set(
+    def on_config_variable_mind_map_viewer_mind_node_drawing_body_height_set(
         self, value
     ):
-        if self._status == xindmap.mind_map.MindNodeStatus.in_progress:
-            self.__canvas.itemconfigure(self._hitbox_id, fill=value)
+        self._place_components()
 
-    def on_config_variable_mind_map_viewer_node_status_none_fill_color_set(self, value):
-        if self._status == xindmap.mind_map.MindNodeStatus.none:
-            self.__canvas.itemconfigure(self._hitbox_id, fill=value)
-
-    def on_config_variable_mind_map_viewer_node_status_to_do_fill_color_set(
+    def on_config_variable_mind_map_viewer_mind_node_drawing_selector_radius_set(
         self, value
     ):
-        if self._status == xindmap.mind_map.MindNodeStatus.to_do:
-            self.__canvas.itemconfigure(self._hitbox_id, fill=value)
+        self._place_components()
 
     # coords *******************************************************************
     @property
@@ -57,10 +48,8 @@ class MindNodeDrawing(xindmap.config.Configurable):
     def __init__(self, canvas):
         super().__init__(
             [
-                xindmap.config.Variables.mind_map_viewer_node_status_done_fill_color,
-                xindmap.config.Variables.mind_map_viewer_node_status_in_progress_fill_color,
-                xindmap.config.Variables.mind_map_viewer_node_status_none_fill_color,
-                xindmap.config.Variables.mind_map_viewer_node_status_to_do_fill_color,
+                xindmap.config.Variables.mind_map_viewer_mind_node_drawing_body_height,
+                xindmap.config.Variables.mind_map_viewer_mind_node_drawing_selector_radius,
             ]
         )
 
@@ -74,21 +63,61 @@ class MindNodeDrawing(xindmap.config.Configurable):
         self._is_selected = False
         self._status = xindmap.mind_map.MindNodeStatus.none
 
-        self._hitbox_id = self.__canvas.create_rectangle(
-            self._x,
-            self._y,
-            self._x + self._width,
-            self._y + self._height,
-            fill=xindmap.config.Config().get(
-                xindmap.config.Variables.mind_map_viewer_node_status_none_fill_color
-            ),
+        config = xindmap.config.Config()
+
+        self._body_id = self.__canvas.create_rectangle(
+            0, 0, 0, 0, outline="", fill="pink", tags="mind_node_drawing_body_id"
         )
-        self._title_id = self.__canvas.create_text(
-            self._x, self._y, text="", anchor=ctk.CENTER
+        self._description_body_id = self.__canvas.create_rectangle(
+            0,
+            0,
+            0,
+            0,
+            fill="green",
+            state=ctk.HIDDEN,
+            outline="",
+            tags="mind_node_drawing_description_body",
         )
         self._description_id = self.__canvas.create_text(
-            self._x, self._y, text="", anchor=ctk.NW, state=ctk.HIDDEN
+            0,
+            0,
+            text="",
+            anchor=ctk.NW,
+            state=ctk.HIDDEN,
+            width=config.get(
+                xindmap.config.Variables.mind_map_viewer_mind_node_drawing_description_width
+            ),
+            tags="mind_node_drawing_description",
         )
+        self._selector_id = self.__canvas.create_polygon(
+            0,
+            0,
+            0,
+            0,
+            state=ctk.HIDDEN,
+            fill="",
+            outline="white",
+            smooth=True,
+            tags="mind_node_drawing_selector",
+        )
+        self._title_id = self.__canvas.create_text(
+            0, 0, text="", anchor=ctk.S, tags="mind_node_drawing_title"
+        )
+
+        self.__canvas.tag_raise(
+            "mind_node_drawing_description_body", "mind_node_drawing_body_id"
+        )
+        self.__canvas.tag_raise(
+            "mind_node_drawing_description_body", "mind_node_drawing_title"
+        )
+        self.__canvas.tag_raise(
+            "mind_node_drawing_description", "mind_node_drawing_description_body"
+        )
+        self.__canvas.tag_raise(
+            "mind_node_drawing_selector", "mind_node_drawing_description"
+        )
+
+        self._place_components()
 
     # description **************************************************************
     @property
@@ -101,18 +130,52 @@ class MindNodeDrawing(xindmap.config.Configurable):
 
     # draw *********************************************************************
     def clear(self):
-        self.__canvas.delete(self._hitbox_id, self._title_id)
+        self.__canvas.delete(self._title_id, self._description_id, self._body_id)
 
     def _place_components(self):
-        self.__canvas.coords(
-            self._hitbox_id,
-            self._x,
-            self._y,
-            self._x + self._width,
-            self._y + self._height,
+        config = xindmap.config.Config()
+
+        x = self._x
+        y = self._y
+        width = self._width
+        height = self._height
+
+        center_x = self.center_x
+        center_y = self.center_y
+
+        body_height = config.get(
+            xindmap.config.Variables.mind_map_viewer_mind_node_drawing_body_height
         )
-        self.__canvas.coords(self._title_id, self.center_x, self.center_y)
-        self.__canvas.coords(self._description_id, self._x, self._y + self._height)
+        body_half_height = body_height / 2
+
+        description_bbox = self.__canvas.bbox(self._description_id)
+        title_bbox = self.__canvas.bbox(self._title_id)
+
+        self.__canvas.coords(
+            self._body_id,
+            x,
+            center_y - body_half_height,
+            x + width,
+            center_y + body_half_height,
+        )
+        self.__canvas.coords(self._title_id, center_x, center_y - body_half_height)
+        self.__canvas.coords(self._description_id, x, y + height)
+        if (
+            description_bbox is not None
+            and abs(description_bbox[0] - description_bbox[2]) > 5
+        ):
+            self.__canvas.coords(self._description_body_id, *description_bbox)
+
+        if title_bbox is not None:
+            self.__canvas.coords(
+                self._selector_id,
+                xindmap.widget.tools.compute_round_rectangle_points(
+                    *title_bbox,
+                    radius=config.get(
+                        xindmap.config.Variables.mind_map_viewer_mind_node_drawing_selector_radius
+                    )
+                ),
+            )
 
     # select *******************************************************************
     @property
@@ -124,11 +187,14 @@ class MindNodeDrawing(xindmap.config.Configurable):
         self.__is_selected = is_selected
 
         if is_selected:
-            self.__canvas.itemconfigure(self._hitbox_id, outline="red")
             self.__canvas.itemconfigure(self._description_id, state=ctk.NORMAL)
+            self.__canvas.itemconfigure(self._description_body_id, state=ctk.NORMAL)
+            self.__canvas.itemconfigure(self._selector_id, state=ctk.NORMAL)
+            self._place_components()
         else:
-            self.__canvas.itemconfigure(self._hitbox_id, outline="systemTextColor")
             self.__canvas.itemconfigure(self._description_id, state=ctk.HIDDEN)
+            self.__canvas.itemconfigure(self._description_body_id, state=ctk.HIDDEN)
+            self.__canvas.itemconfigure(self._selector_id, state=ctk.HIDDEN)
 
     # size *********************************************************************
     @property
@@ -150,13 +216,6 @@ class MindNodeDrawing(xindmap.config.Configurable):
         self._place_components()
 
     # status *******************************************************************
-    __status_to_variable = {
-        xindmap.mind_map.MindNodeStatus.done: xindmap.config.Variables.mind_map_viewer_node_status_done_fill_color,
-        xindmap.mind_map.MindNodeStatus.in_progress: xindmap.config.Variables.mind_map_viewer_node_status_in_progress_fill_color,
-        xindmap.mind_map.MindNodeStatus.none: xindmap.config.Variables.mind_map_viewer_node_status_none_fill_color,
-        xindmap.mind_map.MindNodeStatus.to_do: xindmap.config.Variables.mind_map_viewer_node_status_to_do_fill_color,
-    }
-
     @property
     def status(self):
         return self._status
@@ -164,11 +223,6 @@ class MindNodeDrawing(xindmap.config.Configurable):
     @status.setter
     def status(self, status):
         self._status = status
-
-        variable = MindNodeDrawing.__status_to_variable[status]
-        color = xindmap.config.Config().get(variable)
-
-        self.__canvas.itemconfigure(self._hitbox_id, fill=color)
 
     # title ********************************************************************
     @property

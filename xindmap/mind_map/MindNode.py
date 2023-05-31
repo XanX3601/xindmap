@@ -52,7 +52,11 @@ class MindNode:
 
     @property
     def description(self):
-        return None if self.__title_index is None else self.__text[self.__title_index+1:]
+        return (
+            None
+            if self.__title_index is None
+            else self.__text[self.__title_index + 1 :]
+        )
 
     @property
     def text(self):
@@ -66,4 +70,8 @@ class MindNode:
 
     @property
     def title(self):
-        return self.__text if self.__title_index is None else self.__text[:self.__title_index]
+        return (
+            self.__text
+            if self.__title_index is None
+            else self.__text[: self.__title_index]
+        )

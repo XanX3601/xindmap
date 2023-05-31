@@ -101,6 +101,11 @@
           "text": "node animation",
           "status": "to_do",
           "childs": []
+        },
+        {
+          "text": "edge drawing",
+          "status": "to_do",
+          "childs": []
         }
       ]
     },
@@ -136,6 +141,11 @@
           "childs": []
         }
       ]
+    },
+    {
+      "text": "undo / do\nDo it by saving the status or asking the commands to implement an undo method",
+      "status": "to_do",
+      "childs": []
     }
   ]
 }
