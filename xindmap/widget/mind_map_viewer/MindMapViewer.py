@@ -96,6 +96,32 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
 
             self.__node_id_to_direction[node_id] = direction
 
+            # handle the body color of the new node
+            # if parent is root then pick new color else, pick parent's color
+            if parent_id == self.__root_id:
+                config = xindmap.config.Config()
+
+                body_colors = config.get(
+                    xindmap.config.Variables.mind_map_viewer_mind_node_drawing_body_colors
+                )
+
+                root_childs_ids = self.__node_id_to_child_ids[self.__root_id]
+
+                body_color = body_colors[len(root_childs_ids) % len(body_colors)]
+
+                drawing.body_color = body_color
+            else:
+                parent_drawing = self.__node_id_to_drawing[parent_id]
+
+                body_color = parent_drawing.body_color
+
+                drawing.body_color = body_color
+
+            # copy the body color
+            self.__node_id_to_child_id_to_edge_drawing[parent_id][
+                node_id
+            ].color = body_color
+
             # compute the x of the hitbox from the parent
             self.__compute_hitbox_width(node_id)
             self.__compute_children_hitbox_x(

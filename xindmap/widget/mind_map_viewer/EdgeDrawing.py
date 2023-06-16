@@ -6,6 +6,15 @@ import xindmap.config
 
 
 class EdgeDrawing:
+    # color ********************************************************************
+    @property
+    def color(self):
+        return self.__canvas.itemcget(self.__line_id, "fill")
+
+    @color.setter
+    def color(self, color):
+        self.__canvas.itemconfigure(self.__line_id, fill=color)
+
     # component ****************************************************************
     def set_line_width(self, width):
         self.__canvas.itemconfigure(self.__line_id, width=width)
@@ -13,7 +22,7 @@ class EdgeDrawing:
     # constructor **************************************************************
     __id_counter = itertools.count()
 
-    def __init__(self, canvas):
+    def __init__(self, canvas, color="#fff"):
         self.__id = next(EdgeDrawing.__id_counter)
 
         self.__canvas = canvas
@@ -37,6 +46,7 @@ class EdgeDrawing:
             0,
             0,
             0,
+            fill=color,
             smooth=True,
             tags=(drawing_tag, "edge_drawing_line"),
             width=line_width,

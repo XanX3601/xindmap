@@ -28,6 +28,9 @@ class Variables(enum.Enum):
         VariableTypes.float, 0.2
     )
     mind_map_viewer_edge_drawing_line_width = Variable(VariableTypes.float, 3)
+    mind_map_viewer_mind_node_drawing_body_colors = Variable(
+        VariableTypes.color_list, ["#f00", "#0f0", "#00f"]
+    )
     mind_map_viewer_mind_node_drawing_body_height = Variable(VariableTypes.int, 2)
     mind_map_viewer_mind_node_drawing_body_min_width = Variable(VariableTypes.int, 30)
     mind_map_viewer_mind_node_drawing_margin_bottom = Variable(VariableTypes.int, 10)

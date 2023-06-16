@@ -1,7 +1,7 @@
-import xindmap.plugin
-import xindmap.mind_map
-
 import sortedcontainers
+
+import xindmap.mind_map
+import xindmap.plugin
 
 
 class MovePlugin(xindmap.plugin.Plugin):

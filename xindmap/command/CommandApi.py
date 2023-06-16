@@ -1,8 +1,8 @@
+import logging
+
 import xindmap.config
 import xindmap.event
 import xindmap.mind_map
-
-import logging
 
 
 class CommandApi:
@@ -14,6 +14,7 @@ class CommandApi:
             [input mapping tree][xindmap.input.InputMappingTree.InputMappingTree]
             used to register mapping.
     """
+
     # callback *****************************************************************
     def on_mind_map_node_added(self, _, event):
         logging.debug(f"mind map {id(self)}: on_mind_map_node_added(event={event})")
@@ -52,9 +53,7 @@ class CommandApi:
         self.__mind_map_viewer = mind_map_viewer
         self.__state_holder = state_holder
 
-        self.__event_type_to_callbacks = {
-            xindmap.mind_map.MindMapEvent.node_added: []
-        }
+        self.__event_type_to_callbacks = {xindmap.mind_map.MindMapEvent.node_added: []}
 
     # mapping ******************************************************************
     def map(self, inputs, mapped_inputs):

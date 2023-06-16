@@ -82,6 +82,13 @@ class Config(xindmap.event.EventSource):
         )
 
     @staticmethod
+    def __variable_type_color_list_check(value):
+        config = Config()
+        return isinstance(value, list) and all(
+            config.__variable_type_color_check(element) for element in value
+        )
+
+    @staticmethod
     def __variable_type_int_check(value):
         """Checks if a value complies with type
         [`VariableTypes.int`][xindmap.config.VariableTypes.VariableTypes.int].

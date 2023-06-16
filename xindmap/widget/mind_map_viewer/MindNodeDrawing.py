@@ -57,10 +57,18 @@ class MindNodeDrawing:
         self.__body_hitbox.width = width
         self.__body_hitbox.height = height
 
+    @property
+    def body_color(self):
+        return self.__canvas.itemcget(self.__body_rectangle_id, "fill")
+
+    @body_color.setter
+    def body_color(self, color):
+        self.__canvas.itemconfigure(self.__body_rectangle_id, fill=color, outline=color)
+
     # constructor **************************************************************
     __id_counter = itertools.count()
 
-    def __init__(self, canvas):
+    def __init__(self, canvas, body_color="#fff"):
         self.__id = next(MindNodeDrawing.__id_counter)
 
         self.__canvas = canvas
@@ -80,7 +88,13 @@ class MindNodeDrawing:
         drawing_tag = f"mind_node_drawing_{self.__id}"
 
         self.__body_rectangle_id = self.__canvas.create_rectangle(
-            0, 0, 0, 0, tags=(drawing_tag, "mind_node_drawing_body_rectangle")
+            0,
+            0,
+            0,
+            0,
+            fill=body_color,
+            outline=body_color,
+            tags=(drawing_tag, "mind_node_drawing_body_rectangle"),
         )
         self.__body_rectangle_current_hitbox = Hitbox()
         self.__body_rectangle_hitbox = Hitbox()

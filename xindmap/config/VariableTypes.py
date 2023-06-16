@@ -7,6 +7,7 @@ class VariableTypes(enum.Enum):
     """
 
     color = enum.auto()
+    color_list = enum.auto()
     int = enum.auto()
     """Integer.
     """
