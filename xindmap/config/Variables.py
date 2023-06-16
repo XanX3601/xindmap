@@ -20,22 +20,71 @@ class Variables(enum.Enum):
     [input pushed][xindmap.input.InputStack.InputStack--input-pushed]
     is dispatched.
     """
-    input_stack_viewer_height_px = Variable(VariableTypes.int, 20)
+    input_stack_viewer_height_px = Variable(VariableTypes.float, 20)
     """The height (in pixel) of 
     [input stack viewer][xindmap.widget.InputStackViewer.InputStackViewer].
     """
-    mind_map_viewer_edge_drawing_width = Variable(VariableTypes.int, 2)
-    mind_map_viewer_mind_node_drawing_body_height = Variable(VariableTypes.int, 6)
-    mind_map_viewer_mind_node_drawing_body_min_width = Variable(VariableTypes.int, 10)
-    mind_map_viewer_mind_node_drawing_description_width = Variable(
-        VariableTypes.int, 100
+    mind_map_viewer_edge_drawing_inner_point_padding_width_percentage = Variable(
+        VariableTypes.float, 0.2
     )
-    mind_map_viewer_mind_node_drawing_margin_x = Variable(VariableTypes.int, 50)
-    mind_map_viewer_mind_mode_drawing_margin_y = Variable(VariableTypes.int, 30)
-    mind_map_viewer_mind_node_drawing_padding_x = Variable(VariableTypes.int, 5)
-    mind_map_viewer_mind_node_drawing_padding_y = Variable(VariableTypes.int, 5)
-    mind_map_viewer_mind_node_drawing_selector_radius = Variable(VariableTypes.int, 5)
-
+    mind_map_viewer_edge_drawing_line_width = Variable(VariableTypes.float, 3)
+    mind_map_viewer_mind_node_drawing_body_height = Variable(VariableTypes.int, 2)
+    mind_map_viewer_mind_node_drawing_body_min_width = Variable(VariableTypes.int, 30)
+    mind_map_viewer_mind_node_drawing_margin_bottom = Variable(VariableTypes.int, 10)
+    mind_map_viewer_mind_node_drawing_margin_right = Variable(VariableTypes.int, 50)
+    mind_map_viewer_mind_node_drawing_padding_bottom = Variable(VariableTypes.int, 5)
+    mind_map_viewer_mind_node_drawing_padding_left = Variable(VariableTypes.int, 5)
+    mind_map_viewer_mind_node_drawing_padding_right = Variable(VariableTypes.int, 5)
+    mind_map_viewer_mind_node_drawing_padding_top = Variable(VariableTypes.int, 5)
+    mind_map_viewer_mind_node_drawing_selector_padding_bottom = Variable(
+        VariableTypes.int, 5
+    )
+    mind_map_viewer_mind_node_drawing_selector_padding_left = Variable(
+        VariableTypes.int, 5
+    )
+    mind_map_viewer_mind_node_drawing_selector_padding_right = Variable(
+        VariableTypes.int, 5
+    )
+    mind_map_viewer_mind_node_drawing_selector_padding_top = Variable(
+        VariableTypes.int, 5
+    )
+    mind_map_viewer_mind_node_drawing_selector_radius = Variable(VariableTypes.int, 10)
+    mind_map_viewer_mind_node_drawing_status_height = Variable(VariableTypes.int, 20)
+    mind_map_viewer_mind_node_drawing_status_inner_circle_padding_bottom = Variable(
+        VariableTypes.int, 3
+    )
+    mind_map_viewer_mind_node_drawing_status_inner_circle_padding_left = Variable(
+        VariableTypes.int, 3
+    )
+    mind_map_viewer_mind_node_drawing_status_inner_circle_padding_right = Variable(
+        VariableTypes.int, 3
+    )
+    mind_map_viewer_mind_node_drawing_status_inner_circle_padding_top = Variable(
+        VariableTypes.int, 3
+    )
+    mind_map_viewer_mind_node_drawing_status_padding_bottom = Variable(
+        VariableTypes.int, 5
+    )
+    mind_map_viewer_mind_node_drawing_status_padding_left = Variable(
+        VariableTypes.int, 5
+    )
+    mind_map_viewer_mind_node_drawing_status_padding_right = Variable(
+        VariableTypes.int, 5
+    )
+    mind_map_viewer_mind_node_drawing_status_padding_top = Variable(
+        VariableTypes.int, 5
+    )
+    mind_map_viewer_mind_node_drawing_status_width = Variable(VariableTypes.int, 20)
+    mind_map_viewer_mind_node_drawing_title_padding_bottom = Variable(
+        VariableTypes.int, 5
+    )
+    mind_map_viewer_mind_node_drawing_title_padding_left = Variable(
+        VariableTypes.int, 5
+    )
+    mind_map_viewer_mind_node_drawing_title_padding_right = Variable(
+        VariableTypes.int, 5
+    )
+    mind_map_viewer_mind_node_drawing_title_padding_top = Variable(VariableTypes.int, 5)
     state_viewer_height_px = Variable(VariableTypes.int, 20)
     xindmap_app_main_window_height_px = Variable(VariableTypes.int, 600)
     xindmap_app_main_window_width_px = Variable(VariableTypes.int, 800)

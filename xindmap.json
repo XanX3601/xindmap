@@ -36,12 +36,12 @@
       "childs": [
         {
           "text": "status",
-          "status": "done",
+          "status": "to_do",
           "childs": []
         },
         {
           "text": "detail",
-          "status": "done",
+          "status": "to_do",
           "childs": []
         }
       ]
@@ -146,6 +146,17 @@
       "text": "undo / do\nDo it by saving the status or asking the commands to implement an undo method",
       "status": "to_do",
       "childs": []
+    },
+    {
+      "text": "",
+      "status": "none",
+      "childs": [
+        {
+          "text": "hello",
+          "status": "none",
+          "childs": []
+        }
+      ]
     }
   ]
 }

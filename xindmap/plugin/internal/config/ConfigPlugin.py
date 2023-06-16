@@ -33,7 +33,9 @@ class ConfigPlugin(xindmap.plugin.Plugin):
             self.variable_type_to_parser[type] = method
 
     # variable *****************************************************************
-    variable_name_to_variable = {}
+    variable_name_to_variable = {
+        "test": xindmap.config.Variables.mind_map_viewer_mind_node_drawing_title_padding_bottom
+    }
 
     @classmethod
     def parse_color_value(cls, value):
