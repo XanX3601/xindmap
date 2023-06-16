@@ -316,6 +316,7 @@ class XindmapApp(xindmap.config.Configurable):
         self.__mind_map.register_callbacks(
             xindmap.mind_map.MindMapEvent.node_added,
             self.__mind_map_viewer.on_mind_map_node_added,
+            self.__command_api.on_mind_map_node_added,
         )
         self.__mind_map.register_callbacks(
             xindmap.mind_map.MindMapEvent.node_deleted,
@@ -396,6 +397,8 @@ class XindmapApp(xindmap.config.Configurable):
         plugins = self.__plugin_importer.import_plugins_from_module(plugin_name)
 
         for plugin in plugins:
+            plugin.init(self.__command_api)
+
             for command_name, command in plugin.commands():
                 self.__command_register.register_command(command_name, command)
 

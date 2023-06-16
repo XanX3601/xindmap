@@ -12,3 +12,7 @@ class Plugin:
     def __init__(self):
         """Instantiates this plugin."""
         pass
+
+    # initialization ***********************************************************
+    def init(self, api):
+        pass

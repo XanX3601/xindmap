@@ -1,5 +1,8 @@
 import xindmap.config
 import xindmap.event
+import xindmap.mind_map
+
+import logging
 
 
 class CommandApi:
@@ -11,6 +14,18 @@ class CommandApi:
             [input mapping tree][xindmap.input.InputMappingTree.InputMappingTree]
             used to register mapping.
     """
+    # callback *****************************************************************
+    def on_mind_map_node_added(self, _, event):
+        logging.debug(f"mind map {id(self)}: on_mind_map_node_added(event={event})")
+
+        for callback in self.__event_type_to_callbacks[event.type]:
+            callback(self, event.node_id)
+
+    def register_callback(self, event_type, callback):
+        if event_type not in self.__event_type_to_callbacks:
+            raise ValueError(f"unknown event type {event_type}")
+
+        self.__event_type_to_callbacks[event_type].append(callback)
 
     # config *******************************************************************
     def get_config(self, variable):
@@ -36,6 +51,10 @@ class CommandApi:
         self.__mind_map = mind_map
         self.__mind_map_viewer = mind_map_viewer
         self.__state_holder = state_holder
+
+        self.__event_type_to_callbacks = {
+            xindmap.mind_map.MindMapEvent.node_added: []
+        }
 
     # mapping ******************************************************************
     def map(self, inputs, mapped_inputs):
@@ -73,6 +92,12 @@ class CommandApi:
         self.__mind_map.node_delete(node_id)
         if wait:
             self.__wait()
+
+    def direction_node(self, node_id=None):
+        if node_id is None:
+            node_id = self.current_node()
+
+        return self.__mind_map_viewer.node_direction(node_id)
 
     def parent_node(self, node_id=None):
         return self.__mind_map.node_parent_id(node_id)

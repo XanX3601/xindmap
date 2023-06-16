@@ -535,6 +535,15 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
 
         self.__canvas.pack(fill=ctk.BOTH, expand=True)
 
+    # direction ****************************************************************
+    def node_direction(self, node_id):
+        direction = self.__node_id_to_direction.get(node_id, None)
+
+        if direction is not None:
+            direction = direction.name
+
+        return direction if direction else ""
+
     # node computation *********************************************************
     def __compute_all_hitboxes_height(self):
         config = xindmap.config.Config()
@@ -850,13 +859,12 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
 
     # view *********************************************************************
     def view_center_on_node(self, node_id):
-        # TODO: implement
         if node_id not in self.__node_id_to_drawing:
             raise MindMapViewerError(f"unknown node id {node_id}")
 
         node_drawing = self.__node_id_to_drawing[node_id]
-        x = int(node_drawing.x1)
-        y = int(node_drawing.y1)
+        x = int(node_drawing.center_x)
+        y = int(node_drawing.center_y)
 
         center_x = self.__canvas.winfo_width() // 2
         center_y = self.__canvas.winfo_height() // 2
