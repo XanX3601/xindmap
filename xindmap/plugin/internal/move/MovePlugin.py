@@ -18,8 +18,6 @@ class MovePlugin(xindmap.plugin.Plugin):
         self.__node_to_deep_level[node] = deep_level
         self.__node_to_last_index[node] = 0
 
-        print(node, direction)
-
         if deep_level not in self.__deep_level_to_direction_to_nodes:
             self.__deep_level_to_direction_to_nodes[deep_level] = {}
         if direction not in self.__deep_level_to_direction_to_nodes[deep_level]:

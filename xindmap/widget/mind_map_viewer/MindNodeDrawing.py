@@ -68,7 +68,15 @@ class MindNodeDrawing:
     # constructor **************************************************************
     __id_counter = itertools.count()
 
-    def __init__(self, canvas, body_color="#fff"):
+    def __init__(
+        self,
+        canvas,
+        body_color="#fff",
+        selector_color="#fff",
+        status_arc_color="#fff",
+        status_check_color="#fff",
+        status_inner_circle_color="#fff",
+    ):
         self.__id = next(MindNodeDrawing.__id_counter)
 
         self.__canvas = canvas
@@ -83,6 +91,8 @@ class MindNodeDrawing:
         self.__selector_hitbox = Hitbox()
         self.__status_hitbox = Hitbox()
         self.__title_hitbox = Hitbox()
+
+        self.__status_inner_circle_color = status_inner_circle_color
 
         # components
         drawing_tag = f"mind_node_drawing_{self.__id}"
@@ -105,7 +115,7 @@ class MindNodeDrawing:
             0,
             0,
             fill="",
-            outline="white",
+            outline=selector_color,
             smooth=True,
             state=ctk.HIDDEN,
             tags=(drawing_tag, "mind_node_drawing_selector_polygon"),
@@ -118,7 +128,7 @@ class MindNodeDrawing:
             0,
             0,
             0,
-            outline="orange",
+            outline=status_arc_color,
             start=90,
             state=ctk.HIDDEN,
             style=ctk.ARC,
@@ -133,6 +143,7 @@ class MindNodeDrawing:
             0,
             0,
             0,
+            fill=status_check_color,
             state=ctk.HIDDEN,
             tags=(drawing_tag, "mind_node_drawing_status_check"),
         )
@@ -335,6 +346,14 @@ class MindNodeDrawing:
 
             self.__canvas.itemconfigure(self.__selector_polygon_id, state=state)
 
+    @property
+    def selector_color(self):
+        return self.__canvas.itemcget(self.__selector_polygon_id, "outline")
+
+    @selector_color.setter
+    def selector_color(self, selector_color):
+        self.__canvas.itemconfigure(self.__selector_polygon_id, outline=selector_color)
+
     # size *********************************************************************
     @property
     def height(self):
@@ -509,16 +528,16 @@ class MindNodeDrawing:
             self.__canvas.itemconfigure(
                 self.__status_inner_circle_id,
                 state=ctk.NORMAL,
-                fill="orange",
-                outline="orange",
+                fill=self.__status_inner_circle_color,
+                outline=self.__status_inner_circle_color,
             )
         elif status == xindmap.mind_map.MindNodeStatus.in_progress:
             self.__canvas.itemconfigure(self.__status_check_id, state=ctk.HIDDEN)
             self.__canvas.itemconfigure(
                 self.__status_inner_circle_id,
                 state=ctk.NORMAL,
-                fill="orange",
-                outline="orange",
+                fill=self.__status_inner_circle_color,
+                outline=self.__status_inner_circle_color,
             )
         elif status == xindmap.mind_map.MindNodeStatus.none:
             self.__canvas.itemconfigure(self.__status_check_id, state=ctk.HIDDEN)
@@ -529,8 +548,41 @@ class MindNodeDrawing:
                 self.__status_inner_circle_id,
                 state=ctk.NORMAL,
                 fill="",
-                outline="orange",
+                outline=self.__status_inner_circle_color,
             )
+
+    @property
+    def status_arc_color(self):
+        return self.__canvas.itemcget(self.__status_arc_id, "outline")
+
+    @status_arc_color.setter
+    def status_arc_color(self, arc_color):
+        self.__canvas.itemconfigure(self.__status_arc_id, outline=arc_color)
+
+    @property
+    def status_check_color(self):
+        return self.__canvas.itemcget(self.__status_check_id, "fill")
+
+    @status_check_color.setter
+    def status_check_color(self, check_color):
+        self.__canvas.itemconfigure(self.__status_check_id, fill=check_color)
+
+    @property
+    def status_inner_circle_color(self):
+        return self.__status_inner_circle_color
+
+    @status_inner_circle_color.setter
+    def status_inner_circle_color(self, inner_circle_color):
+        self.__status_inner_circle_color = inner_circle_color
+
+        fill = self.__canvas.itemcget(self.__status_inner_circle_id, "fill")
+        outline = self.__canvas.itemcget(self.__status_inner_circle_id, "outline")
+
+        self.__canvas.itemconfigure(
+            self.__status_inner_circle_id,
+            fill="" if fill == "" else inner_circle_color,
+            outline="" if outline == "" else inner_circle_color,
+        )
 
     # title ********************************************************************
     def __update_title_components_coords(self):

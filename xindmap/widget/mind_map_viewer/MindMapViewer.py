@@ -38,10 +38,15 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
             f"mind map viewer {id(self)}: on_mind_map_node_added(event={event})"
         )
 
+        config = xindmap.config.Config()
+        Variables = xindmap.config.Variables
+
+        selector_color = config.get(Variables.mind_map_viewer_mind_node_drawing_selector_color)
+
         node_id = event.node_id
         parent_id = mind_map.node_parent_id(node_id)
 
-        drawing = MindNodeDrawing(self.__canvas)
+        drawing = MindNodeDrawing(self.__canvas, selector_color=selector_color)
 
         if self.__root_id is None:
             self.__root_id = node_id
@@ -65,6 +70,8 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
             self.__compute_hitbox_width(node_id)
 
         else:
+            edge_drawing = EdgeDrawing(self.__canvas)
+
             # basic stuff for the new node
             self.__node_id_to_child_ids[node_id] = sortedcontainers.SortedList()
             self.__node_id_to_child_id_to_edge_drawing[node_id] = {}
@@ -76,11 +83,17 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
             self.__node_id_to_child_ids[parent_id].add(node_id)
             self.__node_id_to_child_id_to_edge_drawing[parent_id][
                 node_id
-            ] = EdgeDrawing(self.__canvas)
+            ] = edge_drawing
 
-            # handle the direction of the new node
-            # if parent is root then there is extra step
+            # settings depending on which is the parent
+            # - body color
+            # - direction
+            # - edge color
+            # - status arc color
+            # - status check color
+            # - status inner circle color
             if parent_id == self.__root_id:
+                # direction
                 if len(self.__root_direction_to_child_ids[Direction.right]) < 3:
                     direction = Direction.right
                 elif len(self.__root_direction_to_child_ids[Direction.right]) == len(
@@ -91,36 +104,59 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
                     direction = Direction.left
 
                 self.__root_direction_to_child_ids[direction].add(node_id)
+
+                # body color
+                body_colors = config.get(Variables.mind_map_viewer_mind_node_drawing_body_colors)
+                root_child_ids = self.__node_id_to_child_ids[self.__root_id]
+                body_color = body_colors[len(root_child_ids) % len(body_colors)]
+                drawing.body_color = body_color
+
+                # edge color
+                edge_colors = config.get(Variables.mind_map_viewer_edge_drawing_colors)
+                edge_color = edge_colors[len(root_child_ids) % len(edge_colors)]
+                edge_drawing.color = edge_color
+
+                # status arc color
+                status_arc_colors = config.get(Variables.mind_map_viewer_mind_node_drawing_status_arc_colors)
+                status_arc_color = status_arc_colors[len(root_child_ids) % len(status_arc_colors)]
+                drawing.status_arc_color = status_arc_color
+
+                # status check color
+                status_check_colors = config.get(Variables.mind_map_viewer_mind_node_drawing_status_check_colors)
+                status_check_color = status_check_colors[len(root_child_ids) % len(status_check_colors)]
+                drawing.status_check_color = status_check_color
+
+                # status inner circle color
+                status_inner_circle_colors = config.get(Variables.mind_map_viewer_mind_node_drawing_status_inner_circle_colors)
+                status_inner_circle_color = status_inner_circle_colors[len(root_child_ids) % len(status_inner_circle_colors)]
+                drawing.status_inner_circle_color = status_inner_circle_color
+
             else:
+                # direction
                 direction = self.__node_id_to_direction[parent_id]
 
-            self.__node_id_to_direction[node_id] = direction
-
-            # handle the body color of the new node
-            # if parent is root then pick new color else, pick parent's color
-            if parent_id == self.__root_id:
-                config = xindmap.config.Config()
-
-                body_colors = config.get(
-                    xindmap.config.Variables.mind_map_viewer_mind_node_drawing_body_colors
-                )
-
-                root_childs_ids = self.__node_id_to_child_ids[self.__root_id]
-
-                body_color = body_colors[len(root_childs_ids) % len(body_colors)]
-
-                drawing.body_color = body_color
-            else:
+                # body color
                 parent_drawing = self.__node_id_to_drawing[parent_id]
-
                 body_color = parent_drawing.body_color
-
                 drawing.body_color = body_color
 
-            # copy the body color
-            self.__node_id_to_child_id_to_edge_drawing[parent_id][
-                node_id
-            ].color = body_color
+                # edge color
+                grand_parent_id = self.__node_id_to_parent_id[parent_id]
+                parent_edge_drawing = self.__node_id_to_child_id_to_edge_drawing[grand_parent_id][parent_id]
+                edge_color = parent_edge_drawing.color
+                edge_drawing.color = edge_color
+
+                # status arc color
+                drawing.status_arc_color = parent_drawing.status_arc_color
+
+                # status check color
+                drawing.status_check_color = parent_drawing.status_check_color
+
+                # status inner circle color
+                print(node_id, parent_id, parent_drawing.status_inner_circle_color)
+                drawing.status_inner_circle_color = parent_drawing.status_inner_circle_color
+
+            self.__node_id_to_direction[node_id] = direction
 
             # compute the x of the hitbox from the parent
             self.__compute_hitbox_width(node_id)
@@ -302,6 +338,39 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
         # TODO: refactor
 
     # config callback **********************************************************
+    def on_config_variable_mind_map_viewer_background_color_set(self, value):
+        self.__canvas.config(background=value)
+
+    def on_config_variable_mind_map_viewer_edge_drawing_colors_set(self, value):
+        if self.__root_id is None:
+            return
+
+        root_child_ids = self.__node_id_to_child_ids[self.__root_id]
+
+        for child_index in range(len(root_child_ids)):
+            child_id = root_child_ids[child_index]
+            edge_color = value[child_index % len(value)]
+
+            edge_drawing = self.__node_id_to_child_id_to_edge_drawing[self.__root_id][child_id].color = edge_color
+
+        queue = collections.deque()
+        queue.extend(root_child_ids)
+
+        while queue:
+            node_id = queue.pop()
+
+            child_ids = self.__node_id_to_child_ids[node_id]
+            parent_id = self.__node_id_to_parent_id[node_id]
+
+            edge_drawing = self.__node_id_to_child_id_to_edge_drawing[parent_id][node_id]
+
+            for child_id in child_ids:
+                child_edge_drawing = self.__node_id_to_child_id_to_edge_drawing[node_id][child_id]
+
+                child_edge_drawing.color = edge_drawing.color
+
+            queue.extendleft(child_ids)
+
     def on_config_variable_mind_map_viewer_edge_drawing_inner_point_padding_width_percentage_set(
         self, _
     ):
@@ -317,6 +386,34 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
         ) in self.__node_id_to_child_id_to_edge_drawing.values():
             for edge_drawing in child_id_to_edge_drawing.values():
                 edge_drawing.set_line_width(value)
+
+    def on_config_variable_mind_map_viewer_mind_node_drawing_body_colors_set(self, value):
+        if self.__root_id is None:
+            return
+
+        child_ids = self.__node_id_to_child_ids[self.__root_id]
+        for child_index in range(len(child_ids)):
+            child_id = child_ids[child_index]
+            child_drawing = self.__node_id_to_drawing[child_id]
+
+            body_color = value[child_id % len(value)]
+
+            child_drawing.body_color = body_color
+
+        queue = collections.deque()
+        queue.extendleft(child_ids)
+
+        while queue:
+            node_id = queue.pop()
+
+            child_ids = self.__node_id_to_child_ids[node_id]
+            drawing = self.__node_id_to_drawing[node_id]
+
+            for child_id in child_ids:
+                child_drawing = self.__node_id_to_drawing[child_id]
+                child_drawing.body_color = drawing.body_color
+
+            queue.extendleft(child_ids)
 
     def on_config_variable_mind_map_viewer_mind_node_drawing_body_height_set(self, _):
         if self.__root_id is not None:
@@ -370,6 +467,13 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
             self.__compute_hitbox_y_from_root(Direction.left)
             self.__compute_hitbox_y_from_root(Direction.right)
 
+    def on_config_variable_mind_map_viewer_mind_node_drawing_selector_color_set(self, value):
+        if self.__root_id is None:
+            return
+
+        for drawing in self.__node_id_to_drawing.values():
+            drawing.selector_color = value
+
     def on_config_variable_mind_map_viewer_mind_node_drawing_selector_padding_bottom_set(
         self, _
     ):
@@ -404,6 +508,62 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
         if self.__root_id is not None:
             for drawing in self.__node_id_to_drawing.values():
                 drawing.update_components()
+
+    def on_config_variable_mind_map_viewer_mind_node_drawing_status_arc_colors_set(self, value):
+        if self.__root_id is None:
+            return
+
+        child_ids = self.__node_id_to_child_ids[self.__root_id]
+        for child_index in range(len(child_ids)):
+            child_id = child_ids[child_index]
+            child_drawing = self.__node_id_to_drawing[child_id]
+
+            arc_color = value[child_id % len(value)]
+
+            child_drawing.status_arc_color = arc_color
+
+        queue = collections.deque()
+        queue.extendleft(child_ids)
+
+        while queue:
+            node_id = queue.pop()
+
+            child_ids = self.__node_id_to_child_ids[node_id]
+            drawing = self.__node_id_to_drawing[node_id]
+
+            for child_id in child_ids:
+                child_drawing = self.__node_id_to_drawing[child_id]
+                child_drawing.status_arc_color = drawing.status_arc_color
+
+            queue.extendleft(child_ids)
+
+    def on_config_variable_mind_map_viewer_mind_node_drawing_status_check_colors_set(self, value):
+        if self.__root_id is None:
+            return
+
+        child_ids = self.__node_id_to_child_ids[self.__root_id]
+        for child_index in range(len(child_ids)):
+            child_id = child_ids[child_index]
+            child_drawing = self.__node_id_to_drawing[child_id]
+
+            check_color = value[child_id % len(value)]
+
+            child_drawing.status_check_color = check_color
+
+        queue = collections.deque()
+        queue.extendleft(child_ids)
+
+        while queue:
+            node_id = queue.pop()
+
+            child_ids = self.__node_id_to_child_ids[node_id]
+            drawing = self.__node_id_to_drawing[node_id]
+
+            for child_id in child_ids:
+                child_drawing = self.__node_id_to_drawing[child_id]
+                child_drawing.status_check_color = drawing.status_check_color
+
+            queue.extendleft(child_ids)
 
     def on_config_variable_mind_map_viewer_mind_node_drawing_status_height_set(self, _):
         if self.__root_id is not None:
@@ -509,13 +669,17 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
     def __init__(self, parent):
         ctk.CTkFrame.__init__(self, parent)
 
+        config = xindmap.config.Config()
         Variables = xindmap.config.Variables
 
         xindmap.config.Configurable.__init__(
             self,
             (
+                Variables.mind_map_viewer_background_color,
+                Variables.mind_map_viewer_edge_drawing_colors,
                 Variables.mind_map_viewer_edge_drawing_inner_point_padding_width_percentage,
                 Variables.mind_map_viewer_edge_drawing_line_width,
+                Variables.mind_map_viewer_mind_node_drawing_body_colors,
                 Variables.mind_map_viewer_mind_node_drawing_body_height,
                 Variables.mind_map_viewer_mind_node_drawing_body_min_width,
                 Variables.mind_map_viewer_mind_node_drawing_margin_bottom,
@@ -524,11 +688,14 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
                 Variables.mind_map_viewer_mind_node_drawing_padding_left,
                 Variables.mind_map_viewer_mind_node_drawing_padding_right,
                 Variables.mind_map_viewer_mind_node_drawing_padding_top,
+                Variables.mind_map_viewer_mind_node_drawing_selector_color,
                 Variables.mind_map_viewer_mind_node_drawing_selector_padding_bottom,
                 Variables.mind_map_viewer_mind_node_drawing_selector_padding_left,
                 Variables.mind_map_viewer_mind_node_drawing_selector_padding_right,
                 Variables.mind_map_viewer_mind_node_drawing_selector_padding_top,
                 Variables.mind_map_viewer_mind_node_drawing_selector_radius,
+                Variables.mind_map_viewer_mind_node_drawing_status_arc_colors,
+                Variables.mind_map_viewer_mind_node_drawing_status_check_colors,
                 Variables.mind_map_viewer_mind_node_drawing_status_height,
                 Variables.mind_map_viewer_mind_node_drawing_status_inner_circle_padding_bottom,
                 Variables.mind_map_viewer_mind_node_drawing_status_inner_circle_padding_left,
@@ -546,7 +713,11 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
             ),
         )
 
-        self.__canvas = ctk.CTkCanvas()
+        background_color = config.get(Variables.mind_map_viewer_background_color)
+
+        self.__canvas = ctk.CTkCanvas(
+            background=background_color,
+        )
 
         self.__node_id_to_child_ids = {}
         self.__node_id_to_child_id_to_edge_drawing = {}

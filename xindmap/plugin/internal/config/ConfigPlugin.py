@@ -1,3 +1,4 @@
+import ast
 import inspect
 
 import xindmap.config
@@ -34,12 +35,16 @@ class ConfigPlugin(xindmap.plugin.Plugin):
 
     # variable *****************************************************************
     variable_name_to_variable = {
-        "test": xindmap.config.Variables.mind_map_viewer_mind_node_drawing_title_padding_bottom
+        "test": xindmap.config.Variables.mind_map_viewer_mind_node_drawing_status_check_colors
     }
 
     @classmethod
     def parse_color_value(cls, value):
         return str(value)
+
+    @classmethod
+    def parse_color_list_value(cls, value):
+        return ast.literal_eval(value)
 
     @classmethod
     def parse_int_value(cls, value):
