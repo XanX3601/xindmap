@@ -74,6 +74,7 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
             self.__node_id_to_direction[node_id] = None
 
             self.__compute_hitbox_width(node_id)
+            self.__compute_drawing_coords(node_id)
 
         else:
             edge_drawing = EdgeDrawing(self.__canvas)
@@ -198,8 +199,6 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
             f"mind map viewer {id(self)}: on_mind_map_node_deleted(event={event})"
         )
 
-        # TODO: refactor
-
         node_id = event.node_id
 
         parent_id = self.__node_id_to_parent_id[node_id]
@@ -209,7 +208,8 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
         del self.__node_id_to_direction[node_id]
         del self.__node_id_to_drawing[node_id]
         del self.__node_id_to_child_id_to_edge_drawing[node_id]
-        del self.__node_id_to_hitbox[node_id]
+        if node_id in self.__node_id_to_hitbox:
+            del self.__node_id_to_hitbox[node_id]
         del self.__node_id_to_parent_id[node_id]
 
         if node_id == self.__root_id:
@@ -362,8 +362,6 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
             self.__compute_hitbox_y_from_root(self.__node_id_to_direction[node_id])
         else:
             self.__compute_drawing_coords(node_id)
-
-        # TODO: refactor
 
     # config callback **********************************************************
     def on_config_variable_mind_map_viewer_background_color_set(self, value):
