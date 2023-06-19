@@ -14,6 +14,7 @@ class VariableTypes(enum.Enum):
     float = enum.auto()
     """Floating number (including integer ones).
     """
+    font = enum.auto()
     string = enum.auto()
     """String.
     """

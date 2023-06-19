@@ -1,6 +1,8 @@
 import ast
 import inspect
 
+import customtkinter as ctk
+
 import xindmap.config
 import xindmap.plugin
 
@@ -35,7 +37,7 @@ class ConfigPlugin(xindmap.plugin.Plugin):
 
     # variable *****************************************************************
     variable_name_to_variable = {
-        "test": xindmap.config.Variables.mind_map_viewer_mind_node_drawing_status_check_colors
+        "test": xindmap.config.Variables.mind_map_viewer_mind_node_drawing_title_color
     }
 
     @classmethod
@@ -53,6 +55,24 @@ class ConfigPlugin(xindmap.plugin.Plugin):
     @classmethod
     def parse_float_value(cls, value):
         return float(value)
+
+    @classmethod
+    def parse_font_value(cls, value):
+        value = value.split("-")
+
+        if not value:
+            raise ValueError(f"cannot parse {value} into a valid font value")
+
+        font = str(value[0])
+        size = int(value[1]) if len(value) >= 2 else None
+        weight = str(value[2]) if len(value) >= 3 else None
+        slant = str(value[3]) if len(value) >= 4 else "roman"
+        underline = True if len(value) >= 5 and value[4].lower() in {"true", "t"} else False
+        overstrike = True if len(value) >= 6 and value[5].lower() in {"true", "t"} else False
+
+        font = ctk.CTkFont(font, size=size, weight=weight, slant=slant, underline=underline, overstrike=overstrike)
+
+        return font
 
     @classmethod
     def parse_string_value(cls, value):

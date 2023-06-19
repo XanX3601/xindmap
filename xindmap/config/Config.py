@@ -1,3 +1,4 @@
+import customtkinter as ctk
 import inspect
 import re
 
@@ -113,6 +114,10 @@ class Config(xindmap.event.EventSource):
             [`True`][] if the value complies, [`False`][] otherwise.
         """
         return isinstance(value, float) or isinstance(value, int)
+
+    @staticmethod
+    def __variable_type_font_check(value):
+        return isinstance(value, ctk.CTkFont) or isinstance(value, str)
 
     @staticmethod
     def __variable_type_string_check(value):

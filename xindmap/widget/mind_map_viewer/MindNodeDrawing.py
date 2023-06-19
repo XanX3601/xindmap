@@ -76,6 +76,8 @@ class MindNodeDrawing:
         status_arc_color="#fff",
         status_check_color="#fff",
         status_inner_circle_color="#fff",
+        title_color="#fff",
+        title_font="TkDefaultFont",
     ):
         self.__id = next(MindNodeDrawing.__id_counter)
 
@@ -162,7 +164,12 @@ class MindNodeDrawing:
         self.__status_inner_circle_hitbox = Hitbox()
 
         self.__title_text_id = self.__canvas.create_text(
-            0, 0, anchor=ctk.NW, tags=(drawing_tag, "mind_node_drawing_title_text")
+            0,
+            0,
+            anchor=ctk.NW,
+            fill=title_color,
+            font=title_font,
+            tags=(drawing_tag, "mind_node_drawing_title_text"),
         )
         self.__title_text_current_hitbox = Hitbox()
         self.__title_text_hitbox = Hitbox()
@@ -663,6 +670,32 @@ class MindNodeDrawing:
             previous_title_hitbox_height != self.__title_hitbox.height
             or previous_title_hitbox_width != self.__title_hitbox.width
         ):
+            self.__update_body_hitbox_size()
+            self.__update_hitbox_size()
+            self.__update_selector_hitbox_size()
+
+    @property
+    def title_color(self):
+        return self.__canvas.itemcget(self.__title_text_id, "fill")
+
+    @title_color.setter
+    def title_color(self, title_color):
+        self.__canvas.itemconfigure(self.__title_text_id, fill=title_color)
+
+    @property
+    def title_font(self):
+        return self.__canvas.itemcget(self.__title_text_id, "font")
+
+    @title_font.setter
+    def title_font(self, title_font):
+        self.__canvas.itemconfigure(self.__title_text_id, font=title_font)
+
+        previous_title_hitbox_height = self.__title_hitbox.height
+        previous_title_hitbox_width = self.__title_hitbox.width
+
+        self.__update_title_hitbox_size()
+
+        if (previous_title_hitbox_height != self.__title_hitbox.height or previous_title_hitbox_width != self.__title_hitbox.width):
             self.__update_body_hitbox_size()
             self.__update_hitbox_size()
             self.__update_selector_hitbox_size()

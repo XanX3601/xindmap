@@ -1,4 +1,5 @@
 import enum
+import customtkinter as ctk
 
 from .Variable import Variable
 from .VariableTypes import VariableTypes
@@ -93,7 +94,9 @@ class Variables(enum.Enum):
     mind_map_viewer_mind_node_drawing_title_padding_right = Variable(
         VariableTypes.int, 5
     )
+    mind_map_viewer_mind_node_drawing_title_color = Variable(VariableTypes.color, "#fff")
     mind_map_viewer_mind_node_drawing_title_padding_top = Variable(VariableTypes.int, 5)
+    mind_map_viewer_mind_node_drawing_title_font = Variable(VariableTypes.font, "TkDefaultFont")
     state_viewer_height_px = Variable(VariableTypes.int, 20)
     xindmap_app_main_window_height_px = Variable(VariableTypes.int, 600)
     xindmap_app_main_window_width_px = Variable(VariableTypes.int, 800)
