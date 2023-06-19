@@ -1,7 +1,7 @@
-import customtkinter as ctk
 import inspect
 import re
 
+import customtkinter as ctk
 import singleton_decorator
 
 import xindmap.event

@@ -695,7 +695,10 @@ class MindNodeDrawing:
 
         self.__update_title_hitbox_size()
 
-        if (previous_title_hitbox_height != self.__title_hitbox.height or previous_title_hitbox_width != self.__title_hitbox.width):
+        if (
+            previous_title_hitbox_height != self.__title_hitbox.height
+            or previous_title_hitbox_width != self.__title_hitbox.width
+        ):
             self.__update_body_hitbox_size()
             self.__update_hitbox_size()
             self.__update_selector_hitbox_size()

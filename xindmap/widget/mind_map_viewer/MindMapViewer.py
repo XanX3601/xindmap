@@ -44,14 +44,19 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
         selector_color = config.get(
             Variables.mind_map_viewer_mind_node_drawing_selector_color
         )
-        title_color = config.get(Variables.mind_map_viewer_mind_node_drawing_title_color)
+        title_color = config.get(
+            Variables.mind_map_viewer_mind_node_drawing_title_color
+        )
         title_font = config.get(Variables.mind_map_viewer_mind_node_drawing_title_font)
 
         node_id = event.node_id
         parent_id = mind_map.node_parent_id(node_id)
 
         drawing = MindNodeDrawing(
-            self.__canvas, selector_color=selector_color, title_color=title_color, title_font=title_font
+            self.__canvas,
+            selector_color=selector_color,
+            title_color=title_color,
+            title_font=title_font,
         )
 
         if self.__root_id is None:
@@ -673,7 +678,9 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
                 self.__root_id, update_drawing_size=True, update_hitbox_width=True
             )
 
-    def on_config_variable_mind_map_viewer_mind_node_drawing_title_color_set(self, value):
+    def on_config_variable_mind_map_viewer_mind_node_drawing_title_color_set(
+        self, value
+    ):
         if self.__root_id is None:
             return
 
@@ -696,7 +703,7 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
             self.__root_id,
             update_drawing_coords=True,
             update_hitbox_width=True,
-            update_drawing_size=True
+            update_drawing_size=True,
         )
         self.__compute_drawing_coords(self.__root_id)
 

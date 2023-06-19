@@ -1,4 +1,5 @@
 import enum
+
 import customtkinter as ctk
 
 from .Variable import Variable
@@ -26,7 +27,9 @@ class Variables(enum.Enum):
     [input stack viewer][xindmap.widget.InputStackViewer.InputStackViewer].
     """
     mind_map_viewer_background_color = Variable(VariableTypes.color, "#000")
-    mind_map_viewer_edge_drawing_colors = Variable(VariableTypes.color_list, ["#f00", "#0f0", "#00f"])
+    mind_map_viewer_edge_drawing_colors = Variable(
+        VariableTypes.color_list, ["#f00", "#0f0", "#00f"]
+    )
     mind_map_viewer_edge_drawing_inner_point_padding_width_percentage = Variable(
         VariableTypes.float, 0.2
     )
@@ -42,7 +45,9 @@ class Variables(enum.Enum):
     mind_map_viewer_mind_node_drawing_padding_left = Variable(VariableTypes.int, 5)
     mind_map_viewer_mind_node_drawing_padding_right = Variable(VariableTypes.int, 5)
     mind_map_viewer_mind_node_drawing_padding_top = Variable(VariableTypes.int, 5)
-    mind_map_viewer_mind_node_drawing_selector_color = Variable(VariableTypes.color, "#fff")
+    mind_map_viewer_mind_node_drawing_selector_color = Variable(
+        VariableTypes.color, "#fff"
+    )
     mind_map_viewer_mind_node_drawing_selector_padding_bottom = Variable(
         VariableTypes.int, 5
     )
@@ -56,10 +61,16 @@ class Variables(enum.Enum):
         VariableTypes.int, 5
     )
     mind_map_viewer_mind_node_drawing_selector_radius = Variable(VariableTypes.int, 10)
-    mind_map_viewer_mind_node_drawing_status_arc_colors = Variable(VariableTypes.color_list, ["#f00", "#0f0", "#00f"])
-    mind_map_viewer_mind_node_drawing_status_check_colors = Variable(VariableTypes.color_list, ["#f00", "#0f0", "#00f"])
+    mind_map_viewer_mind_node_drawing_status_arc_colors = Variable(
+        VariableTypes.color_list, ["#f00", "#0f0", "#00f"]
+    )
+    mind_map_viewer_mind_node_drawing_status_check_colors = Variable(
+        VariableTypes.color_list, ["#f00", "#0f0", "#00f"]
+    )
     mind_map_viewer_mind_node_drawing_status_height = Variable(VariableTypes.int, 20)
-    mind_map_viewer_mind_node_drawing_status_inner_circle_colors = Variable(VariableTypes.color_list, ["#f00", "#0f0", "#00f"])
+    mind_map_viewer_mind_node_drawing_status_inner_circle_colors = Variable(
+        VariableTypes.color_list, ["#f00", "#0f0", "#00f"]
+    )
     mind_map_viewer_mind_node_drawing_status_inner_circle_padding_bottom = Variable(
         VariableTypes.int, 3
     )
@@ -94,9 +105,13 @@ class Variables(enum.Enum):
     mind_map_viewer_mind_node_drawing_title_padding_right = Variable(
         VariableTypes.int, 5
     )
-    mind_map_viewer_mind_node_drawing_title_color = Variable(VariableTypes.color, "#fff")
+    mind_map_viewer_mind_node_drawing_title_color = Variable(
+        VariableTypes.color, "#fff"
+    )
     mind_map_viewer_mind_node_drawing_title_padding_top = Variable(VariableTypes.int, 5)
-    mind_map_viewer_mind_node_drawing_title_font = Variable(VariableTypes.font, "TkDefaultFont")
+    mind_map_viewer_mind_node_drawing_title_font = Variable(
+        VariableTypes.font, "TkDefaultFont"
+    )
     state_viewer_height_px = Variable(VariableTypes.int, 20)
     xindmap_app_main_window_height_px = Variable(VariableTypes.int, 600)
     xindmap_app_main_window_width_px = Variable(VariableTypes.int, 800)

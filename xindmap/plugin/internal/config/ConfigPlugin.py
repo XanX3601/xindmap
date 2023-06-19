@@ -67,10 +67,21 @@ class ConfigPlugin(xindmap.plugin.Plugin):
         size = int(value[1]) if len(value) >= 2 else None
         weight = str(value[2]) if len(value) >= 3 else None
         slant = str(value[3]) if len(value) >= 4 else "roman"
-        underline = True if len(value) >= 5 and value[4].lower() in {"true", "t"} else False
-        overstrike = True if len(value) >= 6 and value[5].lower() in {"true", "t"} else False
+        underline = (
+            True if len(value) >= 5 and value[4].lower() in {"true", "t"} else False
+        )
+        overstrike = (
+            True if len(value) >= 6 and value[5].lower() in {"true", "t"} else False
+        )
 
-        font = ctk.CTkFont(font, size=size, weight=weight, slant=slant, underline=underline, overstrike=overstrike)
+        font = ctk.CTkFont(
+            font,
+            size=size,
+            weight=weight,
+            slant=slant,
+            underline=underline,
+            overstrike=overstrike,
+        )
 
         return font
 

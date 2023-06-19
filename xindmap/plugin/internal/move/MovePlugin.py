@@ -7,25 +7,29 @@ import xindmap.plugin
 class MovePlugin(xindmap.plugin.Plugin):
     # callback *****************************************************************
     def on_mind_map_node_added(self, api, node):
-        direction = api.direction_node(node)
         parent = api.parent_node(node)
 
-        if parent is None:
-            deep_level = 0
+        root = api.root_node()
+
+        if node == root:
+            self.__root_to_direction_to_children = {
+                "left": sortedcontainers.SortedList(),
+                "right": sortedcontainers.SortedList(),
+            }
+            self.__root_to_direction_to_last_index = {
+                direction: 0 for direction in self.__root_to_direction_to_children
+            }
+
         else:
-            deep_level = self.__node_to_deep_level[parent] + 1
+            self.__node_to_children[node] = sortedcontainers.SortedList()
+            self.__node_to_last_index[node] = 0
 
-        self.__node_to_deep_level[node] = deep_level
-        self.__node_to_last_index[node] = 0
-
-        if deep_level not in self.__deep_level_to_direction_to_nodes:
-            self.__deep_level_to_direction_to_nodes[deep_level] = {}
-        if direction not in self.__deep_level_to_direction_to_nodes[deep_level]:
-            self.__deep_level_to_direction_to_nodes[deep_level][
-                direction
-            ] = sortedcontainers.SortedList()
-
-        self.__deep_level_to_direction_to_nodes[deep_level][direction].add(node)
+            if parent is not None:
+                if parent == root:
+                    direction = api.direction_node(node)
+                    self.__root_to_direction_to_children[direction].add(node)
+                else:
+                    self.__node_to_children[parent].add(node)
 
     # command ******************************************************************
     def commands(self):
@@ -38,52 +42,79 @@ class MovePlugin(xindmap.plugin.Plugin):
 
     def command_move_down(self, api):
         node = api.current_node()
-        if node is None:
-            return
-
-        deep_level = self.__node_to_deep_level[node]
-        direction = api.direction_node(node)
-
-        nodes = self.__deep_level_to_direction_to_nodes[deep_level][direction]
-
-        node_index = nodes.index(node)
-
-        if node_index < len(nodes) - 1:
-            next_node = nodes[node_index + 1]
-
-            api.select_node(next_node)
-
-    def command_move_left(self, api):
-        node = api.current_node()
         root = api.root_node()
 
         if node == root:
-            children = api.children_node(root)
-            children = [
-                child for child in children if api.direction_node(child) == "left"
-            ]
+            return
+
+        parent = api.parent_node(node)
+
+        if parent == root:
+            direction = api.direction_node(node)
+            siblings = self.__root_to_direction_to_children[direction]
+        else:
+            siblings = self.__node_to_children[parent]
+
+        node_index = siblings.index(node)
+
+        if node_index < len(siblings) - 1:
+            next_node = siblings[node_index + 1]
+        else:
+            grand_parent = api.parent_node(parent)
+
+            if grand_parent == root:
+                direction = api.direction_node(parent)
+                parent_siblings = self.__root_to_direction_to_children[direction]
+            else:
+                parent_siblings = self.__node_to_children[grand_parent]
+
+            parent_index = parent_siblings.index(parent)
+
+            next_node = None
+            while next_node is None:
+                parent_index += 1
+
+                if parent_index == len(parent_siblings):
+                    return
+
+                parent = parent_siblings[parent_index]
+                siblings = self.__node_to_children[parent]
+
+                if siblings:
+                    next_node = siblings[0]
+
+        api.select_node(next_node)
+
+    def command_move_left(self, api):
+        node = api.current_node()
+        direction = api.direction_node(node)
+
+        if direction == "":
+            children = self.__root_to_direction_to_children["left"]
 
             if not children:
                 return
 
-            next_node = children[self.__root_last_left_index]
-        elif api.direction_node(node) == "left":
-            children = api.children_node(node)
+            next_node = children[self.__root_to_direction_to_last_index["left"]]
+        elif direction == "left":
+            children = self.__node_to_children[node]
+
+            if not children:
+                return
 
             next_node = children[self.__node_to_last_index[node]]
         else:
             parent = api.parent_node(node)
-            siblings = api.children_node(parent)
+            root = api.root_node()
 
             if parent == root:
-                siblings = [
-                    sibling
-                    for sibling in siblings
-                    if api.direction_node(sibling) == "right"
-                ]
-                self.__root_last_right_index = siblings.index(node)
+                siblings = self.__root_to_direction_to_children[direction]
+                node_index = siblings.index(node)
+                self.__root_to_direction_to_last_index[direction] = node_index
             else:
-                self.__node_to_last_index[parent] = siblings.index(node)
+                siblings = self.__node_to_children[parent]
+                node_index = siblings.index(node)
+                self.__node_to_last_index[parent] = node_index
 
             next_node = parent
 
@@ -91,67 +122,93 @@ class MovePlugin(xindmap.plugin.Plugin):
 
     def command_move_right(self, api):
         node = api.current_node()
-        root = api.root_node()
+        direction = api.direction_node(node)
 
-        if node == root:
-            children = api.children_node(root)
-            children = [
-                child for child in children if api.direction_node(child) == "right"
-            ]
+        if direction == "":
+            children = self.__root_to_direction_to_children["right"]
 
             if not children:
                 return
 
-            next_node = children[self.__root_last_right_index]
-        elif api.direction_node(node) == "right":
-            children = api.children_node(node)
-
-            next_node = children[self.__node_to_last_index[node]]
-        else:
+            next_node = children[self.__root_to_direction_to_last_index["right"]]
+        elif direction == "left":
             parent = api.parent_node(node)
-            siblings = api.children_node(parent)
+            root = api.root_node()
 
             if parent == root:
-                siblings = [
-                    sibling
-                    for sibling in siblings
-                    if api.direction_node(sibling) == "left"
-                ]
-                self.__root_last_left_index = siblings.index(node)
+                siblings = self.__root_to_direction_to_children[direction]
+                node_index = siblings.index(node)
+                self.__root_to_direction_to_last_index[direction] = node_index
             else:
-                self.__node_to_last_index[parent] = siblings.index(node)
+                siblings = self.__node_to_children[parent]
+                node_index = siblings.index(node)
+                self.__node_to_last_index[parent] = node_index
 
             next_node = parent
+        else:
+            children = self.__node_to_children[node]
+
+            if not children:
+                return
+
+            next_node = children[self.__node_to_last_index[node]]
 
         api.select_node(next_node)
 
     def command_move_up(self, api):
         node = api.current_node()
-        if node is None:
+        root = api.root_node()
+
+        if node == root:
             return
 
-        deep_level = self.__node_to_deep_level[node]
-        direction = api.direction_node(node)
+        parent = api.parent_node(node)
 
-        nodes = self.__deep_level_to_direction_to_nodes[deep_level][direction]
+        if parent == root:
+            direction = api.direction_node(node)
+            siblings = self.__root_to_direction_to_children[direction]
+        else:
+            siblings = self.__node_to_children[parent]
 
-        node_index = nodes.index(node)
+        node_index = siblings.index(node)
 
         if node_index > 0:
-            next_node = nodes[node_index - 1]
+            next_node = siblings[node_index - 1]
+        else:
+            grand_parent = api.parent_node(parent)
 
-            api.select_node(next_node)
+            if grand_parent == root:
+                direction = api.direction_node(parent)
+                parent_siblings = self.__root_to_direction_to_children[direction]
+            else:
+                parent_siblings = self.__node_to_children[grand_parent]
+
+            parent_index = parent_siblings.index(parent)
+
+            next_node = None
+            while next_node is None:
+                parent_index -= 1
+
+                if parent_index == -1:
+                    return
+
+                parent = parent_siblings[parent_index]
+                siblings = self.__node_to_children[parent]
+
+                if siblings:
+                    next_node = siblings[-1]
+
+        api.select_node(next_node)
 
     # constructor **************************************************************
     def __init__(self):
         super().__init__()
 
-        self.__deep_level_to_direction_to_nodes = {}
-        self.__node_to_deep_level = {}
+        self.__node_to_children = {}
         self.__node_to_last_index = {}
 
-        self.__root_last_left_index = 0
-        self.__root_last_right_index = 0
+        self.__root_to_direction_to_children = {}
+        self.__root_to_direction_to_last_index = {}
 
     # initialization ***********************************************************
     def init(self, api):
