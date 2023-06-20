@@ -445,7 +445,7 @@ class XindmapApp(xindmap.config.Configurable):
         self.__place_main_window()
 
     # constructor **************************************************************
-    def __init__(self, init_file_path):
+    def __init__(self, config_directory_path, data_directory_path, init_file_path):
         """Instantiates the application.
 
         Instantiates data model, controller and widgets in the correct order
@@ -469,6 +469,8 @@ class XindmapApp(xindmap.config.Configurable):
         )
 
         # data *******************************************************
+        self.__config_directory_path = config_directory_path
+        self.__data_directory_path = data_directory_path
         self.__init_file_path = init_file_path
 
         self.__previous_height = None
@@ -507,6 +509,8 @@ class XindmapApp(xindmap.config.Configurable):
 
         # api ********************************************************
         self.__command_api = xindmap.command.CommandApi(
+            self.__config_directory_path,
+            self.__data_directory_path,
             self.__input_mapping_tree,
             self.__mind_map,
             self.__mind_map_viewer,

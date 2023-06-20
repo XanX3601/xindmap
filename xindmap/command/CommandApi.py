@@ -40,7 +40,7 @@ class CommandApi:
             self.__wait()
 
     # constructor **************************************************************
-    def __init__(self, input_mapping_tree, mind_map, mind_map_viewer, state_holder):
+    def __init__(self, config_directory_path, data_directory_path, input_mapping_tree, mind_map, mind_map_viewer, state_holder):
         """Instantiates this api.
 
         Args:
@@ -48,6 +48,8 @@ class CommandApi:
                 An
                 [input mapping tree][xindmap.input.InputMappingTree.InputMappingTree].
         """
+        self.__config_directory_path = config_directory_path
+        self.__data_directory_path = data_directory_path
         self.__input_mapping_tree = input_mapping_tree
         self.__mind_map = mind_map
         self.__mind_map_viewer = mind_map_viewer
@@ -113,6 +115,15 @@ class CommandApi:
         self.__mind_map.node_set_status(status, node_id)
         if wait:
             self.__wait()
+
+    # path *********************************************************************
+    def plugin_data_directory_path(self):
+        plugin_data_directory_path = self.__data_directory_path / "plugin"
+
+        if not plugin_data_directory_path.exists():
+            plugin_data_directory_path.mkdir(parents=True)
+
+        return plugin_data_directory_path
 
     # state ********************************************************************
     def set_state(self, state, wait=False):
