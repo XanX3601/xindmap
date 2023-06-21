@@ -5,6 +5,7 @@ import xindmap.plugin.internal.move
 import xindmap.plugin.internal.node
 import xindmap.plugin.internal.state
 import xindmap.plugin.internal.status
+import xindmap.plugin.internal.theme
 import xindmap.plugin.internal.view
 
 map h :move_left<CR>

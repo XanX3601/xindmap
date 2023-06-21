@@ -41,7 +41,7 @@ def main(config_directory_path, data_directory_path, init_file_path, file):
             This path is given to [pathlib.Path][].
     """
     logging.basicConfig(
-        level="ERROR",
+        level="NOTSET",
         format="%(message)s",
         datefmt="[%X]",
         handlers=[rich.logging.RichHandler()],

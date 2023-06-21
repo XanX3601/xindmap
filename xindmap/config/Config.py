@@ -78,6 +78,7 @@ class Config(xindmap.event.EventSource):
     # type *********************************************************************
     @staticmethod
     def __variable_type_color_check(value):
+        value = value.lower()
         return isinstance(value, str) and re.fullmatch(
             r"#[\dabcdef]{6}|#[\dabcdef]{3}", value
         )

@@ -71,10 +71,13 @@ class MindNodeDrawing:
     def __init__(
         self,
         canvas,
+        arc_width=3,
         body_color="#fff",
         selector_color="#fff",
+        selector_width=1,
         status_arc_color="#fff",
         status_check_color="#fff",
+        status_check_width=1,
         status_inner_circle_color="#fff",
         title_color="#fff",
         title_font="TkDefaultFont",
@@ -121,6 +124,7 @@ class MindNodeDrawing:
             smooth=True,
             state=ctk.HIDDEN,
             tags=(drawing_tag, "mind_node_drawing_selector_polygon"),
+            width=selector_width
         )
         self.__selector_polygon_current_hitbox = Hitbox()
         self.__selector_polygon_hitbox = Hitbox()
@@ -135,7 +139,7 @@ class MindNodeDrawing:
             state=ctk.HIDDEN,
             style=ctk.ARC,
             tags=(drawing_tag, "mind_node_drawing_status_arc"),
-            width=3,
+            width=arc_width,
         )
         self.__status_arc_current_hitbox = Hitbox()
         self.__status_arc_hitbox = Hitbox()
@@ -148,6 +152,7 @@ class MindNodeDrawing:
             fill=status_check_color,
             state=ctk.HIDDEN,
             tags=(drawing_tag, "mind_node_drawing_status_check"),
+            width=status_check_width,
         )
         self.__status_check_current_hitbox = Hitbox()
         self.__status_check_hitbox = Hitbox()
@@ -361,6 +366,14 @@ class MindNodeDrawing:
     def selector_color(self, selector_color):
         self.__canvas.itemconfigure(self.__selector_polygon_id, outline=selector_color)
 
+    @property
+    def selector_width(self):
+        return self.__canvas.itemcget(self.__selector_polygon_id, "width")
+
+    @selector_width.setter
+    def selector_width(self, selector_width):
+        self.__canvas.itemconfigure(self.__selector_polygon_id, width=selector_width)
+
     # size *********************************************************************
     @property
     def height(self):
@@ -401,11 +414,19 @@ class MindNodeDrawing:
             Variables.mind_map_viewer_mind_node_drawing_status_inner_circle_padding_top
         )
 
+        status_hitbox_with_padding = Hitbox()
+        status_hitbox_with_padding.coords(
+            self.__status_hitbox.x1 + padding_left,
+            self.__status_hitbox.y1 + padding_top,
+            self.__status_hitbox.x2 - padding_right,
+            self.__status_hitbox.y2 - padding_bottom,
+        )
+
         # status arc
-        x1 = self.__status_hitbox.x1 + padding_left
-        y1 = self.__status_hitbox.y1 + padding_top
-        x2 = self.__status_hitbox.x2 - padding_right
-        y2 = self.__status_hitbox.y2 - padding_bottom
+        x1 = status_hitbox_with_padding.x1
+        y1 = status_hitbox_with_padding.y1
+        x2 = status_hitbox_with_padding.x2
+        y2 = status_hitbox_with_padding.y2
 
         self.__status_arc_hitbox.coords(x1, y1, x2, y2)
         if self.__status_arc_hitbox != self.__status_arc_current_hitbox:
@@ -567,12 +588,28 @@ class MindNodeDrawing:
         self.__canvas.itemconfigure(self.__status_arc_id, outline=arc_color)
 
     @property
+    def status_arc_width(self):
+        return self.__canvas.itemcget(self.__status_arc_id, "width")
+
+    @status_arc_width.setter
+    def status_arc_width(self, arc_width):
+        self.__canvas.itemconfigure(self.__status_arc_id, width=arc_width)
+
+    @property
     def status_check_color(self):
         return self.__canvas.itemcget(self.__status_check_id, "fill")
 
     @status_check_color.setter
     def status_check_color(self, check_color):
         self.__canvas.itemconfigure(self.__status_check_id, fill=check_color)
+
+    @property
+    def status_check_width(self):
+        return self.__canvas.itemcget(self.__status_check_id, "width")
+
+    @status_check_width.setter
+    def status_check_width(self, check_width):
+        self.__canvas.itemconfigure(self.__status_check_id, width=check_width)
 
     @property
     def status_inner_circle_color(self):
