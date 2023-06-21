@@ -44,11 +44,15 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
         selector_color = config.get(
             Variables.mind_map_viewer_mind_node_drawing_selector_color
         )
-        selector_width = config.get(Variables.mind_map_viewer_mind_node_drawing_selector_width)
+        selector_width = config.get(
+            Variables.mind_map_viewer_mind_node_drawing_selector_width
+        )
         title_color = config.get(
             Variables.mind_map_viewer_mind_node_drawing_title_color
         )
-        status_check_width = config.get(Variables.mind_map_viewer_mind_node_drawing_status_check_width)
+        status_check_width = config.get(
+            Variables.mind_map_viewer_mind_node_drawing_status_check_width
+        )
         title_font = config.get(Variables.mind_map_viewer_mind_node_drawing_title_font)
 
         node_id = event.node_id
@@ -278,7 +282,6 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
                 previous_height != drawing.height
                 or parent_previous_height != parent_drawing.height
             )
-            has_computed_width_or_height = False
 
             if parent_previous_width != parent_drawing.width:
                 self.__compute_hitbox_width(parent_id)
@@ -290,8 +293,6 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
                     direction=self.__node_id_to_direction[node_id],
                 )
 
-                has_computed_width_or_height = True
-
             elif previous_width != drawing.width:
                 self.__compute_hitbox_width(node_id)
 
@@ -299,21 +300,16 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
                     node_id, update_drawing_coords=not will_need_to_compute_height
                 )
 
-                has_computed_width_or_height = True
-
             if previous_height != drawing.height:
                 self.__compute_hitbox_height(node_id)
                 self.__compute_hitbox_y_from_root(self.__node_id_to_direction[node_id])
-                has_computed_width_or_height = True
 
             elif parent_previous_height != parent_drawing.height:
                 self.__compute_hitbox_height(parent_id)
                 self.__compute_hitbox_y_from_root(self.__node_id_to_direction[node_id])
-                has_computed_width_or_height = True
 
-            if not has_computed_width_or_height:
-                self.__compute_drawing_coords(node_id)
-                self.__compute_drawing_coords(parent_id)
+            self.__compute_drawing_coords(node_id)
+            self.__compute_drawing_coords(parent_id)
 
         else:
             will_need_to_compute_height = previous_height != drawing.height
@@ -554,7 +550,9 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
             for drawing in self.__node_id_to_drawing.values():
                 drawing.update_components()
 
-    def on_config_variable_mind_map_viewer_mind_node_drawing_selector_width_set(self, value):
+    def on_config_variable_mind_map_viewer_mind_node_drawing_selector_width_set(
+        self, value
+    ):
         if self.__root_id is None:
             return
 
@@ -591,7 +589,9 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
 
             queue.extendleft(child_ids)
 
-    def on_config_variable_mind_map_viewer_mind_node_drawing_status_arc_width_set(self, value):
+    def on_config_variable_mind_map_viewer_mind_node_drawing_status_arc_width_set(
+        self, value
+    ):
         for drawing in self.__node_id_to_drawing.values():
             drawing.status_arc_width = value
 
@@ -625,7 +625,9 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
 
             queue.extendleft(child_ids)
 
-    def on_config_variable_mind_map_viewer_mind_node_drawing_status_check_width_set(self, value):
+    def on_config_variable_mind_map_viewer_mind_node_drawing_status_check_width_set(
+        self, value
+    ):
         if self.__root_id is None:
             return
 
@@ -638,7 +640,9 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
             self.__compute_hitbox_y_from_root(Direction.left)
             self.__compute_hitbox_y_from_root(Direction.right)
 
-    def on_config_variable_mind_map_viewer_mind_node_drawing_status_inner_circle_colors_set(self, value):
+    def on_config_variable_mind_map_viewer_mind_node_drawing_status_inner_circle_colors_set(
+        self, value
+    ):
         print("lol")
         if self.__root_id is None:
             return
@@ -663,23 +667,33 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
 
             for child_id in child_ids:
                 child_drawing = self.__node_id_to_drawing[child_id]
-                child_drawing.status_inner_circle_color = drawing.status_inner_circle_color
+                child_drawing.status_inner_circle_color = (
+                    drawing.status_inner_circle_color
+                )
 
             queue.extendleft(child_ids)
 
-    def on_config_variable_mind_map_viewer_mind_node_drawing_status_inner_circle_padding_bottom_set(self, _):
+    def on_config_variable_mind_map_viewer_mind_node_drawing_status_inner_circle_padding_bottom_set(
+        self, _
+    ):
         for drawing in self.__node_id_to_drawing.values():
             drawing.update_components()
 
-    def on_config_variable_mind_map_viewer_mind_node_drawing_status_inner_circle_padding_left_set(self, _):
+    def on_config_variable_mind_map_viewer_mind_node_drawing_status_inner_circle_padding_left_set(
+        self, _
+    ):
         for drawing in self.__node_id_to_drawing.values():
             drawing.update_components()
 
-    def on_config_variable_mind_map_viewer_mind_node_drawing_status_inner_circle_padding_right_set(self, _):
+    def on_config_variable_mind_map_viewer_mind_node_drawing_status_inner_circle_padding_right_set(
+        self, _
+    ):
         for drawing in self.__node_id_to_drawing.values():
             drawing.update_components()
 
-    def on_config_variable_mind_map_viewer_mind_node_drawing_status_inner_circle_padding_top_set(self, _):
+    def on_config_variable_mind_map_viewer_mind_node_drawing_status_inner_circle_padding_top_set(
+        self, _
+    ):
         for drawing in self.__node_id_to_drawing.values():
             drawing.update_components()
 

@@ -21,6 +21,6 @@ theme_name_to_theme = {
         foreground_color="#f8f8f2",
         node_dimensions=(20, 3),
         node_margins=(30, 5),
-        title_paddings=(0, 10, 10, 0)
+        title_paddings=(0, 10, 10, 0),
     )
 }

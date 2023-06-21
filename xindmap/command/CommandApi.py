@@ -40,7 +40,15 @@ class CommandApi:
             self.__wait()
 
     # constructor **************************************************************
-    def __init__(self, config_directory_path, data_directory_path, input_mapping_tree, mind_map, mind_map_viewer, state_holder):
+    def __init__(
+        self,
+        config_directory_path,
+        data_directory_path,
+        input_mapping_tree,
+        mind_map,
+        mind_map_viewer,
+        state_holder,
+    ):
         """Instantiates this api.
 
         Args:

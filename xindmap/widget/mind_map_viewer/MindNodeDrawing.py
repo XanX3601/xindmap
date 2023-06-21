@@ -124,7 +124,7 @@ class MindNodeDrawing:
             smooth=True,
             state=ctk.HIDDEN,
             tags=(drawing_tag, "mind_node_drawing_selector_polygon"),
-            width=selector_width
+            width=selector_width,
         )
         self.__selector_polygon_current_hitbox = Hitbox()
         self.__selector_polygon_hitbox = Hitbox()

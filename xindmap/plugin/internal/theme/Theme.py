@@ -26,7 +26,7 @@ class Theme:
         node_paddings=(5, 5, 5, 5),
         title_color=None,
         title_font=None,
-        title_paddings=(5, 5, 5, 5)
+        title_paddings=(5, 5, 5, 5),
     ):
         self.arc_colors = arc_colors if arc_colors is not None else colors
         self.arc_dimensions = arc_dimensions
@@ -53,4 +53,3 @@ class Theme:
         self.title_color = title_color if title_color is not None else foreground_color
         self.title_font = title_font if title_font is not None else font
         self.title_paddings = title_paddings
-

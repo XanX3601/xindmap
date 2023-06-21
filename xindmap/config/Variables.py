@@ -69,7 +69,9 @@ class Variables(enum.Enum):
     mind_map_viewer_mind_node_drawing_status_check_colors = Variable(
         VariableTypes.color_list, ["#f00", "#0f0", "#00f"]
     )
-    mind_map_viewer_mind_node_drawing_status_check_width = Variable(VariableTypes.int, 1)
+    mind_map_viewer_mind_node_drawing_status_check_width = Variable(
+        VariableTypes.int, 1
+    )
     mind_map_viewer_mind_node_drawing_status_height = Variable(VariableTypes.int, 20)
     mind_map_viewer_mind_node_drawing_status_inner_circle_colors = Variable(
         VariableTypes.color_list, ["#f00", "#0f0", "#00f"]
