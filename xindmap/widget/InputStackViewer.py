@@ -93,6 +93,9 @@ class InputStackViewer(ctk.CTkFrame, xindmap.config.Configurable):
         self.__update_label_text()
 
     # config callback **********************************************************
+    def on_config_variable_input_stack_viewer_background_color_set(self, value):
+        self.__label.configure(bg_color=value)
+
     def on_config_variable_input_stack_viewer_height_px_set(self, value):
         """Config callback called whenerver
         [`input_stack_viewer_height_px`][xindmap.config.Variables.Variables.input_stack_viewer_height_px]
@@ -107,9 +110,16 @@ class InputStackViewer(ctk.CTkFrame, xindmap.config.Configurable):
         Args:
             parent: The widget holding this input stack viewer.
         """
+        config = xindmap.config.Config()
+        Variables = xindmap.config.Variables
+
         ctk.CTkFrame.__init__(self, parent)
         xindmap.config.Configurable.__init__(
-            self, (xindmap.config.Variables.input_stack_viewer_height_px,)
+            self,
+            (
+                Variables.input_stack_viewer_background_color,
+                Variables.input_stack_viewer_height_px,
+            ),
         )
 
         self.__input_text_queue = collections.deque()
@@ -117,9 +127,9 @@ class InputStackViewer(ctk.CTkFrame, xindmap.config.Configurable):
         self.__label_text = ctk.StringVar(value="")
         self.__label = ctk.CTkLabel(
             self,
+            bg_color=config.get(Variables.input_stack_viewer_background_color),
+            height=config.get(Variables.input_stack_viewer_height_px),
             textvariable=self.__label_text,
-            height=xindmap.config.Variables.input_stack_viewer_height_px.default,
-            bg_color="red",
         )
 
         self.__label.pack(fill=ctk.BOTH, expand=True)

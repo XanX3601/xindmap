@@ -8,6 +8,8 @@ class Theme:
         arc_width=3,
         background_color="#000",
         bar_height=20,
+        bar_input_background_color="#f00",
+        bar_state_background_color="#f00",
         check_colors=None,
         check_width=1,
         circle_colors=None,
@@ -34,6 +36,8 @@ class Theme:
         self.arc_width = arc_width
         self.background_color = background_color
         self.bar_height = bar_height
+        self.bar_input_background_color = bar_input_background_color
+        self.bar_state_background_color = bar_state_background_color
         self.check_colors = check_colors if check_colors is not None else colors
         self.check_width = check_width
         self.circle_colors = circle_colors if circle_colors is not None else colors

@@ -6,6 +6,8 @@ theme_name_to_theme = {
         arc_width=3,
         background_color="#282a36",
         bar_height=10,
+        bar_input_background_color="#44475a",
+        bar_state_background_color="#44475a",
         check_colors=["#f8f8f2"],
         colors=[
             "#8be9fd",

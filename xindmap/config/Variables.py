@@ -22,6 +22,7 @@ class Variables(enum.Enum):
     [input pushed][xindmap.input.InputStack.InputStack--input-pushed]
     is dispatched.
     """
+    input_stack_viewer_background_color = Variable(VariableTypes.color, "#f00")
     input_stack_viewer_height_px = Variable(VariableTypes.float, 20)
     """The height (in pixel) of 
     [input stack viewer][xindmap.widget.InputStackViewer.InputStackViewer].
@@ -117,6 +118,7 @@ class Variables(enum.Enum):
     mind_map_viewer_mind_node_drawing_title_font = Variable(
         VariableTypes.font, "TkDefaultFont"
     )
+    state_viewer_background_color = Variable(VariableTypes.color, "#f00")
     state_viewer_height_px = Variable(VariableTypes.int, 20)
     xindmap_app_main_window_height_px = Variable(VariableTypes.int, 600)
     xindmap_app_main_window_width_px = Variable(VariableTypes.int, 800)

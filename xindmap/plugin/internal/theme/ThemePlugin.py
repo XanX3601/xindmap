@@ -72,6 +72,10 @@ class ThemePlugin(xindmap.plugin.Plugin):
         #   height
         config.set(Variables.input_stack_viewer_height_px, theme.bar_height)
         config.set(Variables.state_viewer_height_px, theme.bar_height)
+        #   input background color
+        config.set(Variables.input_stack_viewer_background_color, theme.bar_input_background_color)
+        #   state background color
+        config.set(Variables.state_viewer_background_color, theme.bar_state_background_color)
 
         # check
         #   colors

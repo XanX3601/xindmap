@@ -37,7 +37,7 @@ class ConfigPlugin(xindmap.plugin.Plugin):
 
     # variable *****************************************************************
     variable_name_to_variable = {
-        "test": xindmap.config.Variables.mind_map_viewer_mind_node_drawing_status_inner_circle_height
+        "test": xindmap.config.Variables.state_viewer_background_color
     }
 
     @classmethod

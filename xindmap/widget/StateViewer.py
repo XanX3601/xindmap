@@ -16,22 +16,28 @@ class StateViewer(ctk.CTkFrame, xindmap.config.Configurable):
         self.__update_label_text(event.state)
 
     # config callback **********************************************************
+    def on_config_variable_state_viewer_background_color_set(self, value):
+        self.__label.configure(bg_color=value)
+
     def on_config_variable_state_viewer_height_px_set(self, value):
         self.__label.configure(height=value)
 
     # constructor **************************************************************
     def __init__(self, parent):
+        config = xindmap.config.Config()
+        Variables = xindmap.config.Variables
+
         ctk.CTkFrame.__init__(self, parent)
         xindmap.config.Configurable.__init__(
-            self, [xindmap.config.Variables.state_viewer_height_px]
+            self, [Variables.state_viewer_background_color, Variables.state_viewer_height_px]
         )
 
         self.__label_text = ctk.StringVar(value="hello")
         self.__label = ctk.CTkLabel(
             self,
             textvariable=self.__label_text,
-            bg_color="blue",
-            height=xindmap.config.Variables.state_viewer_height_px.default,
+            bg_color=config.get(Variables.state_viewer_background_color),
+            height=config.get(Variables.state_viewer_height_px),
         )
 
         self.__label.pack(fill=ctk.BOTH, expand=True)

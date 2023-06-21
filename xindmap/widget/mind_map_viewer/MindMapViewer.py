@@ -313,7 +313,6 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
 
         else:
             will_need_to_compute_height = previous_height != drawing.height
-            has_computed_width_or_height = False
 
             if previous_width != drawing.width:
                 self.__compute_hitbox_width(node_id)
@@ -322,15 +321,11 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
                     node_id, update_drawing_coords=not will_need_to_compute_height
                 )
 
-                has_computed_width_or_height = True
-
             if will_need_to_compute_height:
                 self.__compute_hitbox_height(node_id)
                 self.__compute_hitbox_y_from_root(self.__node_id_to_direction[node_id])
-                has_computed_width_or_height = True
 
-            if not has_computed_width_or_height:
-                self.__compute_drawing_coords(node_id)
+            self.__compute_drawing_coords(node_id)
 
     def on_mind_map_node_text_set(self, mind_map, event):
         logging.debug(

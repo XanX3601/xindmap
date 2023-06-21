@@ -12,7 +12,7 @@
           "childs": [
             {
               "text": "add more customization",
-              "status": "done",
+              "status": "in_progress",
               "childs": []
             }
           ]
@@ -23,6 +23,11 @@
           "childs": [
             {
               "text": "improve movement",
+              "status": "done",
+              "childs": []
+            },
+            {
+              "text": "center on node when not in view",
               "status": "to_do",
               "childs": []
             }
@@ -36,7 +41,7 @@
       "childs": [
         {
           "text": "status",
-          "status": "to_do",
+          "status": "done",
           "childs": []
         },
         {
@@ -94,7 +99,7 @@
       "childs": [
         {
           "text": "node drawing",
-          "status": "to_do",
+          "status": "done",
           "childs": []
         },
         {
@@ -105,6 +110,11 @@
         {
           "text": "edge drawing",
           "status": "to_do",
+          "childs": []
+        },
+        {
+          "text": "themee",
+          "status": "done",
           "childs": []
         }
       ]
@@ -148,11 +158,21 @@
       "childs": []
     },
     {
-      "text": "",
+      "text": "bug",
       "status": "none",
       "childs": [
         {
-          "text": "hello",
+          "text": "status set bad node width",
+          "status": "none",
+          "childs": []
+        },
+        {
+          "text": "delete node compute status",
+          "status": "none",
+          "childs": []
+        },
+        {
+          "text": "delete node last index",
           "status": "none",
           "childs": []
         }
