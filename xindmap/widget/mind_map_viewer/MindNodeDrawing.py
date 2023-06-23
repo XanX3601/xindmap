@@ -73,6 +73,8 @@ class MindNodeDrawing:
         canvas,
         arc_width=3,
         body_color="#fff",
+        description_background_color="#000",
+        description_max_width=None,
         selector_color="#fff",
         selector_width=1,
         status_arc_color="#fff",
@@ -91,7 +93,10 @@ class MindNodeDrawing:
         self.__completion = None
         self.__status = xindmap.mind_map.MindNodeStatus.none
 
+        self.__display_description = False
+
         self.__body_hitbox = Hitbox()
+        self.__description_hitbox = Hitbox()
         self.__hitbox = Hitbox()
         self.__selector_hitbox = Hitbox()
         self.__status_hitbox = Hitbox()
@@ -109,10 +114,42 @@ class MindNodeDrawing:
             0,
             fill=body_color,
             outline=body_color,
-            tags=(drawing_tag, "mind_node_drawing_body_rectangle"),
+            tags=("mind_node_drawing", drawing_tag, "mind_node_drawing_body_rectangle"),
         )
         self.__body_rectangle_current_hitbox = Hitbox()
         self.__body_rectangle_hitbox = Hitbox()
+
+        self.__description_rectangle_id = self.__canvas.create_rectangle(
+            0,
+            0,
+            0,
+            0,
+            fill=description_background_color,
+            outline=description_background_color,
+            state=ctk.HIDDEN,
+            tags=(
+                "mind_node_drawing",
+                drawing_tag,
+                "mind_node_drawing_description_rectangle",
+            ),
+        )
+        self.__description_rectangle_current_hitbox = Hitbox()
+        self.__description_rectangle_hitbox = Hitbox()
+
+        self.__description_text_id = self.__canvas.create_text(
+            0,
+            0,
+            anchor=ctk.NW,
+            state=ctk.HIDDEN,
+            tags=(
+                "mind_node_drawing",
+                drawing_tag,
+                "mind_node_drawing_description_text",
+            ),
+            width=description_max_width,
+        )
+        self.__description_text_current_hitbox = Hitbox()
+        self.__description_text_hitbox = Hitbox()
 
         self.__selector_polygon_id = self.__canvas.create_polygon(
             0,
@@ -123,7 +160,11 @@ class MindNodeDrawing:
             outline=selector_color,
             smooth=True,
             state=ctk.HIDDEN,
-            tags=(drawing_tag, "mind_node_drawing_selector_polygon"),
+            tags=(
+                "mind_node_drawing",
+                drawing_tag,
+                "mind_node_drawing_selector_polygon",
+            ),
             width=selector_width,
         )
         self.__selector_polygon_current_hitbox = Hitbox()
@@ -138,7 +179,7 @@ class MindNodeDrawing:
             start=90,
             state=ctk.HIDDEN,
             style=ctk.ARC,
-            tags=(drawing_tag, "mind_node_drawing_status_arc"),
+            tags=("mind_node_drawing", drawing_tag, "mind_node_drawing_status_arc"),
             width=arc_width,
         )
         self.__status_arc_current_hitbox = Hitbox()
@@ -151,7 +192,7 @@ class MindNodeDrawing:
             0,
             fill=status_check_color,
             state=ctk.HIDDEN,
-            tags=(drawing_tag, "mind_node_drawing_status_check"),
+            tags=("mind_node_drawing", drawing_tag, "mind_node_drawing_status_check"),
             width=status_check_width,
         )
         self.__status_check_current_hitbox = Hitbox()
@@ -163,7 +204,11 @@ class MindNodeDrawing:
             0,
             0,
             state=ctk.HIDDEN,
-            tags=(drawing_tag, "mind_node_drawing_status_inner_circle"),
+            tags=(
+                "mind_node_drawing",
+                drawing_tag,
+                "mind_node_drawing_status_inner_circle",
+            ),
         )
         self.__status_inner_circle_current_hitbox = Hitbox()
         self.__status_inner_circle_hitbox = Hitbox()
@@ -174,21 +219,34 @@ class MindNodeDrawing:
             anchor=ctk.NW,
             fill=title_color,
             font=title_font,
-            tags=(drawing_tag, "mind_node_drawing_title_text"),
+            tags=("mind_node_drawing", drawing_tag, "mind_node_drawing_title_text"),
         )
         self.__title_text_current_hitbox = Hitbox()
         self.__title_text_hitbox = Hitbox()
 
         # handle canvas zindex
 
-        # order is
-        # - selector polygon
+        # order is from lowest to highest
         # - body rectangle
         # - title text
         # - status inner circle
         # - status arc
         # - status check
+        # - selector polygon
+        # - description rectangle
+        # - description text
 
+        self.__canvas.lower(
+            "mind_node_drawing_description_rectangle",
+            "mind_node_drawing_description_text",
+        )
+        self.__canvas.lower(
+            "mind_node_drawing_selector_polygon",
+            "mind_node_drawing_description_rectangle",
+        )
+        self.__canvas.lower(
+            "mind_node_drawing_status_check", "mind_node_drawing_selector_polygon"
+        )
         self.__canvas.lower(
             "mind_node_drawing_status_arc", "mind_node_drawing_status_check"
         )
@@ -201,15 +259,13 @@ class MindNodeDrawing:
         self.__canvas.lower(
             "mind_node_drawing_body_rectangle", "mind_node_drawing_title_text"
         )
-        self.__canvas.lower(
-            "mind_node_drawing_selector_polygon", "mind_node_drawing_body_rectangle"
-        )
 
         self.__update_status_hitbox_size()
         self.__update_title_hitbox_size()
         self.__update_body_hitbox_size()
         self.__update_hitbox_size()
         self.__update_selector_hitbox_size()
+        self.__update_description_hitbox_size()
 
     def __del__(self):
         self.__canvas.delete(f"mind_node_drawing_{self.__id}")
@@ -258,6 +314,127 @@ class MindNodeDrawing:
     @y1.setter
     def y1(self, y1):
         self.__hitbox.y1 = y1
+
+    # description **************************************************************
+    def __update_description_components_coords(self):
+        config = xindmap.config.Config()
+        Variables = xindmap.config.Variables
+
+        padding_bottom = config.get(
+            Variables.mind_map_viewer_mind_node_drawing_description_padding_bottom
+        )
+        padding_left = config.get(
+            Variables.mind_map_viewer_mind_node_drawing_description_padding_left
+        )
+        padding_right = config.get(
+            Variables.mind_map_viewer_mind_node_drawing_description_padding_right
+        )
+        padding_top = config.get(
+            Variables.mind_map_viewer_mind_node_drawing_description_padding_top
+        )
+
+        # description rectangle
+        x1 = self.__description_hitbox.x1
+        y1 = self.__description_hitbox.y1
+        x2 = self.__description_hitbox.x2
+        y2 = self.__description_hitbox.y2
+
+        self.__description_rectangle_hitbox.coords(x1, y1, x2, y2)
+        if (
+            self.__description_rectangle_hitbox
+            != self.__description_rectangle_current_hitbox
+        ):
+            self.__description_rectangle_current_hitbox.coords(x1, y1, x2, y2)
+
+            self.__canvas.coords(self.__description_rectangle_id, x1, y1, x2, y2)
+
+        # description text
+        x1 = self.__description_hitbox.x1 + padding_left
+        y1 = self.__description_hitbox.y1 + padding_top
+        x2 = self.__description_hitbox.x2 - padding_right
+        y2 = self.__description_hitbox.y2 - padding_bottom
+
+        self.__description_text_hitbox.coords(x1, y1, x2, y2)
+        if self.__description_text_hitbox != self.__description_text_current_hitbox:
+            self.__description_text_current_hitbox.coords(x1, y1, x2, y2)
+
+            self.__canvas.coords(self.__description_text_id, x1, y1)
+
+    def __update_description_hitbox_coords(self):
+        config = xindmap.config.Config()
+
+        margin_top = config.get(
+            xindmap.config.Variables.mind_map_viewer_mind_node_drawing_description_margin_top
+        )
+
+        self.__description_hitbox.x1 = self.__body_hitbox.x1
+        self.__description_hitbox.y1 = self.__body_hitbox.y2 + margin_top
+
+    def __update_description_hitbox_size(self):
+        config = xindmap.config.Config()
+        Variables = xindmap.config.Variables
+
+        padding_bottom = config.get(
+            Variables.mind_map_viewer_mind_node_drawing_description_padding_bottom
+        )
+        padding_left = config.get(
+            Variables.mind_map_viewer_mind_node_drawing_description_padding_left
+        )
+        padding_right = config.get(
+            Variables.mind_map_viewer_mind_node_drawing_description_padding_right
+        )
+        padding_top = config.get(
+            Variables.mind_map_viewer_mind_node_drawing_description_padding_top
+        )
+
+        text_bbox = self.__canvas.bbox(self.__description_text_id)
+
+        if text_bbox is None:
+            return
+
+        text_height = text_bbox[3] - text_bbox[1]
+        text_width = text_bbox[2] - text_bbox[0]
+
+        height = padding_top + text_height + padding_bottom
+        width = padding_left + text_width + padding_right
+
+        self.__description_hitbox.width = width
+        self.__description_hitbox.height = height
+
+    @property
+    def description(self):
+        return self.__canvas.itemcget(self.__description_text_id, "text")
+
+    @description.setter
+    def description(self, description):
+        self.__canvas.itemconfigure(self.__description_text_id, text=description)
+
+        self.__display_description = bool(description)
+
+        self.__update_description_hitbox_size()
+
+    @property
+    def description_background_color(self):
+        return self.__canvas.itemcget(self.__description_rectangle_id, "fill")
+
+    @description_background_color.setter
+    def description_background_color(self, background_color):
+        self.__canvas.itemconfigure(
+            self.__description_rectangle_id,
+            fill=background_color,
+            outline=background_color,
+        )
+
+    @property
+    def description_max_width(self):
+        return self.__canvas.itemcget(self.__description_text_id, "width")
+
+    @description_max_width.setter
+    def description_max_width(self, max_width):
+        self.__canvas.itemconfigure(self.__description_text_id, width=max_width)
+
+        self.__update_description_hitbox_size()
+        self.__update_description_components_coords()
 
     # hitbox *******************************************************************
     def __update_hitbox_size(self):
@@ -353,6 +530,18 @@ class MindNodeDrawing:
     def is_selected(self, is_selected):
         if is_selected != self.__is_selected:
             self.__is_selected = is_selected
+
+            state = (
+                ctk.NORMAL if is_selected and self.__display_description else ctk.HIDDEN
+            )
+
+            self.__canvas.itemconfigure(self.__description_rectangle_id, state=state)
+            self.__canvas.itemconfigure(self.__description_text_id, state=state)
+
+            if state == ctk.NORMAL:
+                self.__update_description_hitbox_size()
+                self.__update_description_hitbox_coords()
+                self.__update_description_components_coords()
 
             state = ctk.NORMAL if is_selected else ctk.HIDDEN
 
@@ -747,6 +936,7 @@ class MindNodeDrawing:
         self.__update_body_hitbox_size()
         self.__update_hitbox_size()
         self.__update_selector_hitbox_size()
+        self.__update_description_hitbox_size()
 
     def update_components(self):
         self.__update_selector_hitbox_coords()
@@ -756,10 +946,12 @@ class MindNodeDrawing:
         self.__update_body_hitbox_coords()
         self.__update_status_hitbox_coords()
         self.__update_title_hitbox_coords()
+        self.__update_description_hitbox_coords()
 
         # order does not matter because they are placed according to their
         # hitbox
         self.__update_body_components_coords()
+        self.__update_description_components_coords()
         self.__update_selector_components_coords()
         self.__update_status_components_coords()
         self.__update_title_components_coords()

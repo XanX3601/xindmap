@@ -20,6 +20,7 @@ theme_name_to_theme = {
         ],
         cursor_color="#44475a",
         cursor_width=2,
+        description_background_color="#44475a",
         foreground_color="#f8f8f2",
         node_dimensions=(20, 3),
         node_margins=(30, 5),

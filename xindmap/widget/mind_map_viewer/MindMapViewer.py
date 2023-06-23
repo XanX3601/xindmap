@@ -41,6 +41,12 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
         config = xindmap.config.Config()
         Variables = xindmap.config.Variables
 
+        description_background_color = config.get(
+            Variables.mind_map_viewer_mind_node_drawing_description_background_color
+        )
+        description_max_width = config.get(
+            Variables.mind_map_viewer_mind_node_drawing_description_max_width
+        )
         selector_color = config.get(
             Variables.mind_map_viewer_mind_node_drawing_selector_color
         )
@@ -60,6 +66,8 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
 
         drawing = MindNodeDrawing(
             self.__canvas,
+            description_background_color=description_background_color,
+            description_max_width=description_max_width,
             selector_color=selector_color,
             selector_width=selector_width,
             status_check_width=status_check_width,
@@ -91,6 +99,7 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
 
         else:
             edge_drawing = EdgeDrawing(self.__canvas)
+            self.__canvas.lower("edge_drawing", "mind_node_drawing")
 
             # basic stuff for the new node
             self.__node_id_to_child_ids[node_id] = sortedcontainers.SortedList()
@@ -334,6 +343,7 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
 
         node_id = event.node_id
 
+        description = mind_map.node_description(node_id)
         title = mind_map.node_title(node_id)
 
         drawing = self.__node_id_to_drawing[node_id]
@@ -341,6 +351,7 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
         previous_width = drawing.width
         previous_height = drawing.height
 
+        drawing.description = description
         drawing.title = title
 
         if previous_width != drawing.width:
@@ -465,6 +476,48 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
                 update_drawing_size=True,
                 update_hitbox_width=True,
             )
+
+    def on_config_variable_mind_map_viewer_mind_node_drawing_description_background_color_set(
+        self, value
+    ):
+        for drawing in self.__node_id_to_drawing.values():
+            drawing.description_background_color = value
+
+    def on_config_variable_mind_map_viewer_mind_node_drawing_description_margin_top_set(
+        self, _
+    ):
+        for node_id in self.__node_id_to_drawing:
+            self.__compute_drawing_coords(node_id, True)
+
+    def on_config_variable_mind_map_viewer_mind_node_drawing_description_max_width_set(
+        self, value
+    ):
+        for drawing in self.__node_id_to_drawing.values():
+            drawing.description_max_width = value
+
+    def on_config_variable_mind_map_viewer_mind_node_drawing_description_padding_bottom_set(
+        self, _
+    ):
+        for node_id in self.__node_id_to_drawing:
+            self.__compute_drawing_coords(node_id, True)
+
+    def on_config_variable_mind_map_viewer_mind_node_drawing_description_padding_left_set(
+        self, _
+    ):
+        for node_id in self.__node_id_to_drawing:
+            self.__compute_drawing_coords(node_id, True)
+
+    def on_config_variable_mind_map_viewer_mind_node_drawing_description_padding_right_set(
+        self, _
+    ):
+        for node_id in self.__node_id_to_drawing:
+            self.__compute_drawing_coords(node_id, True)
+
+    def on_config_variable_mind_map_viewer_mind_node_drawing_description_padding_top_set(
+        self, _
+    ):
+        for node_id in self.__node_id_to_drawing:
+            self.__compute_drawing_coords(node_id, True)
 
     def on_config_variable_mind_map_viewer_mind_node_drawing_margin_bottom_set(self, _):
         if self.__root_id is not None:
@@ -808,6 +861,13 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
                 Variables.mind_map_viewer_mind_node_drawing_body_colors,
                 Variables.mind_map_viewer_mind_node_drawing_body_height,
                 Variables.mind_map_viewer_mind_node_drawing_body_min_width,
+                Variables.mind_map_viewer_mind_node_drawing_description_background_color,
+                Variables.mind_map_viewer_mind_node_drawing_description_margin_top,
+                Variables.mind_map_viewer_mind_node_drawing_description_max_width,
+                Variables.mind_map_viewer_mind_node_drawing_description_padding_bottom,
+                Variables.mind_map_viewer_mind_node_drawing_description_padding_left,
+                Variables.mind_map_viewer_mind_node_drawing_description_padding_right,
+                Variables.mind_map_viewer_mind_node_drawing_description_padding_top,
                 Variables.mind_map_viewer_mind_node_drawing_margin_bottom,
                 Variables.mind_map_viewer_mind_node_drawing_margin_right,
                 Variables.mind_map_viewer_mind_node_drawing_padding_bottom,
@@ -1035,7 +1095,7 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
 
         drawing.completion = completion
 
-    def __compute_drawing_coords(self, node_id):
+    def __compute_drawing_coords(self, node_id, update_size=False):
         drawing = self.__node_id_to_drawing[node_id]
 
         # ensure that the root hitbox stays at the same place
@@ -1047,6 +1107,9 @@ class MindMapViewer(ctk.CTkFrame, xindmap.config.Configurable):
 
             self.__root_direction_to_hitbox[Direction.left].center_x = 0
             self.__root_direction_to_hitbox[Direction.left].center_y = 0
+
+            if update_size:
+                drawing.update_size()
 
             drawing.x1 = self.__root_direction_to_hitbox[Direction.right].x1
             drawing.center_y = self.__root_direction_to_hitbox[Direction.left].center_y

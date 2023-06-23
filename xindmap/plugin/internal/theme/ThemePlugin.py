@@ -73,9 +73,14 @@ class ThemePlugin(xindmap.plugin.Plugin):
         config.set(Variables.input_stack_viewer_height_px, theme.bar_height)
         config.set(Variables.state_viewer_height_px, theme.bar_height)
         #   input background color
-        config.set(Variables.input_stack_viewer_background_color, theme.bar_input_background_color)
+        config.set(
+            Variables.input_stack_viewer_background_color,
+            theme.bar_input_background_color,
+        )
         #   state background color
-        config.set(Variables.state_viewer_background_color, theme.bar_state_background_color)
+        config.set(
+            Variables.state_viewer_background_color, theme.bar_state_background_color
+        )
 
         # check
         #   colors
@@ -147,6 +152,35 @@ class ThemePlugin(xindmap.plugin.Plugin):
         config.set(
             Variables.mind_map_viewer_mind_node_drawing_selector_width,
             theme.cursor_width,
+        )
+
+        # description
+        #   background color
+        config.set(
+            Variables.mind_map_viewer_mind_node_drawing_description_background_color,
+            theme.description_background_color,
+        )
+        #   paddings
+        config.set(
+            Variables.mind_map_viewer_mind_node_drawing_description_padding_top,
+            theme.description_paddings[0],
+        )
+        config.set(
+            Variables.mind_map_viewer_mind_node_drawing_description_padding_bottom,
+            theme.description_paddings[1],
+        )
+        config.set(
+            Variables.mind_map_viewer_mind_node_drawing_description_padding_left,
+            theme.description_paddings[2],
+        )
+        config.set(
+            Variables.mind_map_viewer_mind_node_drawing_description_padding_right,
+            theme.description_paddings[3],
+        )
+        #   width
+        config.set(
+            Variables.mind_map_viewer_mind_node_drawing_description_max_width,
+            theme.description_width,
         )
 
         # edge

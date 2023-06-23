@@ -19,6 +19,9 @@ class Theme:
         cursor_paddings=(5, 5, 5, 5),
         cursor_radius=10,
         cursor_width=1,
+        description_background_color="#000",
+        description_paddings=(5, 5, 5, 5),
+        description_width=1000,
         edge_colors=None,
         font="TkDefaultFont",
         foreground_color="#fff",
@@ -47,6 +50,9 @@ class Theme:
         self.cursor_paddings = cursor_paddings
         self.cursor_radius = cursor_radius
         self.cursor_width = cursor_width
+        self.description_background_color = description_background_color
+        self.description_paddings = description_paddings
+        self.description_width = description_width
         self.edge_colors = edge_colors if edge_colors is not None else colors
         self.font = font
         self.foreground_color = foreground_color

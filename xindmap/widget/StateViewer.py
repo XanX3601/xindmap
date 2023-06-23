@@ -29,7 +29,8 @@ class StateViewer(ctk.CTkFrame, xindmap.config.Configurable):
 
         ctk.CTkFrame.__init__(self, parent)
         xindmap.config.Configurable.__init__(
-            self, [Variables.state_viewer_background_color, Variables.state_viewer_height_px]
+            self,
+            [Variables.state_viewer_background_color, Variables.state_viewer_height_px],
         )
 
         self.__label_text = ctk.StringVar(value="hello")

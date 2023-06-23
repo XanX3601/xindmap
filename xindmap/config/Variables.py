@@ -40,6 +40,27 @@ class Variables(enum.Enum):
     )
     mind_map_viewer_mind_node_drawing_body_height = Variable(VariableTypes.int, 2)
     mind_map_viewer_mind_node_drawing_body_min_width = Variable(VariableTypes.int, 30)
+    mind_map_viewer_mind_node_drawing_description_background_color = Variable(
+        VariableTypes.color, "#f00"
+    )
+    mind_map_viewer_mind_node_drawing_description_margin_top = Variable(
+        VariableTypes.int, 5
+    )
+    mind_map_viewer_mind_node_drawing_description_max_width = Variable(
+        VariableTypes.int, 100
+    )
+    mind_map_viewer_mind_node_drawing_description_padding_bottom = Variable(
+        VariableTypes.int, 5
+    )
+    mind_map_viewer_mind_node_drawing_description_padding_left = Variable(
+        VariableTypes.int, 5
+    )
+    mind_map_viewer_mind_node_drawing_description_padding_right = Variable(
+        VariableTypes.int, 5
+    )
+    mind_map_viewer_mind_node_drawing_description_padding_top = Variable(
+        VariableTypes.int, 5
+    )
     mind_map_viewer_mind_node_drawing_margin_bottom = Variable(VariableTypes.int, 10)
     mind_map_viewer_mind_node_drawing_margin_right = Variable(VariableTypes.int, 50)
     mind_map_viewer_mind_node_drawing_padding_bottom = Variable(VariableTypes.int, 5)

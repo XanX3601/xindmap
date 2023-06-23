@@ -48,7 +48,7 @@ class EdgeDrawing:
             0,
             fill=color,
             smooth=True,
-            tags=(drawing_tag, "edge_drawing_line"),
+            tags=("edge_drawing", drawing_tag, "edge_drawing_line"),
             width=line_width,
         )
 
